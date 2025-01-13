@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2800-2899/2812.Find%20the%20Safest%20Path%20in%20a%20Grid/README_EN.md
+rating: 2153
+source: Weekly Contest 357 Q3
+tags:
+    - Breadth-First Search
+    - Union Find
+    - Array
+    - Binary Search
+    - Matrix
+---
+
+<!-- problem:start -->
+
 # [2812. Find the Safest Path in a Grid](https://leetcode.com/problems/find-the-safest-path-in-a-grid)
 
 [中文文档](/solution/2800-2899/2812.Find%20the%20Safest%20Path%20in%20a%20Grid/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> 2D matrix <code>grid</code> of size <code>n x n</code>, where <code>(r, c)</code> represents:</p>
 
@@ -61,9 +79,13 @@ It can be shown that there are no other paths with a higher safeness factor.
 	<li>There is at least one thief in the <code>grid</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-**Solution 1: BFS + Sorting + Union-Find**
+<!-- solution:start -->
+
+### Solution 1: BFS + Sorting + Union-Find
 
 We can first find out the positions of all thieves, and then start multi-source BFS from these positions to get the shortest distance from each position to the thieves. Then sort in descending order according to the distance, and add each position to the union-find set one by one. If the start and end points are in the same connected component, the current distance is the answer.
 
@@ -71,7 +93,7 @@ The time complexity is $O(n^2 \times \log n)$, and the space complexity $O(n^2)$
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class UnionFind:
@@ -131,7 +153,7 @@ class Solution:
         return 0
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -222,7 +244,7 @@ class UnionFind {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class UnionFind {
@@ -305,7 +327,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 type unionFind struct {
@@ -398,7 +420,7 @@ func maximumSafenessFactor(grid [][]int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 class UnionFind {
@@ -483,6 +505,86 @@ function maximumSafenessFactor(grid: number[][]): number {
 }
 ```
 
+#### Rust
+
+```rust
+use std::collections::VecDeque;
+impl Solution {
+    fn dfs(i: usize, j: usize, v: i32, g: &Vec<Vec<i32>>, vis: &mut Vec<Vec<bool>>) -> bool {
+        if vis[i][j] || g[i][j] <= v {
+            return false;
+        }
+        vis[i][j] = true;
+        let n = g.len();
+        (i == n - 1 && j == n - 1)
+            || (i != 0 && Self::dfs(i - 1, j, v, g, vis))
+            || (i != n - 1 && Self::dfs(i + 1, j, v, g, vis))
+            || (j != 0 && Self::dfs(i, j - 1, v, g, vis))
+            || (j != n - 1 && Self::dfs(i, j + 1, v, g, vis))
+    }
+
+    pub fn maximum_safeness_factor(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut g = vec![vec![-1; n]; n];
+        let mut q = VecDeque::new();
+        for i in 0..n {
+            for j in 0..n {
+                if grid[i][j] == 1 {
+                    q.push_back((i, j));
+                }
+            }
+        }
+        let mut level = 0;
+        while !q.is_empty() {
+            let m = q.len();
+            for _ in 0..m {
+                let (i, j) = q.pop_front().unwrap();
+                if g[i][j] != -1 {
+                    continue;
+                }
+                g[i][j] = level;
+                if i != n - 1 {
+                    q.push_back((i + 1, j));
+                }
+                if i != 0 {
+                    q.push_back((i - 1, j));
+                }
+                if j != n - 1 {
+                    q.push_back((i, j + 1));
+                }
+                if j != 0 {
+                    q.push_back((i, j - 1));
+                }
+            }
+            level += 1;
+        }
+        let mut left = 0;
+        let mut right = level;
+        while left < right {
+            let mid = (left + right) >> 1;
+            if Self::dfs(0, 0, mid, &g, &mut vec![vec![false; n]; n]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        right
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### TypeScript
+
 ```ts
 function maximumSafenessFactor(grid: number[][]): number {
     const n = grid.length;
@@ -541,78 +643,8 @@ function maximumSafenessFactor(grid: number[][]): number {
 }
 ```
 
-### **Rust**
-
-```rust
-use std::collections::VecDeque;
-impl Solution {
-    fn dfs(i: usize, j: usize, v: i32, g: &Vec<Vec<i32>>, vis: &mut Vec<Vec<bool>>) -> bool {
-        if vis[i][j] || g[i][j] <= v {
-            return false;
-        }
-        vis[i][j] = true;
-        let n = g.len();
-        (i == n - 1 && j == n - 1) ||
-            (i != 0 && Self::dfs(i - 1, j, v, g, vis)) ||
-            (i != n - 1 && Self::dfs(i + 1, j, v, g, vis)) ||
-            (j != 0 && Self::dfs(i, j - 1, v, g, vis)) ||
-            (j != n - 1 && Self::dfs(i, j + 1, v, g, vis))
-    }
-
-    pub fn maximum_safeness_factor(grid: Vec<Vec<i32>>) -> i32 {
-        let n = grid.len();
-        let mut g = vec![vec![-1; n]; n];
-        let mut q = VecDeque::new();
-        for i in 0..n {
-            for j in 0..n {
-                if grid[i][j] == 1 {
-                    q.push_back((i, j));
-                }
-            }
-        }
-        let mut level = 0;
-        while !q.is_empty() {
-            let m = q.len();
-            for _ in 0..m {
-                let (i, j) = q.pop_front().unwrap();
-                if g[i][j] != -1 {
-                    continue;
-                }
-                g[i][j] = level;
-                if i != n - 1 {
-                    q.push_back((i + 1, j));
-                }
-                if i != 0 {
-                    q.push_back((i - 1, j));
-                }
-                if j != n - 1 {
-                    q.push_back((i, j + 1));
-                }
-                if j != 0 {
-                    q.push_back((i, j - 1));
-                }
-            }
-            level += 1;
-        }
-        let mut left = 0;
-        let mut right = level;
-        while left < right {
-            let mid = (left + right) >> 1;
-            if Self::dfs(0, 0, mid, &g, &mut vec![vec![false; n]; n]) {
-                left = mid + 1;
-            } else {
-                right = mid;
-            }
-        }
-        right
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

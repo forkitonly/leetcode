@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0033.Search%20in%20Rotated%20Sorted%20Array/README_EN.md
+tags:
+    - Array
+    - Binary Search
+---
+
+<!-- problem:start -->
+
 # [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array)
 
 [中文文档](/solution/0000-0099/0033.Search%20in%20Rotated%20Sorted%20Array/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is an integer array <code>nums</code> sorted in ascending order (with <strong>distinct</strong> values).</p>
 
@@ -34,13 +47,32 @@
 	<li><code>-10<sup>4</sup> &lt;= target &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Binary search.
+<!-- solution:start -->
+
+### Solution 1: Binary Search
+
+We use binary search to divide the array into two parts, $[left,.. mid]$ and $[mid + 1,.. right]$. At this point, we can find that one part must be sorted.
+
+Therefore, we can determine whether $target$ is in this part based on the sorted part:
+
+-   If the elements in the range $[0,.. mid]$ form a sorted array:
+    -   If $nums[0] \leq target \leq nums[mid]$, then our search range can be narrowed down to $[left,.. mid]$;
+    -   Otherwise, search in $[mid + 1,.. right]$;
+-   If the elements in the range $[mid + 1, n - 1]$ form a sorted array:
+    -   If $nums[mid] \lt target \leq nums[n - 1]$, then our search range can be narrowed down to $[mid + 1,.. right]$;
+    -   Otherwise, search in $[left,.. mid]$.
+
+The termination condition for binary search is $left \geq right$. If at the end we find that $nums[left]$ is not equal to $target$, it means that there is no element with a value of $target$ in the array, and we return $-1$. Otherwise, we return the index $left$.
+
+The time complexity is $O(\log n)$, where $n$ is the length of the array $nums$. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -62,7 +94,7 @@ class Solution:
         return left if nums[left] == target else -1
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -90,9 +122,7 @@ class Solution {
 }
 ```
 
-### **C++**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### C++
 
 ```cpp
 class Solution {
@@ -119,7 +149,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func search(nums []int, target int) int {
@@ -148,15 +178,10 @@ func search(nums []int, target int) int {
 }
 ```
 
-### **JavaScript**
+#### TypeScript
 
-```js
-/**
- * @param {number[]} nums
- * @param {number} target
- * @return {number}
- */
-var search = function (nums, target) {
+```ts
+function search(nums: number[], target: number): number {
     const n = nums.length;
     let left = 0,
         right = n - 1;
@@ -177,10 +202,10 @@ var search = function (nums, target) {
         }
     }
     return nums[left] == target ? left : -1;
-};
+}
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -212,10 +237,15 @@ impl Solution {
 }
 ```
 
-### **TypeScript**
+#### JavaScript
 
-```ts
-function search(nums: number[], target: number): number {
+```js
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var search = function (nums, target) {
     const n = nums.length;
     let left = 0,
         right = n - 1;
@@ -236,13 +266,33 @@ function search(nums: number[], target: number): number {
         }
     }
     return nums[left] == target ? left : -1;
+};
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param integer[] $nums
+     * @param integer $target
+     * @return integer
+     */
+
+    function search($nums, $target) {
+        $foundKey = -1;
+        foreach ($nums as $key => $value) {
+            if ($value === $target) {
+                $foundKey = $key;
+            }
+        }
+        return $foundKey;
+    }
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

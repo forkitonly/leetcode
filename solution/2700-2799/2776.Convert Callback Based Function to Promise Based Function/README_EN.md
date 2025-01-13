@@ -1,12 +1,26 @@
-# [2776. Convert Callback Based Function to Promise Based Function](https://leetcode.com/problems/convert-callback-based-function-to-promise-based-function)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2776.Convert%20Callback%20Based%20Function%20to%20Promise%20Based%20Function/README_EN.md
+tags:
+    - JavaScript
+---
+
+<!-- problem:start -->
+
+# [2776. Convert Callback Based Function to Promise Based Function 🔒](https://leetcode.com/problems/convert-callback-based-function-to-promise-based-function)
 
 [中文文档](/solution/2700-2799/2776.Convert%20Callback%20Based%20Function%20to%20Promise%20Based%20Function/README.md)
 
 ## Description
 
+<!-- description:start -->
+
 <p>Write a function that accepts another function <code>fn</code> and converts the callback-based function&nbsp;into a promise-based function.&nbsp;</p>
 
-<p>The <code>promisify</code>&nbsp;function takes in a function <code>fn</code> that accepts a callback as its first argument and also any additional arguments. It&nbsp;returns a new function that returns a promise instead. The returned promise should resolve with the result of the original function when the callback is called with a successful response, and reject with the error when the callback is called with an error. The returned promise-based function should accept the additional arguments as inputs.</p>
+<p>The function <code>fn</code> takes a callback as its first argument, along with any additional arguments <code>args</code>&nbsp;passed as separate inputs.</p>
+
+<p>The&nbsp;<code>promisify</code>&nbsp;function returns a new function that should return a promise. The promise should resolve with the argument passed as the first parameter of the callback when the callback is invoked without error, and reject with the error when the callback is called with an error as the second argument.</p>
 
 <p>The following is an example of a function that could be passed into&nbsp;<code>promisify</code>.</p>
 
@@ -74,11 +88,17 @@ fn is called with a callback as the first argument and args as the rest. As the 
 	<li><code>0 &lt;= args[i] &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 type CallbackFn = (next: (data: number, error: string) => void, ...args: number[]) => void;
@@ -87,13 +107,16 @@ type Promisified = (...args: number[]) => Promise<number>;
 function promisify(fn: CallbackFn): Promisified {
     return async function (...args) {
         return new Promise((resolve, reject) => {
-            fn((data, error) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(data);
-                }
-            }, ...args);
+            fn(
+                (data, error) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(data);
+                    }
+                },
+                ...args,
+            );
         });
     };
 }
@@ -105,3 +128,7 @@ function promisify(fn: CallbackFn): Promisified {
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

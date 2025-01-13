@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2800-2899/2835.Minimum%20Operations%20to%20Form%20Subsequence%20With%20Target%20Sum/README_EN.md
+rating: 2207
+source: Weekly Contest 360 Q3
+tags:
+    - Greedy
+    - Bit Manipulation
+    - Array
+---
+
+<!-- problem:start -->
+
 # [2835. Minimum Operations to Form Subsequence With Target Sum](https://leetcode.com/problems/minimum-operations-to-form-subsequence-with-target-sum)
 
 [中文文档](/solution/2800-2899/2835.Minimum%20Operations%20to%20Form%20Subsequence%20With%20Target%20Sum/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> array <code>nums</code> consisting of <strong>non-negative</strong> powers of <code>2</code>, and an integer <code>target</code>.</p>
 
@@ -57,11 +73,27 @@ It can be shown that there is no shorter sequence of operations that results in 
 	<li><code>1 &lt;= target &lt; 2<sup>31</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Greedy + Bit Manipulation
+
+Observing the operation in the problem, we find that each operation actually splits a number greater than $1$ into two equal numbers, which means that the sum of the elements in the array will not change after the operation. Therefore, if the sum of the elements in the array $s$ is less than $target$, it is impossible to obtain a subsequence with a sum of $target$ through the operation described in the problem, and we can directly return $-1$. Otherwise, we can definitely make the sum of some subsequences in the array equal to $target$ through the split operation.
+
+In addition, the split operation will actually set the binary high bit of the number to $0$ and add $2$ to the lower bit. Therefore, we first use an array of length $32$ to record the number of times $1$ appears on each binary bit in the binary representation of all elements in the array $nums$.
+
+Next, starting from the low bit of $target$, for the $i$th bit of $target$, if the current bit number is $0$, skip it directly, that is, $i = i + 1$. If the current bit number is $1$, we need to find the smallest number $j$ (where $j \ge i$) in the array $cnt$ such that $cnt[j] > 0$, and then we split the number $1$ at this bit to the lower bit $i$, that is, subtract $1$ from $cnt[j]$, and set each bit from $i$ to $j-1$ in $cnt$ to $1$, and the number of operations is $j-i$. Next, we let $j = i$, and then $i = i + 1$. Repeat the above operation until $i$ exceeds the index range of the array $cnt$, and return the number of operations at this time.
+
+Note that if $j < i$, actually two lower bits of $1$ can be combined into a higher bit of $1$. Therefore, if $j < i$, we add $\frac{cnt[j]}{2}$ to $cnt[j+1]$, and take $cnt[j]$ modulo $2$, then let $j = j + 1$, and continue the above operation.
+
+The time complexity is $O(n \times \log M)$, and the space complexity is $O(\log M)$. Here, $n$ is the length of the array $nums$, and $M$ is the maximum value in the array $nums$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -95,7 +127,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -140,7 +172,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -186,7 +218,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minOperations(nums []int, target int) (ans int) {
@@ -228,7 +260,7 @@ func minOperations(nums []int, target int) (ans int) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minOperations(nums: number[], target: number): number {
@@ -270,10 +302,8 @@ function minOperations(nums: number[], target: number): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

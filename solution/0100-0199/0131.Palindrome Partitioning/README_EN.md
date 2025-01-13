@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0131.Palindrome%20Partitioning/README_EN.md
+tags:
+    - String
+    - Dynamic Programming
+    - Backtracking
+---
+
+<!-- problem:start -->
+
 # [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning)
 
 [中文文档](/solution/0100-0199/0131.Palindrome%20Partitioning/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a string <code>s</code>, partition <code>s</code> such that every <span data-keyword="substring-nonempty">substring</span> of the partition is a <span data-keyword="palindrome-string"><strong>palindrome</strong></span>. Return <em>all possible palindrome partitioning of </em><code>s</code>.</p>
 
@@ -22,11 +36,17 @@
 	<li><code>s</code> contains only lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -52,7 +72,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -94,7 +114,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -110,14 +130,14 @@ public:
         }
         vector<vector<string>> ans;
         vector<string> t;
-        function<void(int)> dfs = [&](int i) {
+        auto dfs = [&](this auto&& dfs, int i) -> void {
             if (i == n) {
-                ans.push_back(t);
+                ans.emplace_back(t);
                 return;
             }
             for (int j = i; j < n; ++j) {
                 if (f[i][j]) {
-                    t.push_back(s.substr(i, j - i + 1));
+                    t.emplace_back(s.substr(i, j - i + 1));
                     dfs(j + 1);
                     t.pop_back();
                 }
@@ -129,7 +149,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func partition(s string) (ans [][]string) {
@@ -166,7 +186,7 @@ func partition(s string) (ans [][]string) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function partition(s: string): string[][] {
@@ -197,7 +217,7 @@ function partition(s: string): string[][] {
 }
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -241,10 +261,8 @@ public class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

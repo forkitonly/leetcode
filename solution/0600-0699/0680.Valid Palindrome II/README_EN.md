@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0680.Valid%20Palindrome%20II/README_EN.md
+tags:
+    - Greedy
+    - Two Pointers
+    - String
+---
+
+<!-- problem:start -->
+
 # [680. Valid Palindrome II](https://leetcode.com/problems/valid-palindrome-ii)
 
 [中文文档](/solution/0600-0699/0680.Valid%20Palindrome%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a string <code>s</code>, return <code>true</code> <em>if the </em><code>s</code><em> can be palindrome after deleting <strong>at most one</strong> character from it</em>.</p>
 
@@ -37,11 +51,23 @@
 	<li><code>s</code> consists of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Two Pointers
+
+We use two pointers to point to the left and right ends of the string, respectively. Each time, we check whether the characters pointed to by the two pointers are the same. If they are not the same, we check whether the string is a palindrome after deleting the character corresponding to the left pointer, or we check whether the string is a palindrome after deleting the character corresponding to the right pointer. If the characters pointed to by the two pointers are the same, we move both pointers towards the middle by one position, until the two pointers meet.
+
+If we have not encountered a situation where the characters pointed to by the pointers are different by the end of the traversal, then the string itself is a palindrome, and we return `true`.
+
+The time complexity is $O(n)$, where $n$ is the length of the string $s$. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -61,7 +87,7 @@ class Solution:
         return True
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -85,29 +111,7 @@ class Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function validPalindrome(s: string): boolean {
-    for (let i: number = 0, j = s.length - 1; i < j; ++i, --j) {
-        if (s.charAt(i) != s.charAt(j)) {
-            return isPalinddrome(s.slice(i, j)) || isPalinddrome(s.slice(i + 1, j + 1));
-        }
-    }
-    return true;
-}
-
-function isPalinddrome(s: string): boolean {
-    for (let i: number = 0, j = s.length - 1; i < j; ++i, --j) {
-        if (s.charAt(i) != s.charAt(j)) {
-            return false;
-        }
-    }
-    return true;
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -132,7 +136,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func validPalindrome(s string) bool {
@@ -153,7 +157,29 @@ func validPalindrome(s string) bool {
 }
 ```
 
-### **JavaScript**
+#### TypeScript
+
+```ts
+function validPalindrome(s: string): boolean {
+    for (let i: number = 0, j = s.length - 1; i < j; ++i, --j) {
+        if (s.charAt(i) != s.charAt(j)) {
+            return isPalinddrome(s.slice(i, j)) || isPalinddrome(s.slice(i + 1, j + 1));
+        }
+    }
+    return true;
+}
+
+function isPalinddrome(s: string): boolean {
+    for (let i: number = 0, j = s.length - 1; i < j; ++i, --j) {
+        if (s.charAt(i) != s.charAt(j)) {
+            return false;
+        }
+    }
+    return true;
+}
+```
+
+#### JavaScript
 
 ```js
 /**
@@ -178,7 +204,7 @@ var validPalindrome = function (s) {
 };
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -207,10 +233,8 @@ public class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2043.Simple%20Bank%20System/README.md
+rating: 1356
+source: 第 263 场周赛 Q2
+tags:
+    - 设计
+    - 数组
+    - 哈希表
+    - 模拟
+---
+
+<!-- problem:start -->
+
 # [2043. 简易银行系统](https://leetcode.cn/problems/simple-bank-system)
 
 [English Version](/solution/2000-2099/2043.Simple%20Bank%20System/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>你的任务是为一个很受欢迎的银行设计一款程序，以自动化执行所有传入的交易（转账，存款和取款）。银行共有 <code>n</code> 个账户，编号从 <code>1</code> 到 <code>n</code> 。每个账号的初始余额存储在一个下标从 <strong>0</strong> 开始的整数数组 <code>balance</code>&nbsp;中，其中第 <code>(i + 1)</code> 个账户的初始余额是 <code>balance[i]</code> 。</p>
 
@@ -37,14 +52,14 @@
 
 <strong>解释：</strong>
 Bank bank = new Bank([10, 100, 20, 50, 30]);
-bank.withdraw(3, 10);    // 返回 true ，账户 3 的余额是 20 ，所以可以取款 10 。
-                         // 账户 3 余额为 20 - 10 = 10 。
-bank.transfer(5, 1, 20); // 返回 true ，账户 5 的余额是 30 ，所以可以转账 20 。
-                         // 账户 5 的余额为 30 - 20 = 10 ，账户 1 的余额为 10 + 20 = 30 。
-bank.deposit(5, 20);     // 返回 true ，可以向账户 5 存款 20 。
-                         // 账户 5 的余额为 10 + 20 = 30 。
-bank.transfer(3, 4, 15); // 返回 false ，账户 3 的当前余额是 10 。
-                         // 所以无法转账 15 。
+bank.withdraw(3, 10);    // 返回 true ，账户 3 的余额是 $20 ，所以可以取款 $10 。
+                         // 账户 3 余额为 $20 - $10 = $10 。
+bank.transfer(5, 1, 20); // 返回 true ，账户 5 的余额是 $30 ，所以可以转账 $20 。
+                         // 账户 5 的余额为 $30 - $20 = $10 ，账户 1 的余额为 $10 + $20 = $30 。
+bank.deposit(5, 20);     // 返回 true ，可以向账户 5 存款 $20 。
+                         // 账户 5 的余额为 $10 + $20 = $30 。
+bank.transfer(3, 4, 15); // 返回 false ，账户 3 的当前余额是 $10 。
+                         // 所以无法转账 $15 。
 bank.withdraw(10, 50);   // 返回 false ，交易无效，因为账户 10 并不存在。
 </pre>
 
@@ -59,11 +74,13 @@ bank.withdraw(10, 50);   // 返回 false ，交易无效，因为账户 10 并�
 	<li><code>transfer</code>, <code>deposit</code>, <code>withdraw</code> 三个函数，<strong>每个</strong> 最多调用 <code>10<sup>4</sup></code> 次</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：模拟**
+### 方法一：模拟
 
 根据题意，我们可以使用一个数组 `balance` 来模拟银行账户的余额，数组下标从 0 开始，数组的值表示账户的余额。
 
@@ -76,9 +93,7 @@ bank.withdraw(10, 50);   // 返回 false ，交易无效，因为账户 10 并�
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Bank:
@@ -113,9 +128,7 @@ class Bank:
 # param_3 = obj.withdraw(account,money)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Bank {
@@ -162,52 +175,7 @@ class Bank {
  */
 ```
 
-### **TypeScript**
-
-```ts
-class Bank {
-    balance: number[];
-    constructor(balance: number[]) {
-        this.balance = balance;
-    }
-
-    transfer(account1: number, account2: number, money: number): boolean {
-        if (
-            account1 > this.balance.length ||
-            account2 > this.balance.length ||
-            money > this.balance[account1 - 1]
-        )
-            return false;
-        this.balance[account1 - 1] -= money;
-        this.balance[account2 - 1] += money;
-        return true;
-    }
-
-    deposit(account: number, money: number): boolean {
-        if (account > this.balance.length) return false;
-        this.balance[account - 1] += money;
-        return true;
-    }
-
-    withdraw(account: number, money: number): boolean {
-        if (account > this.balance.length || money > this.balance[account - 1]) {
-            return false;
-        }
-        this.balance[account - 1] -= money;
-        return true;
-    }
-}
-
-/**
- * Your Bank object will be instantiated and called as such:
- * var obj = new Bank(balance)
- * var param_1 = obj.transfer(account1,account2,money)
- * var param_2 = obj.deposit(account,money)
- * var param_3 = obj.withdraw(account,money)
- */
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Bank {
@@ -249,7 +217,7 @@ public:
  */
 ```
 
-### **Go**
+#### Go
 
 ```go
 type Bank struct {
@@ -295,7 +263,52 @@ func (this *Bank) Withdraw(account int, money int64) bool {
  */
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+class Bank {
+    balance: number[];
+    constructor(balance: number[]) {
+        this.balance = balance;
+    }
+
+    transfer(account1: number, account2: number, money: number): boolean {
+        if (
+            account1 > this.balance.length ||
+            account2 > this.balance.length ||
+            money > this.balance[account1 - 1]
+        )
+            return false;
+        this.balance[account1 - 1] -= money;
+        this.balance[account2 - 1] += money;
+        return true;
+    }
+
+    deposit(account: number, money: number): boolean {
+        if (account > this.balance.length) return false;
+        this.balance[account - 1] += money;
+        return true;
+    }
+
+    withdraw(account: number, money: number): boolean {
+        if (account > this.balance.length || money > this.balance[account - 1]) {
+            return false;
+        }
+        this.balance[account - 1] -= money;
+        return true;
+    }
+}
+
+/**
+ * Your Bank object will be instantiated and called as such:
+ * var obj = new Bank(balance)
+ * var param_1 = obj.transfer(account1,account2,money)
+ * var param_2 = obj.deposit(account,money)
+ * var param_3 = obj.withdraw(account,money)
+ */
+```
+
+#### Rust
 
 ```rust
 struct Bank {
@@ -344,19 +357,11 @@ impl Bank {
         self.balance[account - 1] -= money;
         true
     }
-}/**
- * Your Bank object will be instantiated and called as such:
- * let obj = Bank::new(balance);
- * let ret_1: bool = obj.transfer(account1, account2, money);
- * let ret_2: bool = obj.deposit(account, money);
- * let ret_3: bool = obj.withdraw(account, money);
- */
-```
-
-### **...**
-
-```
-
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

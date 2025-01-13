@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0599.Minimum%20Index%20Sum%20of%20Two%20Lists/README_EN.md
+tags:
+    - Array
+    - Hash Table
+    - String
+---
+
+<!-- problem:start -->
+
 # [599. Minimum Index Sum of Two Lists](https://leetcode.com/problems/minimum-index-sum-of-two-lists)
 
 [中文文档](/solution/0500-0599/0599.Minimum%20Index%20Sum%20of%20Two%20Lists/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given two arrays of strings <code>list1</code> and <code>list2</code>, find the <strong>common strings with the least index sum</strong>.</p>
 
@@ -53,11 +67,17 @@ The strings with the least index sum are &quot;sad&quot; and &quot;happy&quot;.
 	<li>There is at least a common string between <code>list1</code> and <code>list2</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -76,7 +96,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -105,7 +125,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -132,7 +152,93 @@ public:
 };
 ```
 
-### **Go**
+#### Go
+
+```go
+func findRestaurant(list1 []string, list2 []string) []string {
+	mp := make(map[string]int)
+	for i, v := range list2 {
+		mp[v] = i
+	}
+	mi := 2000
+	var ans []string
+	for i, v := range list1 {
+		if _, ok := mp[v]; ok {
+			t := i + mp[v]
+			if t < mi {
+				ans = []string{v}
+				mi = t
+			} else if t == mi {
+				ans = append(ans, v)
+			}
+		}
+	}
+	return ans
+}
+```
+
+#### TypeScript
+
+```ts
+function findRestaurant(list1: string[], list2: string[]): string[] {
+    let minI = Infinity;
+    const res = [];
+    const map = new Map<string, number>(list1.map((s, i) => [s, i]));
+    list2.forEach((s, i) => {
+        if (map.has(s)) {
+            const sumI = i + map.get(s);
+            if (sumI <= minI) {
+                if (sumI < minI) {
+                    minI = sumI;
+                    res.length = 0;
+                }
+                res.push(s);
+            }
+        }
+    });
+    return res;
+}
+```
+
+#### Rust
+
+```rust
+use std::collections::HashMap;
+use std::iter::FromIterator;
+
+impl Solution {
+    pub fn find_restaurant(list1: Vec<String>, list2: Vec<String>) -> Vec<String> {
+        let map: HashMap<String, usize> = HashMap::from_iter(list1.into_iter().zip(0..));
+        let mut res = vec![];
+        let mut min_i = usize::MAX;
+        list2.into_iter().enumerate().for_each(|(i, key)| {
+            if map.contains_key(&key) {
+                let sum_i = map.get(&key).unwrap() + i;
+                if sum_i <= min_i {
+                    if sum_i < min_i {
+                        min_i = sum_i;
+                        res.clear();
+                    }
+                    res.push(key);
+                }
+            }
+        });
+        res
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### C++
 
 ```cpp
 func findRestaurant(list1[] string, list2[] string)[] string {
@@ -159,64 +265,8 @@ mp:= make(map[string]int)
 }
 ```
 
-### **TypeScript**
-
-```ts
-function findRestaurant(list1: string[], list2: string[]): string[] {
-    let minI = Infinity;
-    const res = [];
-    const map = new Map<string, number>(list1.map((s, i) => [s, i]));
-    list2.forEach((s, i) => {
-        if (map.has(s)) {
-            const sumI = i + map.get(s);
-            if (sumI <= minI) {
-                if (sumI < minI) {
-                    minI = sumI;
-                    res.length = 0;
-                }
-                res.push(s);
-            }
-        }
-    });
-    return res;
-}
-```
-
-### **Rust**
-
-```rust
-use std::collections::HashMap;
-use std::iter::FromIterator;
-
-impl Solution {
-    pub fn find_restaurant(list1: Vec<String>, list2: Vec<String>) -> Vec<String> {
-        let map: HashMap<String, usize> = HashMap::from_iter(list1.into_iter().zip(0..));
-        let mut res = vec![];
-        let mut min_i = usize::MAX;
-        list2
-            .into_iter()
-            .enumerate()
-            .for_each(|(i, key)| {
-                if map.contains_key(&key) {
-                    let sum_i = map.get(&key).unwrap() + i;
-                    if sum_i <= min_i {
-                        if sum_i < min_i {
-                            min_i = sum_i;
-                            res.clear();
-                        }
-                        res.push(key);
-                    }
-                }
-            });
-        res
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0100-0199/0148.Sort%20List/README_EN.md
+tags:
+    - Linked List
+    - Two Pointers
+    - Divide and Conquer
+    - Sorting
+    - Merge Sort
+---
+
+<!-- problem:start -->
+
 # [148. Sort List](https://leetcode.com/problems/sort-list)
 
 [中文文档](/solution/0100-0199/0148.Sort%20List/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given the <code>head</code> of a linked list, return <em>the list after sorting it in <strong>ascending order</strong></em>.</p>
 
@@ -39,11 +55,25 @@
 <p>&nbsp;</p>
 <p><strong>Follow up:</strong> Can you sort the linked list in <code>O(n logn)</code> time and <code>O(1)</code> memory (i.e. constant space)?</p>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Merge Sort
+
+We can use the merge sort approach to solve this problem.
+
+First, we use the fast and slow pointers to find the middle of the linked list and break the list from the middle to form two separate sublists $\textit{l1}$ and $\textit{l2}$.
+
+Then, we recursively sort $\textit{l1}$ and $\textit{l2}$, and finally merge $\textit{l1}$ and $\textit{l2}$ into a sorted linked list.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(\log n)$. Here, $n$ is the length of the linked list.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 # Definition for singly-linked list.
@@ -52,30 +82,31 @@
 #         self.val = val
 #         self.next = next
 class Solution:
-    def sortList(self, head: ListNode) -> ListNode:
+    def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if head is None or head.next is None:
             return head
         slow, fast = head, head.next
         while fast and fast.next:
-            slow, fast = slow.next, fast.next.next
-        t = slow.next
+            slow = slow.next
+            fast = fast.next.next
+        l1, l2 = head, slow.next
         slow.next = None
-        l1, l2 = self.sortList(head), self.sortList(t)
+        l1, l2 = self.sortList(l1), self.sortList(l2)
         dummy = ListNode()
-        cur = dummy
+        tail = dummy
         while l1 and l2:
             if l1.val <= l2.val:
-                cur.next = l1
+                tail.next = l1
                 l1 = l1.next
             else:
-                cur.next = l2
+                tail.next = l2
                 l2 = l2.next
-            cur = cur.next
-        cur.next = l1 or l2
+            tail = tail.next
+        tail.next = l1 or l2
         return dummy.next
 ```
 
-### **Java**
+#### Java
 
 ```java
 /**
@@ -98,29 +129,29 @@ class Solution {
             slow = slow.next;
             fast = fast.next.next;
         }
-        ListNode t = slow.next;
+        ListNode l1 = head, l2 = slow.next;
         slow.next = null;
-        ListNode l1 = sortList(head);
-        ListNode l2 = sortList(t);
+        l1 = sortList(l1);
+        l2 = sortList(l2);
         ListNode dummy = new ListNode();
-        ListNode cur = dummy;
+        ListNode tail = dummy;
         while (l1 != null && l2 != null) {
             if (l1.val <= l2.val) {
-                cur.next = l1;
+                tail.next = l1;
                 l1 = l1.next;
             } else {
-                cur.next = l2;
+                tail.next = l2;
                 l2 = l2.next;
             }
-            cur = cur.next;
+            tail = tail.next;
         }
-        cur.next = l1 == null ? l2 : l1;
+        tail.next = l1 != null ? l1 : l2;
         return dummy.next;
     }
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 /**
@@ -136,36 +167,39 @@ class Solution {
 class Solution {
 public:
     ListNode* sortList(ListNode* head) {
-        if (!head || !head->next) return head;
-        auto* slow = head;
-        auto* fast = head->next;
+        if (!head || !head->next) {
+            return head;
+        }
+        ListNode* slow = head;
+        ListNode* fast = head->next;
         while (fast && fast->next) {
             slow = slow->next;
             fast = fast->next->next;
         }
-        auto* t = slow->next;
+        ListNode* l1 = head;
+        ListNode* l2 = slow->next;
         slow->next = nullptr;
-        auto* l1 = sortList(head);
-        auto* l2 = sortList(t);
-        auto* dummy = new ListNode();
-        auto* cur = dummy;
+        l1 = sortList(l1);
+        l2 = sortList(l2);
+        ListNode* dummy = new ListNode();
+        ListNode* tail = dummy;
         while (l1 && l2) {
             if (l1->val <= l2->val) {
-                cur->next = l1;
+                tail->next = l1;
                 l1 = l1->next;
             } else {
-                cur->next = l2;
+                tail->next = l2;
                 l2 = l2->next;
             }
-            cur = cur->next;
+            tail = tail->next;
         }
-        cur->next = l1 ? l1 : l2;
+        tail->next = l1 ? l1 : l2;
         return dummy->next;
     }
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 /**
@@ -183,128 +217,33 @@ func sortList(head *ListNode) *ListNode {
 	for fast != nil && fast.Next != nil {
 		slow, fast = slow.Next, fast.Next.Next
 	}
-	t := slow.Next
+	l1 := head
+	l2 := slow.Next
 	slow.Next = nil
-	l1, l2 := sortList(head), sortList(t)
+	l1 = sortList(l1)
+	l2 = sortList(l2)
 	dummy := &ListNode{}
-	cur := dummy
+	tail := dummy
 	for l1 != nil && l2 != nil {
 		if l1.Val <= l2.Val {
-			cur.Next = l1
+			tail.Next = l1
 			l1 = l1.Next
 		} else {
-			cur.Next = l2
+			tail.Next = l2
 			l2 = l2.Next
 		}
-		cur = cur.Next
+		tail = tail.Next
 	}
 	if l1 != nil {
-		cur.Next = l1
+		tail.Next = l1
 	} else {
-		cur.Next = l2
+		tail.Next = l2
 	}
 	return dummy.Next
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-/**
- * @param {ListNode} head
- * @return {ListNode}
- */
-var sortList = function (head) {
-    if (!head || !head.next) {
-        return head;
-    }
-    let slow = head;
-    let fast = head.next;
-    while (fast && fast.next) {
-        slow = slow.next;
-        fast = fast.next.next;
-    }
-    let t = slow.next;
-    slow.next = null;
-    let l1 = sortList(head);
-    let l2 = sortList(t);
-    const dummy = new ListNode();
-    let cur = dummy;
-    while (l1 && l2) {
-        if (l1.val <= l2.val) {
-            cur.next = l1;
-            l1 = l1.next;
-        } else {
-            cur.next = l2;
-            l2 = l2.next;
-        }
-        cur = cur.next;
-    }
-    cur.next = l1 || l2;
-    return dummy.next;
-};
-```
-
-### **C#**
-
-```cs
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     public int val;
- *     public ListNode next;
- *     public ListNode(int val=0, ListNode next=null) {
- *         this.val = val;
- *         this.next = next;
- *     }
- * }
- */
-public class Solution {
-    public ListNode SortList(ListNode head) {
-        if (head == null || head.next == null)
-        {
-            return head;
-        }
-        ListNode slow = head, fast = head.next;
-        while (fast != null && fast.next != null)
-        {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-        ListNode t = slow.next;
-        slow.next = null;
-        ListNode l1 = SortList(head);
-        ListNode l2 = SortList(t);
-        ListNode dummy = new ListNode();
-        ListNode cur = dummy;
-        while (l1 != null && l2 != null)
-        {
-            if (l1.val <= l2.val)
-            {
-                cur.next = l1;
-                l1 = l1.next;
-            }
-            else
-            {
-                cur.next = l2;
-                l2 = l2.next;
-            }
-            cur = cur.next;
-        }
-        cur.next = l1 == null ? l2 : l1;
-        return dummy.next;
-    }
-}
-```
-
-### **TypeScript**
+#### TypeScript
 
 ```ts
 /**
@@ -320,37 +259,36 @@ public class Solution {
  */
 
 function sortList(head: ListNode | null): ListNode | null {
-    if (head == null || head.next == null) return head;
-    // slow and fast pointer to locate the middle node
-    let slow: ListNode = head,
-        fast: ListNode = head.next;
-    while (fast != null && fast.next != null) {
-        slow = slow.next;
+    if (head === null || head.next === null) {
+        return head;
+    }
+    let [slow, fast] = [head, head.next];
+    while (fast !== null && fast.next !== null) {
+        slow = slow.next!;
         fast = fast.next.next;
     }
-    // merge sort
-    let mid: ListNode = slow.next;
+    let [l1, l2] = [head, slow.next];
     slow.next = null;
-    let l1: ListNode = sortList(head);
-    let l2: ListNode = sortList(mid);
-    let dummy: ListNode = new ListNode();
-    let cur: ListNode = dummy;
-    while (l1 != null && l2 != null) {
+    l1 = sortList(l1);
+    l2 = sortList(l2);
+    const dummy = new ListNode();
+    let tail = dummy;
+    while (l1 !== null && l2 !== null) {
         if (l1.val <= l2.val) {
-            cur.next = l1;
+            tail.next = l1;
             l1 = l1.next;
         } else {
-            cur.next = l2;
+            tail.next = l2;
             l2 = l2.next;
         }
-        cur = cur.next;
+        tail = tail.next;
     }
-    cur.next = l1 == null ? l2 : l1;
+    tail.next = l1 ?? l2;
     return dummy.next;
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 // Definition for singly-linked list.
@@ -411,10 +349,98 @@ impl Solution {
 }
 ```
 
-### **...**
+#### JavaScript
 
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var sortList = function (head) {
+    if (head === null || head.next === null) {
+        return head;
+    }
+    let [slow, fast] = [head, head.next];
+    while (fast !== null && fast.next !== null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    let [l1, l2] = [head, slow.next];
+    slow.next = null;
+    l1 = sortList(l1);
+    l2 = sortList(l2);
+    const dummy = new ListNode();
+    let tail = dummy;
+    while (l1 !== null && l2 !== null) {
+        if (l1.val <= l2.val) {
+            tail.next = l1;
+            l1 = l1.next;
+        } else {
+            tail.next = l2;
+            l2 = l2.next;
+        }
+        tail = tail.next;
+    }
+    tail.next = l1 ?? l2;
+    return dummy.next;
+};
 ```
 
+#### C#
+
+```cs
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode slow = head, fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        ListNode l1 = head, l2 = slow.next;
+        slow.next = null;
+        l1 = SortList(l1);
+        l2 = SortList(l2);
+        ListNode dummy = new ListNode();
+        ListNode tail = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        tail.next = l1 != null ? l1 : l2;
+        return dummy.next;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

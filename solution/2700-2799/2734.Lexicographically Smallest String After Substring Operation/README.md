@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2734.Lexicographically%20Smallest%20String%20After%20Substring%20Operation/README.md
+rating: 1405
+source: 第 349 场周赛 Q2
+tags:
+    - 贪心
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [2734. 执行子串操作后的字典序最小字符串](https://leetcode.cn/problems/lexicographically-smallest-string-after-substring-operation)
 
 [English Version](/solution/2700-2799/2734.Lexicographically%20Smallest%20String%20After%20Substring%20Operation/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个仅由小写英文字母组成的字符串 <code>s</code> 。在一步操作中，你可以完成以下行为：</p>
 
@@ -55,15 +68,21 @@
 	<li><code>s</code> 仅由小写英文字母组成</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：贪心
+
+我们可以从左到右遍历字符串 $s$，找到第一个不是 'a' 的字符所在的位置 $i$，然后找到从 $i$ 开始的第一个 'a' 字符所在的位置 $j$，将 $s[i:j]$ 中的字符都减一，最后返回处理后的字符串即可。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 为字符串 $s$ 的长度。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -80,9 +99,7 @@ class Solution:
         return s[:i] + "".join(chr(ord(c) - 1) for c in s[i:j]) + s[j:]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -106,7 +123,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -131,7 +148,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func smallestString(s string) string {
@@ -154,10 +171,64 @@ func smallestString(s string) string {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function smallestString(s: string): string {
+    const cs: string[] = s.split('');
+    const n: number = cs.length;
+    let i: number = 0;
+    while (i < n && cs[i] === 'a') {
+        i++;
+    }
+
+    if (i === n) {
+        cs[n - 1] = 'z';
+        return cs.join('');
+    }
+
+    let j: number = i;
+    while (j < n && cs[j] !== 'a') {
+        const c: number = cs[j].charCodeAt(0);
+        cs[j] = String.fromCharCode(c - 1);
+        j++;
+    }
+
+    return cs.join('');
+}
 ```
 
+#### Rust
+
+```rust
+impl Solution {
+    pub fn smallest_string(s: String) -> String {
+        let mut cs: Vec<char> = s.chars().collect();
+        let n = cs.len();
+        let mut i = 0;
+
+        while i < n && cs[i] == 'a' {
+            i += 1;
+        }
+
+        if i == n {
+            cs[n - 1] = 'z';
+            return cs.into_iter().collect();
+        }
+
+        let mut j = i;
+        while j < n && cs[j] != 'a' {
+            cs[j] = ((cs[j] as u8) - 1) as char;
+            j += 1;
+        }
+
+        cs.into_iter().collect()
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

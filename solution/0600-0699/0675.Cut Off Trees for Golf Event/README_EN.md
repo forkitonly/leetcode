@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0675.Cut%20Off%20Trees%20for%20Golf%20Event/README_EN.md
+tags:
+    - Breadth-First Search
+    - Array
+    - Matrix
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [675. Cut Off Trees for Golf Event](https://leetcode.com/problems/cut-off-trees-for-golf-event)
 
 [中文文档](/solution/0600-0699/0675.Cut%20Off%20Trees%20for%20Golf%20Event/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are asked to cut off all the trees in a forest for a golf event. The forest is represented as an <code>m x n</code> matrix. In this matrix:</p>
 
@@ -57,11 +72,17 @@ Note that you can cut off the first tree at (0, 0) before making any steps.
 	<li>Heights of all trees are <strong>distinct</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -101,7 +122,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -172,7 +193,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -232,7 +253,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 var dirs = [][]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
@@ -297,18 +318,13 @@ func cutOffTree(forest [][]int) int {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 use std::collections::HashSet;
 use std::collections::VecDeque;
 
-const DIRS: [[i32; 2]; 4] = [
-    [-1, 0],
-    [1, 0],
-    [0, -1],
-    [0, 1],
-];
+const DIRS: [[i32; 2]; 4] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
 impl Solution {
     pub fn cut_off_tree(forest: Vec<Vec<i32>>) -> i32 {
@@ -331,13 +347,12 @@ impl Solution {
                         let x = state / col + DIRS[k][0];
                         let y = (state % col) + DIRS[k][1];
                         let nxt = x * col + y;
-                        if
-                            x >= 0 &&
-                            x < row &&
-                            y >= 0 &&
-                            y < col &&
-                            forest[x as usize][y as usize] != 0 &&
-                            !vis.contains(&nxt)
+                        if x >= 0
+                            && x < row
+                            && y >= 0
+                            && y < col
+                            && forest[x as usize][y as usize] != 0
+                            && !vis.contains(&nxt)
                         {
                             queue.push_back(nxt);
                             vis.insert(nxt);
@@ -375,10 +390,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

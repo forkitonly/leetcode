@@ -72,10 +72,21 @@ Press <kbd>Control</kbd> + <kbd>F</kbd>(or <kbd>Command</kbd> + <kbd>F</kbd> on 
 | 2803 | [Factorial Generator](/solution/2800-2899/2803.Factorial%20Generator/README_EN.md)                                                                                                     |      | Easy       | 🔒     |
 | 2804 | [Array Prototype ForEach](/solution/2800-2899/2804.Array%20Prototype%20ForEach/README_EN.md)                                                                                           |      | Easy       | 🔒     |
 | 2805 | [Custom Interval](/solution/2800-2899/2805.Custom%20Interval/README_EN.md)                                                                                                             |      | Medium     | 🔒     |
-| 2821 | [Delay the Resolution of Each Promise](/solution/2800-2899/2821.Delay%20the%20Resolution%20of%20Each%20Promise/README_EN.md)                                                           |      | Easy       | 🔒     |
+| 2821 | [Delay the Resolution of Each Promise](/solution/2800-2899/2821.Delay%20the%20Resolution%20of%20Each%20Promise/README_EN.md)                                                           |      | Medium     | 🔒     |
 | 2822 | [Inversion of Object](/solution/2800-2899/2822.Inversion%20of%20Object/README_EN.md)                                                                                                   |      | Easy       | 🔒     |
 | 2823 | [Deep Object Filter](/solution/2800-2899/2823.Deep%20Object%20Filter/README_EN.md)                                                                                                     |      | Medium     | 🔒     |
 
 ## Copyright
 
-[@Doocs](https://github.com/doocs)
+The copyright of this project belongs to [Doocs](https://github.com/doocs) community. For commercial reprints, please contact [@yanglbme](mailto:contact@yanglibin.info) for authorization. For non-commercial reprints, please indicate the source.
+
+## Contact Us
+
+We welcome everyone to add @yanglbme's personal WeChat (WeChat ID: YLB0109), with the note "leetcode". In the future, we will create algorithm and technology related discussion groups, where we can learn and share experiences together, and make progress together.
+
+| <img src="https://cdn-doocs.oss-cn-shenzhen.aliyuncs.com/gh/doocs/images/qrcode-for-yanglbme-en.png" width="260px" align="left"/> |
+| --------------------------------------------------------------------------------------------------------------------------------- |
+
+## License
+
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

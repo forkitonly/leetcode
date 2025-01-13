@@ -1,8 +1,21 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0081.Search%20in%20Rotated%20Sorted%20Array%20II/README_EN.md
+tags:
+    - Array
+    - Binary Search
+---
+
+<!-- problem:start -->
+
 # [81. Search in Rotated Sorted Array II](https://leetcode.com/problems/search-in-rotated-sorted-array-ii)
 
 [中文文档](/solution/0000-0099/0081.Search%20in%20Rotated%20Sorted%20Array%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is an integer array <code>nums</code> sorted in non-decreasing order (not necessarily with <strong>distinct</strong> values).</p>
 
@@ -33,11 +46,29 @@
 <p>&nbsp;</p>
 <p><strong>Follow up:</strong> This problem is similar to&nbsp;<a href="/problems/search-in-rotated-sorted-array/description/" target="_blank">Search in Rotated Sorted Array</a>, but&nbsp;<code>nums</code> may contain <strong>duplicates</strong>. Would this affect the runtime complexity? How and why?</p>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Binary Search
+
+We define the left boundary $l=0$ and the right boundary $r=n-1$ for the binary search, where $n$ is the length of the array.
+
+During each binary search process, we get the current midpoint $mid=(l+r)/2$.
+
+-   If $nums[mid] \gt nums[r]$, it means that $[l,mid]$ is ordered. At this time, if $nums[l] \le target \le nums[mid]$, it means that $target$ is in $[l,mid]$, otherwise $target$ is in $[mid+1,r]$.
+-   If $nums[mid] \lt nums[r]$, it means that $[mid+1,r]$ is ordered. At this time, if $nums[mid] \lt target \le nums[r]$, it means that $target$ is in $[mid+1,r]$, otherwise $target$ is in $[l,mid]$.
+-   If $nums[mid] = nums[r]$, it means that the elements $nums[mid]$ and $nums[r]$ are equal. At this time, we cannot determine which interval $target$ is in, so we can only decrease $r$ by $1$.
+
+After the binary search ends, if $nums[l] = target$, it means that the target value $target$ exists in the array, otherwise it means it does not exist.
+
+The time complexity is approximately $O(\log n)$, and the space complexity is $O(1)$. Here, $n$ is the length of the array.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -61,7 +92,7 @@ class Solution:
         return nums[l] == target
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -90,7 +121,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -120,7 +151,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func search(nums []int, target int) bool {
@@ -147,7 +178,7 @@ func search(nums []int, target int) bool {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function search(nums: number[], target: number): boolean {
@@ -174,10 +205,8 @@ function search(nums: number[], target: number): boolean {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

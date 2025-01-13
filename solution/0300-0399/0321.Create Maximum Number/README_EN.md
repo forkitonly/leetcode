@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0321.Create%20Maximum%20Number/README_EN.md
+tags:
+    - Stack
+    - Greedy
+    - Array
+    - Two Pointers
+    - Monotonic Stack
+---
+
+<!-- problem:start -->
+
 # [321. Create Maximum Number](https://leetcode.com/problems/create-maximum-number)
 
 [中文文档](/solution/0300-0399/0321.Create%20Maximum%20Number/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given two integer arrays <code>nums1</code> and <code>nums2</code> of lengths <code>m</code> and <code>n</code> respectively. <code>nums1</code> and <code>nums2</code> represent the digits of two numbers. You are also given an integer <code>k</code>.</p>
 
@@ -41,13 +57,20 @@
 	<li><code>1 &lt;= m, n &lt;= 500</code></li>
 	<li><code>0 &lt;= nums1[i], nums2[i] &lt;= 9</code></li>
 	<li><code>1 &lt;= k &lt;= m + n</code></li>
+	<li><code>nums1</code> and <code>nums2</code> do not have leading zeros.</li>
 </ul>
+
+<!-- description:end -->
 
 ## Solutions
 
+<!-- solution:start -->
+
+### Solution 1
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -104,7 +127,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -174,7 +197,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -244,7 +267,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxNumber(nums1 []int, nums2 []int, k int) []int {
@@ -316,7 +339,7 @@ func maxNumber(nums1 []int, nums2 []int, k int) []int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maxNumber(nums1: number[], nums2: number[], k: number): number[] {
@@ -388,10 +411,8 @@ function merge(nums1: number[], nums2: number[]): number[] {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

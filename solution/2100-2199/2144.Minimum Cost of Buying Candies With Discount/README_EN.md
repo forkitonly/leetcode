@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2144.Minimum%20Cost%20of%20Buying%20Candies%20With%20Discount/README_EN.md
+rating: 1260
+source: Biweekly Contest 70 Q1
+tags:
+    - Greedy
+    - Array
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2144. Minimum Cost of Buying Candies With Discount](https://leetcode.com/problems/minimum-cost-of-buying-candies-with-discount)
 
 [中文文档](/solution/2100-2199/2144.Minimum%20Cost%20of%20Buying%20Candies%20With%20Discount/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A shop is selling candies at a discount. For <strong>every two</strong> candies sold, the shop gives a <strong>third</strong> candy for <strong>free</strong>.</p>
 
@@ -56,11 +72,21 @@ Hence, the minimum cost to buy all candies is 5 + 5 = 10.
 	<li><code>1 &lt;= cost[i] &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Greedy Algorithm
+
+We can first sort the candies by price in descending order, then for every three candies, we take two. This ensures that the candies we get for free are the most expensive, thereby minimizing the total cost.
+
+The time complexity is $O(n \log n)$, and the space complexity is $O(\log n)$. Here, $n$ is the number of candies.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -69,7 +95,7 @@ class Solution:
         return sum(cost) - sum(cost[2::3])
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -87,7 +113,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -106,7 +132,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minimumCost(cost []int) (ans int) {
@@ -121,7 +147,7 @@ func minimumCost(cost []int) (ans int) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minimumCost(cost: number[]): number {
@@ -137,10 +163,8 @@ function minimumCost(cost: number[]): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

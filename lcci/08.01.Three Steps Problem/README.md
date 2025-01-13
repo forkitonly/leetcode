@@ -1,16 +1,25 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/lcci/08.01.Three%20Steps%20Problem/README.md
+---
+
+<!-- problem:start -->
+
 # [面试题 08.01. 三步问题](https://leetcode.cn/problems/three-steps-problem-lcci)
 
 [English Version](/lcci/08.01.Three%20Steps%20Problem/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
+
 <p>三步问题。有个小孩正在上楼梯，楼梯有n阶台阶，小孩一次可以上1阶、2阶或3阶。实现一种方法，计算小孩有多少种上楼梯的方式。结果可能很大，你需要对结果模1000000007。</p>
 
 <p> <strong>示例1:</strong></p>
 
 <pre>
-<strong> 输入</strong>：n = 3 
+<strong> 输入</strong>：n = 3
 <strong> 输出</strong>：4
 <strong> 说明</strong>: 有四种走法
 </pre>
@@ -28,11 +37,13 @@
 <li>n范围在[1, 1000000]之间</li>
 </ol>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：递推**
+### 方法一：递推
 
 我们定义 $f[i]$ 表示上第 $i$ 阶台阶的方法数，初始时 $f[1]=1$, $f[2]=2$, $f[3]=4$。答案为 $f[n]$。
 
@@ -42,7 +53,150 @@
 
 时间复杂度 $O(n)$，其中 $n$ 为给定的整数。空间复杂度 $O(1)$。
 
-**方法二：矩阵快速幂加速递推**
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def waysToStep(self, n: int) -> int:
+        a, b, c = 1, 2, 4
+        mod = 10**9 + 7
+        for _ in range(n - 1):
+            a, b, c = b, c, (a + b + c) % mod
+        return a
+```
+
+#### Java
+
+```java
+class Solution {
+    public int waysToStep(int n) {
+        final int mod = (int) 1e9 + 7;
+        int a = 1, b = 2, c = 4;
+        for (int i = 1; i < n; ++i) {
+            int t = a;
+            a = b;
+            b = c;
+            c = (((a + b) % mod) + t) % mod;
+        }
+        return a;
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int waysToStep(int n) {
+        const int mod = 1e9 + 7;
+        int a = 1, b = 2, c = 4;
+        for (int i = 1; i < n; ++i) {
+            int t = a;
+            a = b;
+            b = c;
+            c = (((a + b) % mod) + t) % mod;
+        }
+        return a;
+    }
+};
+```
+
+#### Go
+
+```go
+func waysToStep(n int) int {
+	const mod int = 1e9 + 7
+	a, b, c := 1, 2, 4
+	for i := 1; i < n; i++ {
+		a, b, c = b, c, (a+b+c)%mod
+	}
+	return a
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn ways_to_step(n: i32) -> i32 {
+        let (mut a, mut b, mut c) = (1, 2, 4);
+        let m = 1000000007;
+        for _ in 1..n {
+            let t = a;
+            a = b;
+            b = c;
+            c = (((a + b) % m) + t) % m;
+        }
+        a
+    }
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var waysToStep = function (n) {
+    let [a, b, c] = [1, 2, 4];
+    const mod = 1e9 + 7;
+    for (let i = 1; i < n; ++i) {
+        [a, b, c] = [b, c, (a + b + c) % mod];
+    }
+    return a;
+};
+```
+
+#### C
+
+```c
+int waysToStep(int n) {
+    const int mod = 1e9 + 7;
+    int a = 1, b = 2, c = 4;
+    for (int i = 1; i < n; ++i) {
+        int t = a;
+        a = b;
+        b = c;
+        c = (((a + b) % mod) + t) % mod;
+    }
+    return a;
+}
+```
+
+#### Swift
+
+```swift
+class Solution {
+    func waysToStep(_ n: Int) -> Int {
+        let mod = Int(1e9) + 7
+        var a = 1, b = 2, c = 4
+        if n == 1 { return a }
+        if n == 2 { return b }
+        if n == 3 { return c }
+
+        for _ in 1..<n {
+            let t = a
+            a = b
+            b = c
+            c = ((a + b) % mod + t) % mod
+        }
+        return a
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start-->
+
+### 方法二：矩阵快速幂加速递推
 
 我们设 $F(n)$ 表示一个 $1 \times 3$ 的矩阵 $\begin{bmatrix} F_{n - 1} & F_{n - 2} & F_{n - 3} \end{bmatrix}$，其中 $F_{n - 1}$, $F_{n - 2}$ 和 $F_{n - 3}$ 分别表示上第 $n - 1$ 阶、第 $n - 2$ 阶和第 $n - 3$ 阶台阶的方法数。
 
@@ -70,48 +224,7 @@ $$
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
-
-```python
-class Solution:
-    def waysToStep(self, n: int) -> int:
-        a, b, c = 1, 2, 4
-        mod = 10**9 + 7
-        for _ in range(n - 1):
-            a, b, c = b, c, (a + b + c) % mod
-        return a
-```
-
-```python
-class Solution:
-    def waysToStep(self, n: int) -> int:
-        mod = 10**9 + 7
-
-        def mul(a: List[List[int]], b: List[List[int]]) -> List[List[int]]:
-            m, n = len(a), len(b[0])
-            c = [[0] * n for _ in range(m)]
-            for i in range(m):
-                for j in range(n):
-                    for k in range(len(a[0])):
-                        c[i][j] = (c[i][j] + a[i][k] * b[k][j] % mod) % mod
-            return c
-
-        def pow(a: List[List[int]], n: int) -> List[List[int]]:
-            res = [[4, 2, 1]]
-            while n:
-                if n & 1:
-                    res = mul(res, a)
-                n >>= 1
-                a = mul(a, a)
-            return res
-
-        if n < 4:
-            return 2 ** (n - 1)
-        a = [[1, 1, 0], [1, 0, 1], [1, 0, 0]]
-        return sum(pow(a, n - 4)[0]) % mod
-```
+#### Python3
 
 ```python
 import numpy as np
@@ -122,8 +235,8 @@ class Solution:
         if n < 4:
             return 2 ** (n - 1)
         mod = 10**9 + 7
-        factor = np.mat([(1, 1, 0), (1, 0, 1), (1, 0, 0)], np.dtype("O"))
-        res = np.mat([(4, 2, 1)], np.dtype("O"))
+        factor = np.asmatrix([(1, 1, 0), (1, 0, 1), (1, 0, 0)], np.dtype("O"))
+        res = np.asmatrix([(4, 2, 1)], np.dtype("O"))
         n -= 4
         while n:
             if n & 1:
@@ -133,25 +246,7 @@ class Solution:
         return res.sum() % mod
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
-
-```java
-class Solution {
-    public int waysToStep(int n) {
-        final int mod = (int) 1e9 + 7;
-        int a = 1, b = 2, c = 4;
-        for (int i = 1; i < n; ++i) {
-            int t = a;
-            a = b;
-            b = c;
-            c = (((a + b) % mod) + t) % mod;
-        }
-        return a;
-    }
-}
-```
+#### Java
 
 ```java
 class Solution {
@@ -197,24 +292,7 @@ class Solution {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int waysToStep(int n) {
-        const int mod = 1e9 + 7;
-        int a = 1, b = 2, c = 4;
-        for (int i = 1; i < n; ++i) {
-            int t = a;
-            a = b;
-            b = c;
-            c = (((a + b) % mod) + t) % mod;
-        }
-        return a;
-    }
-};
-```
+#### C++
 
 ```cpp
 class Solution {
@@ -262,18 +340,7 @@ private:
 };
 ```
 
-### **Go**
-
-```go
-func waysToStep(n int) int {
-	const mod int = 1e9 + 7
-	a, b, c := 1, 2, 4
-	for i := 1; i < n; i++ {
-		a, b, c = b, c, (a+b+c)%mod
-	}
-	return a
-}
-```
+#### Go
 
 ```go
 const mod = 1e9 + 7
@@ -319,22 +386,7 @@ func pow(a [][]int, n int) [][]int {
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * @param {number} n
- * @return {number}
- */
-var waysToStep = function (n) {
-    let [a, b, c] = [1, 2, 4];
-    const mod = 1e9 + 7;
-    for (let i = 1; i < n; ++i) {
-        [a, b, c] = [b, c, (a + b + c) % mod];
-    }
-    return a;
-};
-```
+#### JavaScript
 
 ```js
 /**
@@ -388,38 +440,8 @@ function pow(a, n) {
 }
 ```
 
-### **C**
-
-```c
-int waysToStep(int n) {
-    const int mod = 1e9 + 7;
-    int a = 1, b = 2, c = 4;
-    for (int i = 1; i < n; ++i) {
-        int t = a;
-        a = b;
-        b = c;
-        c = (((a + b) % mod) + t) % mod;
-    }
-    return a;
-}
-```
-
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn ways_to_step(n: i32) -> i32 {
-        let (mut a, mut b, mut c) = (1, 2, 4);
-        let m = 1000000007;
-        for _ in 1..n {
-            let t = a;
-            a = b;
-            b = c;
-            c = (((a + b) % m) + t) % m;
-        }
-        a
-    }
-}
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1222.Queens%20That%20Can%20Attack%20the%20King/README_EN.md
+rating: 1391
+source: Weekly Contest 158 Q2
+tags:
+    - Array
+    - Matrix
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [1222. Queens That Can Attack the King](https://leetcode.com/problems/queens-that-can-attack-the-king)
 
 [中文文档](/solution/1200-1299/1222.Queens%20That%20Can%20Attack%20the%20King/README.md)
 
 ## Description
 
-<p>On a <strong>0-indexed</strong> <code>8 x 8</code> chessboard, there can be multiple black queens ad one white king.</p>
+<!-- description:start -->
+
+<p>On a <strong>0-indexed</strong> <code>8 x 8</code> chessboard, there can be multiple black queens and one white king.</p>
 
 <p>You are given a 2D integer array <code>queens</code> where <code>queens[i] = [xQueen<sub>i</sub>, yQueen<sub>i</sub>]</code> represents the position of the <code>i<sup>th</sup></code> black queen on the chessboard. You are also given an integer array <code>king</code> of length <code>2</code> where <code>king = [xKing, yKing]</code> represents the position of the white king.</p>
 
@@ -37,11 +53,25 @@
 	<li>All the given positions are <strong>unique</strong>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Direct Search
+
+First, we store all the positions of the queens in a hash table or a two-dimensional array $s$.
+
+Next, starting from the position of the king, we search in the eight directions: up, down, left, right, upper left, upper right, lower left, and lower right. If there is a queen in a certain direction, we add its position to the answer and stop continuing to search in that direction.
+
+After the search is over, we return the answer.
+
+The time complexity is $O(n^2)$, and the space complexity is $O(n^2)$. In this problem, $n = 8$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -63,7 +93,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -94,7 +124,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -126,7 +156,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func queensAttacktheKing(queens [][]int, king []int) (ans [][]int) {
@@ -154,7 +184,7 @@ func queensAttacktheKing(queens [][]int, king []int) (ans [][]int) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function queensAttacktheKing(queens: number[][], king: number[]): number[][] {
@@ -181,10 +211,8 @@ function queensAttacktheKing(queens: number[][], king: number[]): number[][] {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

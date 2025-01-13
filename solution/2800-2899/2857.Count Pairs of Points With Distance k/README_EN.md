@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2800-2899/2857.Count%20Pairs%20of%20Points%20With%20Distance%20k/README_EN.md
+rating: 2081
+source: Biweekly Contest 113 Q3
+tags:
+    - Bit Manipulation
+    - Array
+    - Hash Table
+---
+
+<!-- problem:start -->
+
 # [2857. Count Pairs of Points With Distance k](https://leetcode.com/problems/count-pairs-of-points-with-distance-k)
 
 [中文文档](/solution/2800-2899/2857.Count%20Pairs%20of%20Points%20With%20Distance%20k/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>2D</strong> integer array <code>coordinates</code> and an integer <code>k</code>, where <code>coordinates[i] = [x<sub>i</sub>, y<sub>i</sub>]</code> are the coordinates of the <code>i<sup>th</sup></code> point in a 2D plane.</p>
 
@@ -38,11 +54,23 @@
 	<li><code>0 &lt;= k &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Hash Table + Enumeration
+
+We can use a hash table $cnt$ to count the occurrence of each point in the array $coordinates$.
+
+Next, we enumerate each point $(x_2, y_2)$ in the array $coordinates$. Since the range of $k$ is $[0, 100]$, and the result of $x_1 \oplus x_2$ or $y_1 \oplus y_2$ is always greater than or equal to $0$, we can enumerate the result $a$ of $x_1 \oplus x_2$ in the range $[0,..k]$. Then, the result of $y_1 \oplus y_2$ is $b = k - a$. In this way, we can calculate the values of $x_1$ and $y_1$, and add the occurrence of $(x_1, y_1)$ to the answer.
+
+The time complexity is $O(n \times k)$, and the space complexity is $O(n)$. Here, $n$ is the length of the array $coordinates$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -58,7 +86,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -79,7 +107,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -101,30 +129,7 @@ public:
 };
 ```
 
-```cpp
-class Solution {
-public:
-    int countPairs(vector<vector<int>>& coordinates, int k) {
-        unordered_map<long long, int> cnt;
-        auto f = [](int x, int y) {
-            return x * 1000000L + y;
-        };
-        int ans = 0;
-        for (auto& c : coordinates) {
-            int x2 = c[0], y2 = c[1];
-            for (int a = 0; a <= k; ++a) {
-                int b = k - a;
-                int x1 = a ^ x2, y1 = b ^ y2;
-                ans += cnt[f(x1, y1)];
-            }
-            ++cnt[f(x2, y2)];
-        }
-        return ans;
-    }
-};
-```
-
-### **Go**
+#### Go
 
 ```go
 func countPairs(coordinates [][]int, k int) (ans int) {
@@ -142,7 +147,7 @@ func countPairs(coordinates [][]int, k int) (ans int) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function countPairs(coordinates: number[][], k: number): number {
@@ -161,10 +166,8 @@ function countPairs(coordinates: number[][], k: number): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

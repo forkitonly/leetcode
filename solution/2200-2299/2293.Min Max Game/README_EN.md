@@ -1,8 +1,23 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2293.Min%20Max%20Game/README_EN.md
+rating: 1241
+source: Weekly Contest 296 Q1
+tags:
+    - Array
+    - Simulation
+---
+
+<!-- problem:start -->
+
 # [2293. Min Max Game](https://leetcode.com/problems/min-max-game)
 
 [中文文档](/solution/2200-2299/2293.Min%20Max%20Game/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> whose length is a power of <code>2</code>.</p>
 
@@ -48,11 +63,21 @@ Third: nums = [1]
 	<li><code>nums.length</code> is a power of <code>2</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Simulation
+
+According to the problem statement, we can simulate the entire process, and the remaining number will be the answer. In implementation, we do not need to create an additional array; we can directly operate on the original array.
+
+The time complexity is $O(n)$, where $n$ is the length of the array $\textit{nums}$. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -66,7 +91,7 @@ class Solution:
         return nums[0]
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -83,7 +108,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -101,7 +126,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minMaxGame(nums []int) int {
@@ -120,7 +145,7 @@ func minMaxGame(nums []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minMaxGame(nums: number[]): number {
@@ -136,7 +161,7 @@ function minMaxGame(nums: number[]): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -147,7 +172,7 @@ impl Solution {
             for i in 0..n {
                 nums[i] = (if (i & 1) == 1 { i32::max } else { i32::min })(
                     nums[i << 1],
-                    nums[(i << 1) | 1]
+                    nums[(i << 1) | 1],
                 );
             }
         }
@@ -156,7 +181,7 @@ impl Solution {
 }
 ```
 
-### **C**
+#### C
 
 ```c
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -175,10 +200,8 @@ int minMaxGame(int* nums, int numsSize) {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

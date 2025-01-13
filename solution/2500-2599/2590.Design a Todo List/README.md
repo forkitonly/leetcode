@@ -1,10 +1,24 @@
-# [2590. 设计一个待办事项清单](https://leetcode.cn/problems/design-a-todo-list)
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2500-2599/2590.Design%20a%20Todo%20List/README.md
+tags:
+    - 设计
+    - 数组
+    - 哈希表
+    - 字符串
+    - 排序
+---
+
+<!-- problem:start -->
+
+# [2590. 设计一个待办事项清单 🔒](https://leetcode.cn/problems/design-a-todo-list)
 
 [English Version](/solution/2500-2599/2590.Design%20a%20Todo%20List/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>设计一个待办事项清单，用户可以添加 <strong>任务</strong> ，标记任务为 <strong>完成状态</strong> ，或获取待办任务列表。用户还可以为任务添加 <strong>标签</strong> ，并可以按照特定标签筛选任务。</p>
 
@@ -59,11 +73,13 @@ todoList.getAllTasks(1); // 返回["Task3", "Task1"]。用户1现在有两个未
 	<li>每个方法最多被调用 <code>100</code> 次。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：哈希表 + 有序集合**
+### 方法一：哈希表 + 有序集合
 
 我们使用哈希表 $tasks$ 记录每个用户的任务集合，其中键为用户 ID，值为一个有序集合，按照任务的截止日期排序。另外用一个变量 $i$ 记录当前任务的 ID。
 
@@ -79,9 +95,7 @@ todoList.getAllTasks(1); // 返回["Task3", "Task1"]。用户1现在有两个未
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 from sortedcontainers import SortedList
@@ -121,9 +135,7 @@ class TodoList:
 # obj.completeTask(userId,taskId)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Task {
@@ -201,10 +213,10 @@ class TodoList {
  */
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
-use std::collections::{ HashMap, HashSet };
+use std::collections::{HashMap, HashSet};
 
 #[derive(Clone)]
 struct Task {
@@ -234,19 +246,16 @@ impl TodoList {
         user_id: i32,
         task_description: String,
         due_date: i32,
-        tags: Vec<String>
+        tags: Vec<String>,
     ) -> i32 {
         if self.user_map.contains_key(&user_id) {
             // Just add the task
-            self.user_map
-                .get_mut(&user_id)
-                .unwrap()
-                .push(Task {
-                    task_id: self.id,
-                    description: task_description,
-                    tags: tags.into_iter().collect::<HashSet<String>>(),
-                    due_date,
-                });
+            self.user_map.get_mut(&user_id).unwrap().push(Task {
+                task_id: self.id,
+                description: task_description,
+                tags: tags.into_iter().collect::<HashSet<String>>(),
+                due_date,
+            });
             // Increase the global id
             self.id += 1;
             return self.id - 1;
@@ -259,41 +268,34 @@ impl TodoList {
                 description: task_description,
                 tags: tags.into_iter().collect::<HashSet<String>>(),
                 due_date,
-            }]
+            }],
         );
         self.id += 1;
         self.id - 1
     }
 
     fn get_all_tasks(&self, user_id: i32) -> Vec<String> {
-        if
-            !self.user_map.contains_key(&user_id) ||
-            self.user_map.get(&user_id).unwrap().is_empty()
+        if !self.user_map.contains_key(&user_id) || self.user_map.get(&user_id).unwrap().is_empty()
         {
             return vec![];
         }
         // Get the task vector
         let mut ret_vec = (*self.user_map.get(&user_id).unwrap()).clone();
         // Sort by due date
-        ret_vec.sort_by(|lhs, rhs| { lhs.due_date.cmp(&rhs.due_date) });
+        ret_vec.sort_by(|lhs, rhs| lhs.due_date.cmp(&rhs.due_date));
         // Return the description vector
-        ret_vec
-            .into_iter()
-            .map(|x| x.description)
-            .collect()
+        ret_vec.into_iter().map(|x| x.description).collect()
     }
 
     fn get_tasks_for_tag(&self, user_id: i32, tag: String) -> Vec<String> {
-        if
-            !self.user_map.contains_key(&user_id) ||
-            self.user_map.get(&user_id).unwrap().is_empty()
+        if !self.user_map.contains_key(&user_id) || self.user_map.get(&user_id).unwrap().is_empty()
         {
             return vec![];
         }
         // Get the task vector
         let mut ret_vec = (*self.user_map.get(&user_id).unwrap()).clone();
         // Sort by due date
-        ret_vec.sort_by(|lhs, rhs| { lhs.due_date.cmp(&rhs.due_date) });
+        ret_vec.sort_by(|lhs, rhs| lhs.due_date.cmp(&rhs.due_date));
         // Return the description vector
         ret_vec
             .into_iter()
@@ -303,9 +305,7 @@ impl TodoList {
     }
 
     fn complete_task(&mut self, user_id: i32, task_id: i32) {
-        if
-            !self.user_map.contains_key(&user_id) ||
-            self.user_map.get(&user_id).unwrap().is_empty()
+        if !self.user_map.contains_key(&user_id) || self.user_map.get(&user_id).unwrap().is_empty()
         {
             return;
         }
@@ -317,22 +317,8 @@ impl TodoList {
 }
 ```
 
-### **C++**
-
-```cpp
-
-```
-
-### **Go**
-
-```go
-
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

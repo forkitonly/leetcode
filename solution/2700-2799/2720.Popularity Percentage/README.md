@@ -1,10 +1,20 @@
-# [2720. 受欢迎度百分比](https://leetcode.cn/problems/popularity-percentage)
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2720.Popularity%20Percentage/README.md
+tags:
+    - 数据库
+---
+
+<!-- problem:start -->
+
+# [2720. 受欢迎度百分比 🔒](https://leetcode.cn/problems/popularity-percentage)
 
 [English Version](/solution/2700-2799/2720.Popularity%20Percentage/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>表：<code>Friends</code></p>
 
@@ -15,15 +25,15 @@
 | user1       | int  |
 | user2       | int  |
 +-------------+------+
-(user1, user2) 是该表的主键。 
-每一行包含关于用户1和用户2是朋友的信息。 
+(user1, user2) 是该表的主键(具有唯一值的列)。 
+每一行包含关于朋友关系的信息，其中 user1 和 user2 是朋友。 
 </pre>
 
 <p>编写一条 SQL 查询，找出 Meta/Facebook 平台上每个用户的受欢迎度的百分比。受欢迎度百分比定义为用户拥有的朋友总数除以平台上的总用户数，然后乘以 100，并&nbsp;<strong>四舍五入保留 2 位小数&nbsp;</strong>。</p>
 
 <p>返回按照 <code>user1</code> <strong>升序</strong> 排序的结果表。</p>
 
-<p>查询结果的格式如下所示。</p>
+<p>查询结果格式如下示例所示。</p>
 
 <p>&nbsp;</p>
 
@@ -72,15 +82,17 @@ Friends 表:
 - 用户 "9" 与 3 是朋友。因此，用户 9 的受欢迎度百分比计算为（1/9）* 100 = 11.11。 
 user1 按升序排序。</pre>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一
 
 <!-- tabs:start -->
 
-### **SQL**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### MySQL
 
 ```sql
 # Write your MySQL query statement below
@@ -102,3 +114,7 @@ ORDER BY 1;
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

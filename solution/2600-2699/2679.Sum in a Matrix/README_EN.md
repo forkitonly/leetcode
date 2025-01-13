@@ -1,8 +1,26 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2600-2699/2679.Sum%20in%20a%20Matrix/README_EN.md
+rating: 1333
+source: Biweekly Contest 104 Q2
+tags:
+    - Array
+    - Matrix
+    - Sorting
+    - Simulation
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [2679. Sum in a Matrix](https://leetcode.com/problems/sum-in-a-matrix)
 
 [中文文档](/solution/2600-2699/2679.Sum%20in%20a%20Matrix/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> 2D integer array <code>nums</code>. Initially, your score is <code>0</code>. Perform the following operations until the matrix becomes empty:</p>
 
@@ -37,11 +55,17 @@
 	<li><code>0 &lt;= nums[i][j] &lt;= 10<sup>3</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -51,7 +75,7 @@ class Solution:
         return sum(map(max, zip(*nums)))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -72,7 +96,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -94,7 +118,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func matrixSum(nums [][]int) (ans int) {
@@ -112,7 +136,7 @@ func matrixSum(nums [][]int) (ans int) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function matrixSum(nums: number[][]): number {
@@ -131,57 +155,23 @@ function matrixSum(nums: number[][]): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
-    pub fn matrix_sum(nums: Vec<Vec<i32>>) -> i32 {
-        let mut nums = nums;
-        for row in nums.iter_mut() {
+    pub fn matrix_sum(mut nums: Vec<Vec<i32>>) -> i32 {
+        for row in &mut nums {
             row.sort();
         }
-        let transposed: Vec<Vec<i32>> = (0..nums[0].len())
-            .map(|i| {
-                nums.iter()
-                    .map(|row| row[i])
-                    .collect()
-            })
-            .collect();
-
-        transposed
-            .iter()
-            .map(|row| row.iter().max().unwrap())
+        (0..nums[0].len())
+            .map(|col| nums.iter().map(|row| row[col]).max().unwrap())
             .sum()
     }
 }
 ```
 
-```rust
-impl Solution {
-    pub fn matrix_sum(nums: Vec<Vec<i32>>) -> i32 {
-        let mut nums = nums.clone();
-        for row in nums.iter_mut() {
-            row.sort();
-        }
-
-        let mut ans = 0;
-        for j in 0..nums[0].len() {
-            let mut mx = 0;
-            for row in &nums {
-                mx = mx.max(row[j]);
-            }
-            ans += mx;
-        }
-
-        ans
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

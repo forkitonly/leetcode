@@ -1,8 +1,22 @@
-# [1197. Minimum Knight Moves](https://leetcode.com/problems/minimum-knight-moves)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1197.Minimum%20Knight%20Moves/README_EN.md
+rating: 1722
+source: Biweekly Contest 9 Q2
+tags:
+    - Breadth-First Search
+---
+
+<!-- problem:start -->
+
+# [1197. Minimum Knight Moves 🔒](https://leetcode.com/problems/minimum-knight-moves)
 
 [中文文档](/solution/1100-1199/1197.Minimum%20Knight%20Moves/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>In an <strong>infinite</strong> chess board with coordinates from <code>-infinity</code> to <code>+infinity</code>, you have a <strong>knight</strong> at square <code>[0, 0]</code>.</p>
 
@@ -35,13 +49,26 @@
 	<li><code>0 &lt;= |x| + |y| &lt;= 300</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-BFS.
+<!-- solution:start -->
+
+### Solution 1: BFS
+
+This problem can be solved using the BFS shortest path model. The search space for this problem is not large, so we can directly use the naive BFS. The solution below also provides the code for bidirectional BFS for reference.
+
+Bidirectional BFS is a common optimization method for BFS. The main implementation ideas are as follows:
+
+1. Create two queues, q1 and q2, for "start -> end" and "end -> start" search directions, respectively.
+2. Create two hash maps, m1 and m2, to record the visited nodes and their corresponding expansion times (steps).
+3. During each search, prioritize the queue with fewer elements for search expansion. If a node visited from the other direction is found during the expansion, it means the shortest path has been found.
+4. If one of the queues is empty, it means that the search in the current direction cannot continue, indicating that the start and end points are not connected, and there is no need to continue the search.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -64,7 +91,193 @@ class Solution:
         return -1
 ```
 
-Two-end BFS:
+#### Java
+
+```java
+class Solution {
+    public int minKnightMoves(int x, int y) {
+        x += 310;
+        y += 310;
+        int ans = 0;
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[] {310, 310});
+        boolean[][] vis = new boolean[700][700];
+        vis[310][310] = true;
+        int[][] dirs = {{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}};
+        while (!q.isEmpty()) {
+            for (int k = q.size(); k > 0; --k) {
+                int[] p = q.poll();
+                if (p[0] == x && p[1] == y) {
+                    return ans;
+                }
+                for (int[] dir : dirs) {
+                    int c = p[0] + dir[0];
+                    int d = p[1] + dir[1];
+                    if (!vis[c][d]) {
+                        vis[c][d] = true;
+                        q.offer(new int[] {c, d});
+                    }
+                }
+            }
+            ++ans;
+        }
+        return -1;
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int minKnightMoves(int x, int y) {
+        x += 310;
+        y += 310;
+        int ans = 0;
+        queue<pair<int, int>> q;
+        q.push({310, 310});
+        vector<vector<bool>> vis(700, vector<bool>(700));
+        vis[310][310] = true;
+        vector<vector<int>> dirs = {{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}};
+        while (!q.empty()) {
+            for (int k = q.size(); k > 0; --k) {
+                auto p = q.front();
+                q.pop();
+                if (p.first == x && p.second == y) return ans;
+                for (auto& dir : dirs) {
+                    int c = p.first + dir[0], d = p.second + dir[1];
+                    if (!vis[c][d]) {
+                        vis[c][d] = true;
+                        q.push({c, d});
+                    }
+                }
+            }
+            ++ans;
+        }
+        return -1;
+    }
+};
+```
+
+#### Go
+
+```go
+func minKnightMoves(x int, y int) int {
+	x, y = x+310, y+310
+	ans := 0
+	q := [][]int{{310, 310}}
+	vis := make([][]bool, 700)
+	for i := range vis {
+		vis[i] = make([]bool, 700)
+	}
+	dirs := [][]int{{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}}
+	for len(q) > 0 {
+		for k := len(q); k > 0; k-- {
+			p := q[0]
+			q = q[1:]
+			if p[0] == x && p[1] == y {
+				return ans
+			}
+			for _, dir := range dirs {
+				c, d := p[0]+dir[0], p[1]+dir[1]
+				if !vis[c][d] {
+					vis[c][d] = true
+					q = append(q, []int{c, d})
+				}
+			}
+		}
+		ans++
+	}
+	return -1
+}
+```
+
+#### Rust
+
+```rust
+use std::collections::VecDeque;
+
+const DIR: [(i32, i32); 8] = [
+    (-2, 1),
+    (2, 1),
+    (-1, 2),
+    (1, 2),
+    (2, -1),
+    (-2, -1),
+    (1, -2),
+    (-1, -2),
+];
+
+impl Solution {
+    #[allow(dead_code)]
+    pub fn min_knight_moves(x: i32, y: i32) -> i32 {
+        // The original x, y are from [-300, 300]
+        // Let's shift them to [0, 600]
+        let x: i32 = x + 300;
+        let y: i32 = y + 300;
+        let mut ret = -1;
+        let mut vis: Vec<Vec<bool>> = vec![vec![false; 618]; 618];
+        // <X, Y, Current Steps>
+        let mut q: VecDeque<(i32, i32, i32)> = VecDeque::new();
+
+        q.push_back((300, 300, 0));
+
+        while !q.is_empty() {
+            let (i, j, s) = q.front().unwrap().clone();
+            q.pop_front();
+            if i == x && j == y {
+                ret = s;
+                break;
+            }
+            Self::enqueue(&mut vis, &mut q, i, j, s);
+        }
+
+        ret
+    }
+
+    #[allow(dead_code)]
+    fn enqueue(
+        vis: &mut Vec<Vec<bool>>,
+        q: &mut VecDeque<(i32, i32, i32)>,
+        i: i32,
+        j: i32,
+        cur_step: i32,
+    ) {
+        let next_step = cur_step + 1;
+        for (dx, dy) in DIR {
+            let x = i + dx;
+            let y = j + dy;
+            if Self::check_bounds(x, y) || vis[x as usize][y as usize] {
+                // This <X, Y> pair is either out of bound, or has been visited before
+                // Just ignore this pair
+                continue;
+            }
+            // Otherwise, add the pair to the queue
+            // Also remember to update the vis vector
+            vis[x as usize][y as usize] = true;
+            q.push_back((x, y, next_step));
+        }
+    }
+
+    #[allow(dead_code)]
+    fn check_bounds(i: i32, j: i32) -> bool {
+        i < 0 || i > 600 || j < 0 || j > 600
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
 
 ```python
 class Solution:
@@ -103,42 +316,7 @@ class Solution:
         return -1
 ```
 
-### **Java**
-
-```java
-class Solution {
-    public int minKnightMoves(int x, int y) {
-        x += 310;
-        y += 310;
-        int ans = 0;
-        Queue<int[]> q = new ArrayDeque<>();
-        q.offer(new int[] {310, 310});
-        boolean[][] vis = new boolean[700][700];
-        vis[310][310] = true;
-        int[][] dirs = {{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}};
-        while (!q.isEmpty()) {
-            for (int k = q.size(); k > 0; --k) {
-                int[] p = q.poll();
-                if (p[0] == x && p[1] == y) {
-                    return ans;
-                }
-                for (int[] dir : dirs) {
-                    int c = p[0] + dir[0];
-                    int d = p[1] + dir[1];
-                    if (!vis[c][d]) {
-                        vis[c][d] = true;
-                        q.offer(new int[] {c, d});
-                    }
-                }
-            }
-            ++ans;
-        }
-        return -1;
-    }
-}
-```
-
-Two-end BFS:
+#### Java
 
 ```java
 class Solution {
@@ -190,41 +368,7 @@ class Solution {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int minKnightMoves(int x, int y) {
-        x += 310;
-        y += 310;
-        int ans = 0;
-        queue<pair<int, int>> q;
-        q.push({310, 310});
-        vector<vector<bool>> vis(700, vector<bool>(700));
-        vis[310][310] = true;
-        vector<vector<int>> dirs = {{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}};
-        while (!q.empty()) {
-            for (int k = q.size(); k > 0; --k) {
-                auto p = q.front();
-                q.pop();
-                if (p.first == x && p.second == y) return ans;
-                for (auto& dir : dirs) {
-                    int c = p.first + dir[0], d = p.second + dir[1];
-                    if (!vis[c][d]) {
-                        vis[c][d] = true;
-                        q.push({c, d});
-                    }
-                }
-            }
-            ++ans;
-        }
-        return -1;
-    }
-};
-```
-
-Two-end BFS:
+#### C++
 
 ```cpp
 typedef pair<int, int> PII;
@@ -272,85 +416,58 @@ public:
 };
 ```
 
-### **Rust**
+#### Go
 
-```rust
-use std::collections::VecDeque;
-
-const DIR: [(i32, i32); 8] = [
-    (-2, 1),
-    (2, 1),
-    (-1, 2),
-    (1, 2),
-    (2, -1),
-    (-2, -1),
-    (1, -2),
-    (-1, -2),
-];
-
-impl Solution {
-    #[allow(dead_code)]
-    pub fn min_knight_moves(x: i32, y: i32) -> i32 {
-        // The original x, y are from [-300, 300]
-        // Let's shift them to [0, 600]
-        let x: i32 = x + 300;
-        let y: i32 = y + 300;
-        let mut ret = -1;
-        let mut vis: Vec<Vec<bool>> = vec![vec![false; 618]; 618];
-        // <X, Y, Current Steps>
-        let mut q: VecDeque<(i32, i32, i32)> = VecDeque::new();
-
-        q.push_back((300, 300, 0));
-
-        while !q.is_empty() {
-            let (i, j, s) = q.front().unwrap().clone();
-            q.pop_front();
-            if i == x && j == y {
-                ret = s;
-                break;
-            }
-            Self::enqueue(&mut vis, &mut q, i, j, s);
-        }
-
-        ret
-    }
-
-    #[allow(dead_code)]
-    fn enqueue(
-        vis: &mut Vec<Vec<bool>>,
-        q: &mut VecDeque<(i32, i32, i32)>,
-        i: i32,
-        j: i32,
-        cur_step: i32
-    ) {
-        let next_step = cur_step + 1;
-        for (dx, dy) in DIR {
-            let x = i + dx;
-            let y = j + dy;
-            if Self::check_bounds(x, y) || vis[x as usize][y as usize] {
-                // This <X, Y> pair is either out of bound, or has been visited before
-                // Just ignore this pair
-                continue;
-            }
-            // Otherwise, add the pair to the queue
-            // Also remember to update the vis vector
-            vis[x as usize][y as usize] = true;
-            q.push_back((x, y, next_step));
-        }
-    }
-
-    #[allow(dead_code)]
-    fn check_bounds(i: i32, j: i32) -> bool {
-        i < 0 || i > 600 || j < 0 || j > 600
-    }
+```go
+func minKnightMoves(x int, y int) int {
+	if x == 0 && y == 0 {
+		return 0
+	}
+	n := 700
+	x, y = x+310, y+310
+	q1, q2 := []int{310*700 + 310}, []int{x*n + y}
+	m1, m2 := map[int]int{310*700 + 310: 0}, map[int]int{x*n + y: 0}
+	dirs := [][]int{{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}}
+	extend := func() int {
+		for k := len(q1); k > 0; k-- {
+			p := q1[0]
+			q1 = q1[1:]
+			i, j := p/n, p%n
+			step := m1[i*n+j]
+			for _, dir := range dirs {
+				x, y := i+dir[0], j+dir[1]
+				t := x*n + y
+				if _, ok := m1[t]; ok {
+					continue
+				}
+				if v, ok := m2[t]; ok {
+					return step + 1 + v
+				}
+				m1[t] = step + 1
+				q1 = append(q1, t)
+			}
+		}
+		return -1
+	}
+	for len(q1) > 0 && len(q2) > 0 {
+		if len(q1) <= len(q2) {
+			q1, q2 = q2, q1
+			m1, m2 = m2, m1
+		}
+		t := extend()
+		if t != -1 {
+			return t
+		}
+	}
+	return -1
 }
 ```
 
-Two-end BFS:
+#### Rust
 
 ```rust
-use std::collections::VecDeque;
 use std::collections::HashMap;
+use std::collections::VecDeque;
 
 const DIR: [(i32, i32); 8] = [
     (-2, 1),
@@ -404,17 +521,14 @@ impl Solution {
     fn extend(
         map_to: &mut HashMap<i32, i32>,
         map_from: &mut HashMap<i32, i32>,
-        cur_q: &mut VecDeque<(i32, i32)>
+        cur_q: &mut VecDeque<(i32, i32)>,
     ) -> i32 {
         let n = cur_q.len();
         for _ in 0..n {
             let (i, j) = cur_q.front().unwrap().clone();
             cur_q.pop_front();
             // The cur_step here must exist
-            let cur_step = map_to
-                .get(&(601 * i + j))
-                .unwrap()
-                .clone();
+            let cur_step = map_to.get(&(601 * i + j)).unwrap().clone();
             for (dx, dy) in DIR {
                 let x = i + dx;
                 let y = j + dy;
@@ -426,14 +540,7 @@ impl Solution {
                 // Check if this node has been visited by the other side
                 if map_from.contains_key(&(601 * x + y)) {
                     // We found the node
-                    return (
-                        cur_step +
-                        1 +
-                        map_from
-                            .get(&(601 * x + y))
-                            .unwrap()
-                            .clone()
-                    );
+                    return (cur_step + 1 + map_from.get(&(601 * x + y)).unwrap().clone());
                 }
                 // Otherwise, update map_to and push the new node to queue
                 map_to.insert(601 * x + y, cur_step + 1);
@@ -445,90 +552,8 @@ impl Solution {
 }
 ```
 
-### **Go**
-
-Two-end BFS:
-
-```go
-func minKnightMoves(x int, y int) int {
-	x, y = x+310, y+310
-	ans := 0
-	q := [][]int{{310, 310}}
-	vis := make([][]bool, 700)
-	for i := range vis {
-		vis[i] = make([]bool, 700)
-	}
-	dirs := [][]int{{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}}
-	for len(q) > 0 {
-		for k := len(q); k > 0; k-- {
-			p := q[0]
-			q = q[1:]
-			if p[0] == x && p[1] == y {
-				return ans
-			}
-			for _, dir := range dirs {
-				c, d := p[0]+dir[0], p[1]+dir[1]
-				if !vis[c][d] {
-					vis[c][d] = true
-					q = append(q, []int{c, d})
-				}
-			}
-		}
-		ans++
-	}
-	return -1
-}
-```
-
-```go
-func minKnightMoves(x int, y int) int {
-	if x == 0 && y == 0 {
-		return 0
-	}
-	n := 700
-	x, y = x+310, y+310
-	q1, q2 := []int{310*700 + 310}, []int{x*n + y}
-	m1, m2 := map[int]int{310*700 + 310: 0}, map[int]int{x*n + y: 0}
-	dirs := [][]int{{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}}
-	extend := func() int {
-		for k := len(q1); k > 0; k-- {
-			p := q1[0]
-			q1 = q1[1:]
-			i, j := p/n, p%n
-			step := m1[i*n+j]
-			for _, dir := range dirs {
-				x, y := i+dir[0], j+dir[1]
-				t := x*n + y
-				if _, ok := m1[t]; ok {
-					continue
-				}
-				if v, ok := m2[t]; ok {
-					return step + 1 + v
-				}
-				m1[t] = step + 1
-				q1 = append(q1, t)
-			}
-		}
-		return -1
-	}
-	for len(q1) > 0 && len(q2) > 0 {
-		if len(q1) <= len(q2) {
-			q1, q2 = q2, q1
-			m1, m2 = m2, m1
-		}
-		t := extend()
-		if t != -1 {
-			return t
-		}
-	}
-	return -1
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

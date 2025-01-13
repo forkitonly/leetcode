@@ -1,8 +1,20 @@
-# [2720. Popularity Percentage](https://leetcode.com/problems/popularity-percentage)
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2720.Popularity%20Percentage/README_EN.md
+tags:
+    - Database
+---
+
+<!-- problem:start -->
+
+# [2720. Popularity Percentage 🔒](https://leetcode.com/problems/popularity-percentage)
 
 [中文文档](/solution/2700-2799/2720.Popularity%20Percentage/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Table: <code>Friends</code></p>
 
@@ -13,15 +25,15 @@
 | user1       | int  |
 | user2       | int  |
 +-------------+------+
-(user1, user2) is the primary key of this table.
+(user1, user2) is the primary key (combination of unique values) of this table.
 Each row contains information about friendship where user1 and user2 are friends.
 </pre>
 
-<p>Write an SQL query to find the popularity percentage for each user on Meta/Facebook. The popularity percentage is defined as the total number of friends the user has divided by the total number of users on the platform, then converted into a percentage by multiplying by 100, <strong>rounded to 2 decimal places</strong>.</p>
+<p>Write a solution to find the popularity percentage for each user on Meta/Facebook. The popularity percentage is defined as the total number of friends the user has divided by the total number of users on the platform, then converted into a percentage by multiplying by 100, <strong>rounded to 2 decimal places</strong>.</p>
 
 <p>Return <em>the result table ordered by</em> <code>user1</code> <em>in <strong>ascending</strong> order.</em></p>
 
-<p>The query result format is in the following example.</p>
+<p>The result format is in the following example.</p>
 
 <p>&nbsp;</p>
 <p><strong class="example">Example 1:</strong></p>
@@ -70,11 +82,17 @@ There are total 9 users on the platform.
 user1 is sorted in ascending order.
 </pre>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1
 
 <!-- tabs:start -->
 
-### **SQL**
+#### MySQL
 
 ```sql
 # Write your MySQL query statement below
@@ -96,3 +114,7 @@ ORDER BY 1;
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

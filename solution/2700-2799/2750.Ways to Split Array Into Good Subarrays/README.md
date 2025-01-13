@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2750.Ways%20to%20Split%20Array%20Into%20Good%20Subarrays/README.md
+rating: 1597
+source: 第 351 场周赛 Q3
+tags:
+    - 数组
+    - 数学
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [2750. 将数组划分成若干好子数组的方式](https://leetcode.cn/problems/ways-to-split-array-into-good-subarrays)
 
 [English Version](/solution/2700-2799/2750.Ways%20to%20Split%20Array%20Into%20Good%20Subarrays/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个二元数组 <code>nums</code> 。</p>
 
@@ -43,11 +57,13 @@
 	<li><code>0 &lt;= nums[i] &lt;= 1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：乘法原理**
+### 方法一：乘法原理
 
 根据题目描述，我们可以在两个 $1$ 之间画一条分割线，假设两个 $1$ 之间的下标分别为 $j$ 和 $i$，那么可以画的不同分割线的数量为 $i - j$。我们找出所有满足条件的 $j$ 和 $i$，然后将所有的 $i - j$ 相乘即可。如果找不到两个 $1$ 之间的分割线，那么说明数组中不存在 $1$，此时答案为 $0$。
 
@@ -55,9 +71,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -73,9 +87,7 @@ class Solution:
         return 0 if j == -1 else ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -96,7 +108,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -118,7 +130,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numberOfGoodSubarraySplits(nums []int) int {
@@ -140,7 +152,7 @@ func numberOfGoodSubarraySplits(nums []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function numberOfGoodSubarraySplits(nums: number[]): number {
@@ -161,7 +173,7 @@ function numberOfGoodSubarraySplits(nums: number[]): number {
 }
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -183,10 +195,8 @@ public class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

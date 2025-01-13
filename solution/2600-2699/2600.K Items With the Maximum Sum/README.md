@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2600-2699/2600.K%20Items%20With%20the%20Maximum%20Sum/README.md
+rating: 1434
+source: 第 338 场周赛 Q1
+tags:
+    - 贪心
+    - 数学
+---
+
+<!-- problem:start -->
+
 # [2600. K 件物品的最大和](https://leetcode.cn/problems/k-items-with-the-maximum-sum)
 
 [English Version](/solution/2600-2699/2600.K%20Items%20With%20the%20Maximum%20Sum/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>袋子中装有一些物品，每个物品上都标记着数字 <code>1</code> 、<code>0</code> 或 <code>-1</code> 。</p>
 
@@ -48,11 +61,13 @@
 	<li><code>0 &lt;= k &lt;= numOnes + numZeros + numNegOnes</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：贪心**
+### 方法一：贪心
 
 根据题目描述，我们应该尽可能多地取标记为 $1$ 的物品，然后取标记为 $0$ 的物品，最后取标记为 $-1$ 的物品。
 
@@ -66,9 +81,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -82,9 +95,7 @@ class Solution:
         return numOnes - (k - numOnes - numZeros)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -100,7 +111,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -117,7 +128,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func kItemsWithMaximumSum(numOnes int, numZeros int, numNegOnes int, k int) int {
@@ -131,7 +142,7 @@ func kItemsWithMaximumSum(numOnes int, numZeros int, numNegOnes int, k int) int 
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function kItemsWithMaximumSum(
@@ -150,7 +161,30 @@ function kItemsWithMaximumSum(
 }
 ```
 
-### **C#**
+#### Rust
+
+```rust
+impl Solution {
+    pub fn k_items_with_maximum_sum(
+        num_ones: i32,
+        num_zeros: i32,
+        num_neg_ones: i32,
+        k: i32,
+    ) -> i32 {
+        if num_ones > k {
+            return k;
+        }
+
+        if num_ones + num_zeros > k {
+            return num_ones;
+        }
+
+        num_ones - (k - num_ones - num_zeros)
+    }
+}
+```
+
+#### C#
 
 ```cs
 public class Solution {
@@ -166,33 +200,8 @@ public class Solution {
 }
 ```
 
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn k_items_with_maximum_sum(
-        num_ones: i32,
-        num_zeros: i32,
-        num_neg_ones: i32,
-        k: i32
-    ) -> i32 {
-        if num_ones > k {
-            return k;
-        }
-
-        if num_ones + num_zeros > k {
-            return num_ones;
-        }
-
-        num_ones - (k - num_ones - num_zeros)
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

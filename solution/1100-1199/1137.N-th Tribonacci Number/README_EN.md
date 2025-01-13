@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1137.N-th%20Tribonacci%20Number/README_EN.md
+rating: 1142
+source: Weekly Contest 147 Q1
+tags:
+    - Memoization
+    - Math
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [1137. N-th Tribonacci Number](https://leetcode.com/problems/n-th-tribonacci-number)
 
 [中文文档](/solution/1100-1199/1137.N-th%20Tribonacci%20Number/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>The Tribonacci sequence T<sub>n</sub> is defined as follows:&nbsp;</p>
 
@@ -36,11 +52,25 @@ T_4 = 1 + 1 + 2 = 4
 	<li>The answer is guaranteed to fit within a 32-bit integer, ie. <code>answer &lt;= 2^31 - 1</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Dynamic Programming
+
+According to the recurrence relation given in the problem, we can use dynamic programming to solve it.
+
+We define three variables $a$, $b$, $c$ to represent $T_{n-3}$, $T_{n-2}$, $T_{n-1}$, respectively, with initial values of $0$, $1$, $1$.
+
+Then we decrease $n$ to $0$, updating the values of $a$, $b$, $c$ each time, until $n$ is $0$, at which point the answer is $a$.
+
+The time complexity is $O(n)$, and the space complexity is $O(1)$. Here, $n$ is the given integer.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -51,57 +81,7 @@ class Solution:
         return a
 ```
 
-```python
-class Solution:
-    def tribonacci(self, n: int) -> int:
-        def mul(a: List[List[int]], b: List[List[int]]) -> List[List[int]]:
-            m, n = len(a), len(b[0])
-            c = [[0] * n for _ in range(m)]
-            for i in range(m):
-                for j in range(n):
-                    for k in range(len(a[0])):
-                        c[i][j] = c[i][j] + a[i][k] * b[k][j]
-            return c
-
-        def pow(a: List[List[int]], n: int) -> List[List[int]]:
-            res = [[1, 1, 0]]
-            while n:
-                if n & 1:
-                    res = mul(res, a)
-                n >>= 1
-                a = mul(a, a)
-            return res
-
-        if n == 0:
-            return 0
-        if n < 3:
-            return 1
-        a = [[1, 1, 0], [1, 0, 1], [1, 0, 0]]
-        return sum(pow(a, n - 3)[0])
-```
-
-```python
-import numpy as np
-
-
-class Solution:
-    def tribonacci(self, n: int) -> int:
-        if n == 0:
-            return 0
-        if n < 3:
-            return 1
-        factor = np.mat([(1, 1, 0), (1, 0, 1), (1, 0, 0)], np.dtype("O"))
-        res = np.mat([(1, 1, 0)], np.dtype("O"))
-        n -= 3
-        while n:
-            if n & 1:
-                res *= factor
-            factor *= factor
-            n >>= 1
-        return res.sum()
-```
-
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -117,6 +97,183 @@ class Solution {
     }
 }
 ```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int tribonacci(int n) {
+        long long a = 0, b = 1, c = 1;
+        while (n--) {
+            long long d = a + b + c;
+            a = b;
+            b = c;
+            c = d;
+        }
+        return (int) a;
+    }
+};
+```
+
+#### Go
+
+```go
+func tribonacci(n int) int {
+	a, b, c := 0, 1, 1
+	for i := 0; i < n; i++ {
+		a, b, c = b, c, a+b+c
+	}
+	return a
+}
+```
+
+#### TypeScript
+
+```ts
+function tribonacci(n: number): number {
+    if (n === 0) {
+        return 0;
+    }
+    if (n < 3) {
+        return 1;
+    }
+    const a = [
+        [1, 1, 0],
+        [1, 0, 1],
+        [1, 0, 0],
+    ];
+    return pow(a, n - 3)[0].reduce((a, b) => a + b);
+}
+
+function mul(a: number[][], b: number[][]): number[][] {
+    const [m, n] = [a.length, b[0].length];
+    const c = Array.from({ length: m }, () => Array.from({ length: n }, () => 0));
+    for (let i = 0; i < m; ++i) {
+        for (let j = 0; j < n; ++j) {
+            for (let k = 0; k < b.length; ++k) {
+                c[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+    return c;
+}
+
+function pow(a: number[][], n: number): number[][] {
+    let res = [[1, 1, 0]];
+    while (n) {
+        if (n & 1) {
+            res = mul(res, a);
+        }
+        a = mul(a, a);
+        n >>= 1;
+    }
+    return res;
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var tribonacci = function (n) {
+    let a = 0;
+    let b = 1;
+    let c = 1;
+    while (n--) {
+        let d = a + b + c;
+        a = b;
+        b = c;
+        c = d;
+    }
+    return a;
+};
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param Integer $n
+     * @return Integer
+     */
+    function tribonacci($n) {
+        if ($n == 0) {
+            return 0;
+        } elseif ($n == 1 || $n == 2) {
+            return 1;
+        }
+        $dp = [0, 1, 1];
+        for ($i = 3; $i <= $n; $i++) {
+            $dp[$i] = $dp[$i - 1] + $dp[$i - 2] + $dp[$i - 3];
+        }
+        return $dp[$n];
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2: Matrix Exponentiation to Accelerate Recurrence
+
+We define $Tib(n)$ as a $1 \times 3$ matrix $\begin{bmatrix} T_n & T_{n - 1} & T_{n - 2} \end{bmatrix}$, where $T_n$, $T_{n - 1}$ and $T_{n - 2}$ represent the $n$th, $(n - 1)$th and $(n - 2)$th Tribonacci numbers, respectively.
+
+We hope to derive $Tib(n)$ from $Tib(n-1) = \begin{bmatrix} T_{n - 1} & T_{n - 2} & T_{n - 3} \end{bmatrix}$. That is, we need a matrix $base$ such that $Tib(n - 1) \times base = Tib(n)$, i.e.,
+
+$$
+\begin{bmatrix}
+T_{n - 1} & T_{n - 2} & T_{n - 3}
+\end{bmatrix} \times base = \begin{bmatrix} T_n & T_{n - 1} & T_{n - 2} \end{bmatrix}
+$$
+
+Since $T_n = T_{n - 1} + T_{n - 2} + T_{n - 3}$, the matrix $base$ is:
+
+$$
+\begin{bmatrix}
+ 1 & 1 & 0 \\
+ 1 & 0 & 1 \\
+ 1 & 0 & 0
+\end{bmatrix}
+$$
+
+We define the initial matrix $res = \begin{bmatrix} 1 & 1  & 0 \end{bmatrix}$, then $T_n$ is equal to the sum of all elements in the result matrix of $res$ multiplied by $base^{n - 3}$. This can be solved using matrix exponentiation.
+
+The time complexity is $O(\log n)$, and the space complexity is $O(1)$.
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+import numpy as np
+
+
+class Solution:
+    def tribonacci(self, n: int) -> int:
+        if n == 0:
+            return 0
+        if n < 3:
+            return 1
+        factor = np.asmatrix([(1, 1, 0), (1, 0, 1), (1, 0, 0)], np.dtype("O"))
+        res = np.asmatrix([(1, 1, 0)], np.dtype("O"))
+        n -= 3
+        while n:
+            if n & 1:
+                res *= factor
+            factor *= factor
+            n >>= 1
+        return res.sum()
+```
+
+#### Java
 
 ```java
 class Solution {
@@ -163,23 +320,7 @@ class Solution {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int tribonacci(int n) {
-        long long a = 0, b = 1, c = 1;
-        while (n--) {
-            long long d = a + b + c;
-            a = b;
-            b = c;
-            c = d;
-        }
-        return (int) a;
-    }
-};
-```
+#### C++
 
 ```cpp
 class Solution {
@@ -225,17 +366,7 @@ private:
 };
 ```
 
-### **Go**
-
-```go
-func tribonacci(n int) int {
-	a, b, c := 0, 1, 1
-	for i := 0; i < n; i++ {
-		a, b, c = b, c, a+b+c
-	}
-	return a
-}
-```
+#### Go
 
 ```go
 func tribonacci(n int) (ans int) {
@@ -282,26 +413,7 @@ func pow(a [][]int, n int) [][]int {
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * @param {number} n
- * @return {number}
- */
-var tribonacci = function (n) {
-    let a = 0;
-    let b = 1;
-    let c = 1;
-    while (n--) {
-        let d = a + b + c;
-        a = b;
-        b = c;
-        c = d;
-    }
-    return a;
-};
-```
+#### JavaScript
 
 ```js
 /**
@@ -349,77 +461,8 @@ function pow(a, n) {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function tribonacci(n: number): number {
-    if (n === 0) {
-        return 0;
-    }
-    if (n < 3) {
-        return 1;
-    }
-    const a = [
-        [1, 1, 0],
-        [1, 0, 1],
-        [1, 0, 0],
-    ];
-    return pow(a, n - 3)[0].reduce((a, b) => a + b);
-}
-
-function mul(a: number[][], b: number[][]): number[][] {
-    const [m, n] = [a.length, b[0].length];
-    const c = Array.from({ length: m }, () => Array.from({ length: n }, () => 0));
-    for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++j) {
-            for (let k = 0; k < b.length; ++k) {
-                c[i][j] += a[i][k] * b[k][j];
-            }
-        }
-    }
-    return c;
-}
-
-function pow(a: number[][], n: number): number[][] {
-    let res = [[1, 1, 0]];
-    while (n) {
-        if (n & 1) {
-            res = mul(res, a);
-        }
-        a = mul(a, a);
-        n >>= 1;
-    }
-    return res;
-}
-```
-
-### **PHP**
-
-```php
-class Solution {
-    /**
-     * @param Integer $n
-     * @return Integer
-     */
-    function tribonacci($n) {
-        if ($n == 0) {
-            return 0;
-        } elseif ($n == 1 || $n == 2) {
-            return 1;
-        }
-        $dp = [0, 1, 1];
-        for ($i = 3; $i <= $n; $i++) {
-            $dp[$i] = $dp[$i - 1] + $dp[$i - 2] + $dp[$i - 3];
-        }
-        return $dp[$n];
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

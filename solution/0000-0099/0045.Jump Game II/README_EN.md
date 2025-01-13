@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0045.Jump%20Game%20II/README_EN.md
+tags:
+    - Greedy
+    - Array
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [45. Jump Game II](https://leetcode.com/problems/jump-game-ii)
 
 [中文文档](/solution/0000-0099/0045.Jump%20Game%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> array of integers <code>nums</code> of length <code>n</code>. You are initially positioned at <code>nums[0]</code>.</p>
 
@@ -40,21 +54,31 @@
 	<li>It&#39;s guaranteed that you can reach <code>nums[n - 1]</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-**Solution 1: Greedy**
+<!-- solution:start -->
 
-We can use a variable $mx$ to record the furthest position that can be reached at the current position, and use a variable $last$ to record the last jump position, and use a variable $ans$ to record the number of jumps.
+### Solution 1: Greedy Algorithm
 
-Next, we traverse the position $i$ of the array $[0,..n - 2]$, and for each position $i$, we can calculate the furthest position that can be reached at the current position through $i + nums[i]$, and we use $mx$ to record this furthest position, that is, $mx = max(mx, i + nums[i])$. Next, we need to determine whether the current position has reached the boundary of the last jump, that is, $i = last$. If so, we need to jump once, update $last$ to $mx$, and increase the number of jumps $ans$ by $1$.
+We can use a variable $mx$ to record the farthest position that can be reached from the current position, a variable $last$ to record the position of the last jump, and a variable $ans$ to record the number of jumps.
+
+Next, we traverse each position $i$ in $[0,..n - 2]$. For each position $i$, we can calculate the farthest position that can be reached from the current position through $i + nums[i]$. We use $mx$ to record this farthest position, that is, $mx = max(mx, i + nums[i])$. Then, we check whether the current position has reached the boundary of the last jump, that is, $i = last$. If it has reached, then we need to make a jump, update $last$ to $mx$, and increase the number of jumps $ans$ by $1$.
 
 Finally, we return the number of jumps $ans$.
 
-The time complexity is $O(n)$, where $n$ is the length of the array. The space complexity $O(1)$.
+The time complexity is $O(n)$, where $n$ is the length of the array. The space complexity is $O(1)$.
+
+Similar problems:
+
+-   [55. Jump Game](https://github.com/doocs/leetcode/blob/main/solution/0000-0099/0055.Jump%20Game/README_EN.md)
+-   [1024. Video Stitching](https://github.com/doocs/leetcode/blob/main/solution/1000-1099/1024.Video%20Stitching/README_EN.md)
+-   [1326. Minimum Number of Taps to Open to Water a Garden](https://github.com/doocs/leetcode/blob/main/solution/1300-1399/1326.Minimum%20Number%20of%20Taps%20to%20Open%20to%20Water%20a%20Garden/README_EN.md)
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -68,7 +92,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -86,7 +110,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -105,7 +129,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func jump(nums []int) (ans int) {
@@ -121,7 +145,7 @@ func jump(nums []int) (ans int) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function jump(nums: number[]): number {
@@ -137,44 +161,7 @@ function jump(nums: number[]): number {
 }
 ```
 
-### **C#**
-
-```cs
-public class Solution {
-    public int Jump(int[] nums) {
-        int ans = 0, mx = 0, last = 0;
-        for (int i = 0; i < nums.Length - 1; ++i) {
-            mx = Math.Max(mx, i + nums[i]);
-            if (last == i) {
-                ++ans;
-                last = mx;
-            }
-        }
-        return ans;
-    }
-}
-```
-
-### **C**
-
-```c
-#define min(a, b) a < b ? a : b
-int jump(int* nums, int numsSize) {
-    int dp[numsSize];
-    for (int i = 0; i < numsSize; i++) {
-        dp[i] = numsSize;
-    }
-    dp[0] = 0;
-    for (int i = 0; i < numsSize - 1; i++) {
-        for (int j = i + 1; j < (min(i + nums[i] + 1, numsSize)); j++) {
-            dp[j] = min(dp[j], dp[i] + 1);
-        }
-    }
-    return dp[numsSize - 1];
-}
-```
-
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -195,10 +182,71 @@ impl Solution {
 }
 ```
 
-### **...**
+#### C#
 
+```cs
+public class Solution {
+    public int Jump(int[] nums) {
+        int ans = 0, mx = 0, last = 0;
+        for (int i = 0; i < nums.Length - 1; ++i) {
+            mx = Math.Max(mx, i + nums[i]);
+            if (last == i) {
+                ++ans;
+                last = mx;
+            }
+        }
+        return ans;
+    }
+}
 ```
 
+#### C
+
+```c
+#define min(a, b) a < b ? a : b
+int jump(int* nums, int numsSize) {
+    int dp[numsSize];
+    for (int i = 0; i < numsSize; i++) {
+        dp[i] = numsSize;
+    }
+    dp[0] = 0;
+    for (int i = 0; i < numsSize - 1; i++) {
+        for (int j = i + 1; j < (min(i + nums[i] + 1, numsSize)); j++) {
+            dp[j] = min(dp[j], dp[i] + 1);
+        }
+    }
+    return dp[numsSize - 1];
+}
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param integer[] $nums
+     * @return integer
+     */
+
+    function jump($nums) {
+        $maxReach = 0;
+        $steps = 0;
+        $lastJump = 0;
+        for ($i = 0; $i <= count($nums) - 2; $i++) {
+            $maxReach = max($maxReach, $i + $nums[$i]);
+            if ($i == $lastJump) {
+                $lastJump = $maxReach;
+                $steps++;
+            }
+        }
+
+        return $steps;
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

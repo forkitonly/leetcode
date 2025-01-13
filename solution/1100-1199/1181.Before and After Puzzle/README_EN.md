@@ -1,8 +1,25 @@
-# [1181. Before and After Puzzle](https://leetcode.com/problems/before-and-after-puzzle)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1181.Before%20and%20After%20Puzzle/README_EN.md
+rating: 1558
+source: Biweekly Contest 8 Q2
+tags:
+    - Array
+    - Hash Table
+    - String
+    - Sorting
+---
+
+<!-- problem:start -->
+
+# [1181. Before and After Puzzle 🔒](https://leetcode.com/problems/before-and-after-puzzle)
 
 [中文文档](/solution/1100-1199/1181.Before%20and%20After%20Puzzle/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given a list of <code>phrases</code>, generate a list of&nbsp;Before and After puzzles.</p>
 
@@ -56,11 +73,25 @@
 	<li><code>1 &lt;= phrases[i].length &lt;= 100</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Hash Table + Sorting
+
+First, we traverse the `phrases` list, storing the first and last words of each phrase in the array $ps$, where $ps[i][0]$ and $ps[i][1]$ represent the first and last words of the $i$th phrase, respectively.
+
+Next, we enumerate all $(i, j)$, where $i, j \in [0, n)$ and $i \neq j$. If $ps[i][1] = ps[j][0]$, then we can concatenate the $i$th phrase and the $j$th phrase to get a new phrase $phrases[i] + phrases[j][len(ps[j][0]):]$, and add the new phrase to the hash table $s$.
+
+Finally, we convert the hash table $s$ into an array and sort it to get the answer.
+
+The time complexity is $O(n^2 \times m \times (\log n + \log m))$, and the space complexity is $O(n^2 \times m)$. Here, $n$ and $m$ represent the length of the `phrases` array and the average length of each phrase, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -78,7 +109,7 @@ class Solution:
         return sorted(set(ans))
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -104,7 +135,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -136,7 +167,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func beforeAndAfterPuzzles(phrases []string) []string {
@@ -163,7 +194,7 @@ func beforeAndAfterPuzzles(phrases []string) []string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function beforeAndAfterPuzzles(phrases: string[]): string[] {
@@ -185,10 +216,8 @@ function beforeAndAfterPuzzles(phrases: string[]): string[] {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

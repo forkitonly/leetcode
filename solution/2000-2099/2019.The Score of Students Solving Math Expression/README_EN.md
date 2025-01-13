@@ -1,8 +1,27 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2000-2099/2019.The%20Score%20of%20Students%20Solving%20Math%20Expression/README_EN.md
+rating: 2583
+source: Weekly Contest 260 Q4
+tags:
+    - Stack
+    - Memoization
+    - Array
+    - Math
+    - String
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [2019. The Score of Students Solving Math Expression](https://leetcode.com/problems/the-score-of-students-solving-math-expression)
 
 [中文文档](/solution/2000-2099/2019.The%20Score%20of%20Students%20Solving%20Math%20Expression/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a string <code>s</code> that contains digits <code>0-9</code>, addition symbols <code>&#39;+&#39;</code>, and multiplication symbols <code>&#39;*&#39;</code> <strong>only</strong>, representing a <strong>valid</strong> math expression of <strong>single digit numbers</strong> (e.g., <code>3+5*2</code>). This expression was given to <code>n</code> elementary school students. The students were instructed to get the answer of the expression by following this <strong>order of operations</strong>:</p>
 
@@ -67,11 +86,40 @@ The points for the students are: [0,0,5,0,0,5]. The sum of the points is 10.
 	<li><code>0 &lt;= answers[i] &lt;= 1000</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Dynamic Programming (Interval DP)
+
+First, we design a function $cal(s)$ to calculate the result of a valid mathematical expression that only contains single-digit numbers. The correct answer is $x = cal(s)$.
+
+Let the length of the string $s$ be $n$, then the number of digits in $s$ is $m = \frac{n+1}{2}$.
+
+We define $f[i][j]$ as the possible values of the result calculated by selecting the digits from the $i$-th to the $j$-th in $s$ (index starts from $0$). Initially, $f[i][i]$ represents the selection of the $i$-th digit, and the result can only be this digit itself, i.e., $f[i][i] = \{s[i \times 2]\}$ (the $i$-th digit maps to the character at index $i \times 2$ in the string $s$).
+
+Next, we enumerate $i$ from large to small, and then enumerate $j$ from small to large. We need to find out the possible values of the results of the operation of all digits in the interval $[i, j]$. We enumerate the boundary point $k$ in the interval $[i, j]$, then $f[i][j]$ can be obtained from $f[i][k]$ and $f[k+1][j]$ through the operator $s[k \times 2 + 1]$. Therefore, we can get the following state transition equation:
+
+$$
+f[i][j] = \begin{cases}
+\{s[i \times 2]\}, & i = j \\
+\bigcup\limits_{k=i}^{j-1} \{f[i][k] \otimes f[k+1][j]\}, & i < j
+\end{cases}
+$$
+
+Where $\otimes$ represents the operator, i.e., $s[k \times 2 + 1]$.
+
+The possible values of the results of all digit operations in the string $s$ are $f[0][m-1]$.
+
+Finally, we count the answer. We use an array $cnt$ to count the number of times each answer appears in the answer array $answers$. If the answer is equal to $x$, then this student gets $5$ points, otherwise if the answer is in $f[0][m-1]$, then this student gets $2$ points. Traverse $cnt$ to count the answer.
+
+The time complexity is $O(n^3 \times M^2)$, and the space complexity is $O(n^2 \times M^2)$. Here, $M$ is the maximum possible value of the answer, and $n$ is the number of digits in the length of the string $s$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -110,7 +158,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -172,7 +220,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -232,7 +280,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func scoreOfStudents(s string, answers []int) int {
@@ -292,7 +340,7 @@ func cal(s string) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function scoreOfStudents(s: string, answers: number[]): number {
@@ -354,10 +402,8 @@ function scoreOfStudents(s: string, answers: number[]): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

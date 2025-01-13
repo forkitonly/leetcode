@@ -1,6 +1,9 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        f = g = 0
-        for x in nums:
-            f, g = max(f, g), f + x
-        return max(f, g)
+        @cache
+        def dfs(i: int) -> int:
+            if i >= len(nums):
+                return 0
+            return max(nums[i] + dfs(i + 2), dfs(i + 1))
+
+        return dfs(0)

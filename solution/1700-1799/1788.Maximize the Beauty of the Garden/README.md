@@ -1,12 +1,25 @@
-# [1788. 最大化花园的美观度](https://leetcode.cn/problems/maximize-the-beauty-of-the-garden)
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1700-1799/1788.Maximize%20the%20Beauty%20of%20the%20Garden/README.md
+tags:
+    - 贪心
+    - 数组
+    - 哈希表
+    - 前缀和
+---
+
+<!-- problem:start -->
+
+# [1788. 最大化花园的美观度 🔒](https://leetcode.cn/problems/maximize-the-beauty-of-the-garden)
 
 [English Version](/solution/1700-1799/1788.Maximize%20the%20Beauty%20of%20the%20Garden/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
-<p>有一个花园，有 <code>n</code> 朵花，这些花都有一个用整数表示的美观度。这些花被种在一条线上。给定一个长度为 <code>n</code> 的整数类型数组 <code>flowers</code> ，每一个 <code>flowers[i]</code> 表示第 <code>i</code> 朵花的美观度。</p>
+<p>有一个花园，有&nbsp;<code>n</code>&nbsp;朵花，这些花都有一个用整数表示的美观度。这些花被种在一条线上。给定一个长度为 <code>n</code> 的整数类型数组&nbsp;<code>flowers</code>&nbsp;，每一个&nbsp;<code>flowers[i]</code>&nbsp;表示第&nbsp;<code>i</code>&nbsp;朵花的美观度。</p>
 
 <p>一个花园满足下列条件时，该花园是<strong>有效</strong>的。</p>
 
@@ -19,29 +32,32 @@
 
 <p>返回你去除了任意朵花（也可以不去除任意一朵）之后形成的<strong>有效</strong>花园中最大可能的美观度。</p>
 
-<p> </p>
+<p>&nbsp;</p>
 
-<p><b>示例 1：</b></p>
+<p><b class="example">示例 1：</b></p>
 
-<pre><strong>输入:</strong> flowers = [1,2,3,1,2]
+<pre>
+<strong>输入:</strong> flowers = [1,2,3,1,2]
 <strong>输出:</strong> 8
 <strong>解释:</strong> 你可以修整为有效花园 [2,3,1,2] 来达到总美观度 2 + 3 + 1 + 2 = 8。</pre>
 
-<p><strong>示例 2：</strong></p>
+<p><strong class="example">示例 2：</strong></p>
 
-<pre><strong>输入:</strong> flowers = [100,1,1,-3,1]
+<pre>
+<strong>输入:</strong> flowers = [100,1,1,-3,1]
 <strong>输出:</strong> 3
 <strong>解释:</strong> 你可以修整为有效花园 [1,1,1] 来达到总美观度 1 + 1 + 1 = 3。
 </pre>
 
-<p><strong>示例 3：</strong></p>
+<p><strong class="example">示例 3：</strong></p>
 
-<pre><strong>输入:</strong> flowers = [-1,-2,0,-1]
+<pre>
+<strong>输入:</strong> flowers = [-1,-2,0,-1]
 <strong>输出:</strong> -2
 <strong>解释:</strong> 你可以修整为有效花园 [-1,-1] 来达到总美观度 -1 + -1 = -2。
 </pre>
 
-<p> </p>
+<p>&nbsp;</p>
 
 <p><b>提示：</b></p>
 
@@ -51,11 +67,13 @@
 	<li>去除一些花朵（可能没有）后，是有可能形成一个有效花园的。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：哈希表 + 前缀和**
+### 方法一：哈希表 + 前缀和
 
 我们用哈希表 $d$ 记录每个美观度第一次出现的位置，用前缀和数组 $s$ 记录当前位置之前的美观度之和。如果一个美观度 $v$ 在位置 $i$ 和 $j$ 出现过（其中 $i \lt j$），那么我们可以得到一个有效的花园 $[i+1,j]$，其美观度为 $s[i] - s[j + 1] + v \times 2$，我们用这个值更新答案。否则，我们将当前美观度所在的位置 $i$ 记录到哈希表 $d$ 中。接下来，我们更新前缀和，如果美观度 $v$ 为负数，我们将其视为 $0$。
 
@@ -65,9 +83,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -84,9 +100,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -109,7 +123,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -133,7 +147,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maximumBeauty(flowers []int) int {
@@ -153,7 +167,28 @@ func maximumBeauty(flowers []int) int {
 }
 ```
 
-### **Rust**
+#### TypeScript
+
+```ts
+function maximumBeauty(flowers: number[]): number {
+    const n = flowers.length;
+    const s: number[] = Array(n + 1).fill(0);
+    const d: Map<number, number> = new Map();
+    let ans = -Infinity;
+    for (let i = 0; i < n; ++i) {
+        const v = flowers[i];
+        if (d.has(v)) {
+            ans = Math.max(ans, s[i] - s[d.get(v)! + 1] + v * 2);
+        } else {
+            d.set(v, i);
+        }
+        s[i + 1] = s[i] + Math.max(v, 0);
+    }
+    return ans;
+}
+```
+
+#### Rust
 
 ```rust
 use std::collections::HashMap;
@@ -178,31 +213,8 @@ impl Solution {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function maximumBeauty(flowers: number[]): number {
-    const n = flowers.length;
-    const s: number[] = Array(n + 1).fill(0);
-    const d: Map<number, number> = new Map();
-    let ans = -Infinity;
-    for (let i = 0; i < n; ++i) {
-        const v = flowers[i];
-        if (d.has(v)) {
-            ans = Math.max(ans, s[i] - s[d.get(v)! + 1] + v * 2);
-        } else {
-            d.set(v, i);
-        }
-        s[i + 1] = s[i] + Math.max(v, 0);
-    }
-    return ans;
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

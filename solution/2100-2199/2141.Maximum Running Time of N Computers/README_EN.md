@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2141.Maximum%20Running%20Time%20of%20N%20Computers/README_EN.md
+rating: 2265
+source: Weekly Contest 276 Q4
+tags:
+    - Greedy
+    - Array
+    - Binary Search
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2141. Maximum Running Time of N Computers](https://leetcode.com/problems/maximum-running-time-of-n-computers)
 
 [中文文档](/solution/2100-2199/2141.Maximum%20Running%20Time%20of%20N%20Computers/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You have <code>n</code> computers. You are given the integer <code>n</code> and a <strong>0-indexed</strong> integer array <code>batteries</code> where the <code>i<sup>th</sup></code> battery can <strong>run</strong> a computer for <code>batteries[i]</code> minutes. You are interested in running <strong>all</strong> <code>n</code> computers <strong>simultaneously</strong> using the given batteries.</p>
 
@@ -47,11 +64,25 @@ We can run the two computers simultaneously for at most 2 minutes, so we return 
 	<li><code>1 &lt;= batteries[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Binary Search
+
+We notice that if we can run $n$ computers simultaneously for $t$ minutes, then we can also run $n$ computers simultaneously for $t' \le t$ minutes, which shows monotonicity. Therefore, we can use the binary search method to find the maximum $t$.
+
+We define the left boundary of the binary search as $l=0$ and the right boundary as $r=\sum_{i=0}^{n-1} batteries[i]$. During each binary search iteration, we use a variable $mid$ to represent the current middle value, i.e., $mid = (l + r + 1) >> 1$. We check if there exists a scheme that allows $n$ computers to run simultaneously for $mid$ minutes. If such a scheme exists, then we update $l$ to $mid$; otherwise, we update $r$ to $mid - 1$. Finally, we return $l$ as the answer.
+
+The problem is transformed into how to determine if there exists a scheme that allows $n$ computers to run simultaneously for $mid$ minutes. If a battery can run for more minutes than $mid$, since the computers run simultaneously for $mid$ minutes and a battery can only power one computer at a time, we can only use this battery for $mid$ minutes. If a battery can run for minutes less than or equal to $mid$, we can use all the power of this battery. Therefore, we calculate the total minutes $s$ that all batteries can power, and if $s \ge n \times mid$, then we can make $n$ computers run simultaneously for $mid$ minutes.
+
+The time complexity is $O(n \times \log M)$, where $M$ is the total power of all batteries, and the space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -66,7 +97,7 @@ class Solution:
         return l
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -92,7 +123,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -119,7 +150,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxRunTime(n int, batteries []int) int64 {
@@ -143,7 +174,7 @@ func maxRunTime(n int, batteries []int) int64 {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maxRunTime(n: number, batteries: number[]): number {
@@ -168,7 +199,7 @@ function maxRunTime(n: number, batteries: number[]): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -205,9 +236,8 @@ impl Solution {
                 ret = (cur_height as i64) + diff;
                 break;
             } else {
-                extra_sum -=
-                    ((batteries[i + 1] - batteries[i]) as i64) *
-                    ((i - ((m - n) as usize) + 1) as i64);
+                extra_sum -= ((batteries[i + 1] - batteries[i]) as i64)
+                    * ((i - ((m - n) as usize) + 1) as i64);
                 ret = batteries[i + 1] as i64;
             }
 
@@ -222,10 +252,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,25 @@
-# [2852. Sum of Remoteness of All Cells](https://leetcode.com/problems/sum-of-remoteness-of-all-cells)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2800-2899/2852.Sum%20of%20Remoteness%20of%20All%20Cells/README_EN.md
+tags:
+    - Depth-First Search
+    - Breadth-First Search
+    - Union Find
+    - Array
+    - Hash Table
+    - Matrix
+---
+
+<!-- problem:start -->
+
+# [2852. Sum of Remoteness of All Cells 🔒](https://leetcode.com/problems/sum-of-remoteness-of-all-cells)
 
 [中文文档](/solution/2800-2899/2852.Sum%20of%20Remoteness%20of%20All%20Cells/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> matrix <code>grid</code> of order <code>n * n</code>. Each cell in this matrix has a value <code>grid[i][j]</code>, which is either a <strong>positive</strong> integer or <code>-1</code> representing a blocked cell.</p>
 
@@ -58,11 +75,21 @@ Now let&#39;s jump on the bottom-right grid in the above picture and calculate R
 	<li><code>1 &lt;= grid[i][j] &lt;= 10<sup>6</sup></code> or <code>grid[i][j] == -1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: DFS
+
+First, we count the number of non-blocking cells in the matrix, denoted as $cnt$. Then, starting from each non-blocking cell, we use DFS to calculate the sum $s$ of the cells in each connected block and the number of cells $t$. Then, all $(cnt - t)$ cells in other connected blocks can be added with $s$. We sum up the results of all connected blocks.
+
+The time complexity is $O(n^2)$, and the space complexity is $O(n^2)$. Here, $n$ is the side length of the matrix.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -89,7 +116,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -138,7 +165,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -181,7 +208,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func sumRemoteness(grid [][]int) (ans int64) {
@@ -221,7 +248,7 @@ func sumRemoteness(grid [][]int) (ans int64) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function sumRemoteness(grid: number[][]): number {
@@ -262,10 +289,8 @@ function sumRemoteness(grid: number[][]): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

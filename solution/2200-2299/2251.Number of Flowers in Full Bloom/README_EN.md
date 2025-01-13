@@ -1,8 +1,27 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2200-2299/2251.Number%20of%20Flowers%20in%20Full%20Bloom/README_EN.md
+rating: 2022
+source: Weekly Contest 290 Q4
+tags:
+    - Array
+    - Hash Table
+    - Binary Search
+    - Ordered Set
+    - Prefix Sum
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2251. Number of Flowers in Full Bloom](https://leetcode.com/problems/number-of-flowers-in-full-bloom)
 
 [中文文档](/solution/2200-2299/2251.Number%20of%20Flowers%20in%20Full%20Bloom/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> 2D integer array <code>flowers</code>, where <code>flowers[i] = [start<sub>i</sub>, end<sub>i</sub>]</code> means the <code>i<sup>th</sup></code> flower will be in <strong>full bloom</strong> from <code>start<sub>i</sub></code> to <code>end<sub>i</sub></code> (<strong>inclusive</strong>). You are also given a <strong>0-indexed</strong> integer array <code>people</code> of size <code>n</code>, where <code>people[i]</code> is the time that the <code>i<sup>th</sup></code> person will arrive to see the flowers.</p>
 
@@ -38,23 +57,21 @@ For each person, we return the number of flowers in full bloom during their arri
 	<li><code>1 &lt;= people[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Sorting + Binary Search
+
+We sort the flowers by their start and end times. Then, for each person, we can use binary search to find the number of flowers in bloom when they arrive. This means finding the number of flowers that have started blooming by the time each person arrives, minus the number of flowers that have wilted by that time, to get the answer.
+
+The time complexity is $O((m + n) \times \log n)$, and the space complexity is $O(n)$. Here, $n$ and $m$ are the lengths of the arrays $\textit{flowers}$ and $\textit{people}$, respectively.
 
 <!-- tabs:start -->
 
-**Solution 1: Sort + Binary Search**
-
-We sort the flowers by their start and end time respectively, and then for each person, we can use binary search to find the number of flowers they bloom during the flowering period. That is, find the number of flowers that have bloomed when each person arrives, minus the number of flowers that have withered when each person arrives, to get the answer.
-
-The time complexity is $O((m + n) \times \log n)$, and the space complexity is $O(n)$. Where $n$ and $m$ are the lengths of arrays $flowers$ and $people$ respectively.
-
-**Solution 2: Difference + Sort + Offline Query**
-
-We can use the difference to maintain the number of flowers at each time point. Next, we sort $people$ in ascending order of arrival time, and at each person's arrival, we perform a prefix sum operation on the difference array to get the answer.
-
-The time complexity is $O(m \times \log m + n \times \log n)$, and the space complexity is $O(n + m)$. Where $n$ and $m$ are the lengths of arrays $flowers$ and $people$ respectively.
-
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -65,28 +82,7 @@ class Solution:
         return [bisect_right(start, p) - bisect_left(end, p) for p in people]
 ```
 
-```python
-class Solution:
-    def fullBloomFlowers(
-        self, flowers: List[List[int]], people: List[int]
-    ) -> List[int]:
-        d = defaultdict(int)
-        for st, ed in flowers:
-            d[st] += 1
-            d[ed + 1] -= 1
-        ts = sorted(d)
-        s = i = 0
-        m = len(people)
-        ans = [0] * m
-        for t, j in sorted(zip(people, range(m))):
-            while i < len(ts) and ts[i] <= t:
-                s += d[ts[i]]
-                i += 1
-            ans[j] = s
-        return ans
-```
-
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -123,35 +119,7 @@ class Solution {
 }
 ```
 
-```java
-class Solution {
-    public int[] fullBloomFlowers(int[][] flowers, int[] people) {
-        TreeMap<Integer, Integer> d = new TreeMap<>();
-        for (int[] f : flowers) {
-            d.merge(f[0], 1, Integer::sum);
-            d.merge(f[1] + 1, -1, Integer::sum);
-        }
-        int s = 0;
-        int m = people.length;
-        Integer[] idx = new Integer[m];
-        for (int i = 0; i < m; i++) {
-            idx[i] = i;
-        }
-        Arrays.sort(idx, Comparator.comparingInt(i -> people[i]));
-        int[] ans = new int[m];
-        for (int i : idx) {
-            int t = people[i];
-            while (!d.isEmpty() && d.firstKey() <= t) {
-                s += d.pollFirstEntry().getValue();
-            }
-            ans[i] = s;
-        }
-        return ans;
-    }
-}
-```
-
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -177,90 +145,7 @@ public:
 };
 ```
 
-```cpp
-class Solution {
-public:
-    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
-        map<int, int> d;
-        for (auto& f : flowers) {
-            d[f[0]]++;
-            d[f[1] + 1]--;
-        }
-        int m = people.size();
-        vector<int> idx(m);
-        iota(idx.begin(), idx.end(), 0);
-        sort(idx.begin(), idx.end(), [&](int i, int j) {
-            return people[i] < people[j];
-        });
-        vector<int> ans(m);
-        int s = 0;
-        for (int i : idx) {
-            int t = people[i];
-            while (!d.empty() && d.begin()->first <= t) {
-                s += d.begin()->second;
-                d.erase(d.begin());
-            }
-            ans[i] = s;
-        }
-        return ans;
-    }
-};
-```
-
-### **Rust**
-
-```rust
-use std::collections::BTreeMap;
-
-impl Solution {
-    #[allow(dead_code)]
-    pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
-        let n = people.len();
-
-        // First sort the people vector based on the first item
-        let mut people: Vec<(usize, i32)> = people
-            .into_iter()
-            .enumerate()
-            .map(|x| x)
-            .collect();
-
-        people.sort_by(|lhs, rhs| { lhs.1.cmp(&rhs.1) });
-
-        // Initialize the difference vector
-        let mut diff = BTreeMap::new();
-        let mut ret = vec![0; n];
-
-        for f in flowers {
-            let (left, right) = (f[0], f[1]);
-            diff.entry(left)
-                .and_modify(|x| {
-                    *x += 1;
-                })
-                .or_insert(1);
-
-            diff.entry(right + 1)
-                .and_modify(|x| {
-                    *x -= 1;
-                })
-                .or_insert(-1);
-        }
-
-        let mut sum = 0;
-        let mut i = 0;
-        for (k, v) in diff {
-            while i < n && people[i].1 < k {
-                ret[people[i].0] += sum;
-                i += 1;
-            }
-            sum += v;
-        }
-
-        ret
-    }
-}
-```
-
-### **Go**
+#### Go
 
 ```go
 func fullBloomFlowers(flowers [][]int, people []int) (ans []int) {
@@ -282,39 +167,7 @@ func fullBloomFlowers(flowers [][]int, people []int) (ans []int) {
 }
 ```
 
-```go
-func fullBloomFlowers(flowers [][]int, people []int) []int {
-	d := map[int]int{}
-	for _, f := range flowers {
-		d[f[0]]++
-		d[f[1]+1]--
-	}
-	ts := []int{}
-	for t := range d {
-		ts = append(ts, t)
-	}
-	sort.Ints(ts)
-	m := len(people)
-	idx := make([]int, m)
-	for i := range idx {
-		idx[i] = i
-	}
-	sort.Slice(idx, func(i, j int) bool { return people[idx[i]] < people[idx[j]] })
-	ans := make([]int, m)
-	s, i := 0, 0
-	for _, j := range idx {
-		t := people[j]
-		for i < len(ts) && ts[i] <= t {
-			s += d[ts[i]]
-			i++
-		}
-		ans[j] = s
-	}
-	return ans
-}
-```
-
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function fullBloomFlowers(flowers: number[][], people: number[]): number[] {
@@ -351,6 +204,190 @@ function search(nums: number[], x: number): number {
 }
 ```
 
+#### Rust
+
+```rust
+use std::collections::BTreeMap;
+
+impl Solution {
+    #[allow(dead_code)]
+    pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
+        let n = people.len();
+
+        // First sort the people vector based on the first item
+        let mut people: Vec<(usize, i32)> = people.into_iter().enumerate().map(|x| x).collect();
+
+        people.sort_by(|lhs, rhs| lhs.1.cmp(&rhs.1));
+
+        // Initialize the difference vector
+        let mut diff = BTreeMap::new();
+        let mut ret = vec![0; n];
+
+        for f in flowers {
+            let (left, right) = (f[0], f[1]);
+            diff.entry(left)
+                .and_modify(|x| {
+                    *x += 1;
+                })
+                .or_insert(1);
+
+            diff.entry(right + 1)
+                .and_modify(|x| {
+                    *x -= 1;
+                })
+                .or_insert(-1);
+        }
+
+        let mut sum = 0;
+        let mut i = 0;
+        for (k, v) in diff {
+            while i < n && people[i].1 < k {
+                ret[people[i].0] += sum;
+                i += 1;
+            }
+            sum += v;
+        }
+
+        ret
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2: Difference Array + Sorting + Offline Query
+
+We can use a difference array to maintain the number of flowers at each time point. Next, we sort $people$ by their arrival times in ascending order. When each person arrives, we perform a prefix sum operation on the difference array to get the answer.
+
+The time complexity is $O(m \times \log m + n \times \log n)$, and the space complexity is $O(n + m)$. Here, $n$ and $m$ are the lengths of the arrays $\textit{flowers}$ and $\textit{people}$, respectively.
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def fullBloomFlowers(
+        self, flowers: List[List[int]], people: List[int]
+    ) -> List[int]:
+        d = defaultdict(int)
+        for st, ed in flowers:
+            d[st] += 1
+            d[ed + 1] -= 1
+        ts = sorted(d)
+        s = i = 0
+        m = len(people)
+        ans = [0] * m
+        for t, j in sorted(zip(people, range(m))):
+            while i < len(ts) and ts[i] <= t:
+                s += d[ts[i]]
+                i += 1
+            ans[j] = s
+        return ans
+```
+
+#### Java
+
+```java
+class Solution {
+    public int[] fullBloomFlowers(int[][] flowers, int[] people) {
+        TreeMap<Integer, Integer> d = new TreeMap<>();
+        for (int[] f : flowers) {
+            d.merge(f[0], 1, Integer::sum);
+            d.merge(f[1] + 1, -1, Integer::sum);
+        }
+        int s = 0;
+        int m = people.length;
+        Integer[] idx = new Integer[m];
+        for (int i = 0; i < m; i++) {
+            idx[i] = i;
+        }
+        Arrays.sort(idx, Comparator.comparingInt(i -> people[i]));
+        int[] ans = new int[m];
+        for (int i : idx) {
+            int t = people[i];
+            while (!d.isEmpty() && d.firstKey() <= t) {
+                s += d.pollFirstEntry().getValue();
+            }
+            ans[i] = s;
+        }
+        return ans;
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
+        map<int, int> d;
+        for (auto& f : flowers) {
+            d[f[0]]++;
+            d[f[1] + 1]--;
+        }
+        int m = people.size();
+        vector<int> idx(m);
+        iota(idx.begin(), idx.end(), 0);
+        sort(idx.begin(), idx.end(), [&](int i, int j) {
+            return people[i] < people[j];
+        });
+        vector<int> ans(m);
+        int s = 0;
+        for (int i : idx) {
+            int t = people[i];
+            while (!d.empty() && d.begin()->first <= t) {
+                s += d.begin()->second;
+                d.erase(d.begin());
+            }
+            ans[i] = s;
+        }
+        return ans;
+    }
+};
+```
+
+#### Go
+
+```go
+func fullBloomFlowers(flowers [][]int, people []int) []int {
+	d := map[int]int{}
+	for _, f := range flowers {
+		d[f[0]]++
+		d[f[1]+1]--
+	}
+	ts := []int{}
+	for t := range d {
+		ts = append(ts, t)
+	}
+	sort.Ints(ts)
+	m := len(people)
+	idx := make([]int, m)
+	for i := range idx {
+		idx[i] = i
+	}
+	sort.Slice(idx, func(i, j int) bool { return people[idx[i]] < people[idx[j]] })
+	ans := make([]int, m)
+	s, i := 0, 0
+	for _, j := range idx {
+		t := people[j]
+		for i < len(ts) && ts[i] <= t {
+			s += d[ts[i]]
+			i++
+		}
+		ans[j] = s
+	}
+	return ans
+}
+```
+
+#### TypeScript
+
 ```ts
 function fullBloomFlowers(flowers: number[][], people: number[]): number[] {
     const d: Map<number, number> = new Map();
@@ -376,10 +413,8 @@ function fullBloomFlowers(flowers: number[][], people: number[]): number[] {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

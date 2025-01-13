@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0600-0699/0649.Dota2%20Senate/README_EN.md
+tags:
+    - Greedy
+    - Queue
+    - String
+---
+
+<!-- problem:start -->
+
 # [649. Dota2 Senate](https://leetcode.com/problems/dota2-senate)
 
 [中文文档](/solution/0600-0699/0649.Dota2%20Senate/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>In the world of Dota2, there are two parties: the Radiant and the Dire.</p>
 
@@ -52,11 +66,26 @@ And in round 2, the third senator can just announce the victory since he is the 
 	<li><code>senate[i]</code> is either <code>&#39;R&#39;</code> or <code>&#39;D&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Queue + Simulation
+
+We create two queues $qr$ and $qd$ to record the indices of the Radiant and Dire senators, respectively. Then we start the simulation, where in each round we dequeue one senator from each queue and perform different operations based on their factions:
+
+-   If the Radiant senator's index is less than the Dire senator's index, the Radiant senator can permanently ban the voting rights of the Dire senator. We add $n$ to the Radiant senator's index and enqueue it back to the end of the queue, indicating that this senator will participate in the next round of voting.
+-   If the Dire senator's index is less than the Radiant senator's index, the Dire senator can permanently ban the voting rights of the Radiant senator. We add $n$ to the Dire senator's index and enqueue it back to the end of the queue, indicating that this senator will participate in the next round of voting.
+
+Finally, when there are only senators from one faction left in the queues, the senators from that faction win.
+
+The time complexity is $O(n)$, and the space complexity is $O(n)$. Here, $n$ is the number of senators.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -79,7 +108,7 @@ class Solution:
         return "Radiant" if qr else "Dire"
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -108,7 +137,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -140,7 +169,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func predictPartyVictory(senate string) string {
@@ -170,7 +199,7 @@ func predictPartyVictory(senate string) string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function predictPartyVictory(senate: string): string {
@@ -197,7 +226,7 @@ function predictPartyVictory(senate: string): string {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -232,10 +261,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

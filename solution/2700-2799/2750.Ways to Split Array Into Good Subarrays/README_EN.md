@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2750.Ways%20to%20Split%20Array%20Into%20Good%20Subarrays/README_EN.md
+rating: 1597
+source: Weekly Contest 351 Q3
+tags:
+    - Array
+    - Math
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [2750. Ways to Split Array Into Good Subarrays](https://leetcode.com/problems/ways-to-split-array-into-good-subarrays)
 
 [中文文档](/solution/2700-2799/2750.Ways%20to%20Split%20Array%20Into%20Good%20Subarrays/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a binary array <code>nums</code>.</p>
 
@@ -41,11 +57,21 @@
 	<li><code>0 &lt;= nums[i] &lt;= 1</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Multiplication Principle
+
+Based on the problem description, we can draw a dividing line between two $1$s. Assuming the indices of the two $1$s are $j$ and $i$ respectively, then the number of different dividing lines that can be drawn is $i - j$. We find all the pairs of $j$ and $i$ that meet the condition, and then multiply all the $i - j$ together. If no dividing line can be found between two $1$s, it means there are no $1$s in the array, and the answer is $0$.
+
+The time complexity is $O(n)$, where $n$ is the length of the array. The space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -61,7 +87,7 @@ class Solution:
         return 0 if j == -1 else ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -82,7 +108,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -104,7 +130,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func numberOfGoodSubarraySplits(nums []int) int {
@@ -126,7 +152,7 @@ func numberOfGoodSubarraySplits(nums []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function numberOfGoodSubarraySplits(nums: number[]): number {
@@ -147,7 +173,7 @@ function numberOfGoodSubarraySplits(nums: number[]): number {
 }
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -169,10 +195,8 @@ public class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

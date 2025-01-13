@@ -1,3 +1,5 @@
+import platform
+import subprocess
 import time
 from datetime import timezone, timedelta, datetime
 
@@ -13,7 +15,7 @@ user_agent = (
     "Chrome/77.0.3865.120 Safari/537.36"
 )
 sub_folders = [
-    str(i * 100).zfill(4) + "-" + str(i * 100 + 99).zfill(4) for i in range(100)
+    str(i * 100).zfill(4) + "-" + str(i * 100 + 99).zfill(4) for i in range(1000)
 ]
 cn_graph_url = "https://leetcode.cn/graphql"
 difficulty = dict(Easy="简单", Medium="中等", Hard="困难")
@@ -29,7 +31,6 @@ class Spider:
     def __init__(self, cookie1: str, cookie2: str):
         self.cookie_cn = cookie1
         self.cookie_en = cookie2
-        self.session = requests.session()
 
     def get_all_questions(self, retry: int = 3) -> List:
         """获取所有题目"""
@@ -41,7 +42,7 @@ class Spider:
             "cookie": self.cookie_en,
         }
         try:
-            resp = self.session.get(
+            resp = requests.get(
                 url="https://leetcode.com/api/problems/all/",
                 headers=headers,
                 allow_redirects=False,
@@ -50,9 +51,38 @@ class Spider:
             )
             return resp.json()["stat_status_pairs"]
         except Exception as e:
-            print(e)
+            print("get_all_questions", e)
             time.sleep(2)
             return self.get_all_questions(retry - 1) if retry > 0 else []
+
+    def get_all_questions_v2(self, retry: int = 3, limit: int = 10000) -> List:
+        headers = {
+            "Cookie": self.cookie_en,
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0",
+            "Content-Type": "application/json",
+        }
+        form = {
+            "query": "\n    query problemsetQuestionList($categorySlug: String, $limit: Int, $skip: Int, $filters: QuestionListFilterInput) {\n  problemsetQuestionList: questionList(\n    categorySlug: $categorySlug\n    limit: $limit\n    skip: $skip\n    filters: $filters\n  ) {\n    total: totalNum\n    questions: data {\n      acRate\n      difficulty\n      freqBar\n      frontendQuestionId: questionFrontendId\n      isFavor\n      paidOnly: isPaidOnly\n      status\n      title\n      titleSlug\n      topicTags {\n        name\n        id\n        slug\n      }\n      hasSolution\n      hasVideoSolution\n    }\n  }\n}\n    ",
+            "variables": {
+                "categorySlug": "all-code-essentials",
+                "skip": 0,
+                "limit": limit,
+                "filters": {"orderBy": "FRONTEND_ID", "sortOrder": "DESCENDING"},
+            },
+            "operationName": "problemsetQuestionList",
+        }
+        try:
+            resp = requests.post(
+                "https://leetcode.com/graphql",
+                headers=headers,
+                data=json.dumps(form),
+                timeout=20,
+            )
+            return resp.json()["data"]["problemsetQuestionList"]["questions"]
+        except Exception as e:
+            print("get_all_questions_v2", e)
+            time.sleep(2)
+            return self.get_all_questions_v2(retry - 1, limit) if retry > 0 else []
 
     def get_question_detail_en(self, question_title_slug: str, retry: int = 3) -> dict:
         headers = {
@@ -80,9 +110,7 @@ class Spider:
         }
         for _ in range(max(0, retry) + 1):
             try:
-                self.session.get(
-                    question_url, headers=headers, timeout=10, verify=False
-                )
+                requests.get(question_url, headers=headers, timeout=10, verify=False)
                 headers = {
                     "User-Agent": user_agent,
                     "Connection": "keep-alive",
@@ -90,7 +118,7 @@ class Spider:
                     "Referer": "https://leetcode.com/problems/" + slug,
                     "cookie": self.cookie_en,
                 }
-                resp = self.session.post(
+                resp = requests.post(
                     en_graph_url,
                     headers=headers,
                     data=json.dumps(form),
@@ -100,7 +128,9 @@ class Spider:
                 res = resp.json()
                 return res["data"]["question"] or {}
             except Exception as e:
-                print(e)
+                print("get_question_detail_en", e)
+                if "is not defined" in str(e):
+                    return {}
                 time.sleep(2)
         return {}
 
@@ -152,7 +182,7 @@ class Spider:
         }
         for _ in range(max(0, retry) + 1):
             try:
-                self.session.post(
+                requests.post(
                     url=cn_graph_url,
                     data=json.dumps(form1),
                     headers=headers,
@@ -160,7 +190,7 @@ class Spider:
                     verify=False,
                 )
                 # get question detail
-                resp = self.session.post(
+                resp = requests.post(
                     url=cn_graph_url,
                     data=json.dumps(form2).encode("utf-8"),
                     headers=headers,
@@ -170,7 +200,7 @@ class Spider:
                 res = resp.json()
                 return res["data"]["question"] or {}
             except Exception as e:
-                print(e)
+                print("get_question_detail", e)
                 time.sleep(2)
         return {}
 
@@ -269,7 +299,17 @@ class Contest:
 
     def get_data(self, retry: int = 3):
         try:
-            res = requests.get(self.contest_url, timeout=6, verify=False).json()
+            print(self.contest_url)
+            headers = {
+                'User-Agent': user_agent,
+                'Host': 'leetcode.cn',
+                'content-type': 'application/json',
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+            }
+            res = requests.get(
+                self.contest_url, timeout=6, verify=False, headers=headers
+            )
+            res = res.json()
             if not res or "error" in res or not res["questions"]:
                 return {}
             questions = res["questions"]
@@ -329,7 +369,8 @@ def get_contests(fetch_new=True) -> List:
             c = Contest(i, contest_type=t)
             if c.contest_title_slug in d:
                 continue
-            contest_data = c.get_data(retry=3)
+            contest_data = c.get_data(retry=10)
+            time.sleep(1)
             if not contest_data:
                 cnt += 1
                 if cnt > 2:
@@ -343,6 +384,55 @@ def get_contests(fetch_new=True) -> List:
 
 
 ########################################################################################
+
+
+def format_rust_files_linux():
+    # The find command to locate and format all .rs files in Linux
+    find_command = 'find . -name "*.rs" -exec rustfmt {} \\;'
+
+    # Execute the command
+    process = subprocess.Popen(
+        find_command,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    # Get the output and errors
+    stdout, stderr = process.communicate()
+
+    if process.returncode == 0:
+        print("Rust files formatted successfully on Linux!")
+        print(stdout)
+    else:
+        print("Error formatting Rust files on Linux:")
+        print(stderr)
+
+
+def format_rust_files_windows():
+    # PowerShell command to format all .rs files recursively in Windows
+    ps_command = (
+        "Get-ChildItem -Recurse -Filter *.rs | ForEach-Object { rustfmt $_.FullName }"
+    )
+
+    # Execute the PowerShell command
+    process = subprocess.Popen(
+        ["powershell", "-Command", ps_command],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    # Get the output and errors
+    stdout, stderr = process.communicate()
+
+    if process.returncode == 0:
+        print("Rust files formatted successfully on Windows!")
+        print(stdout)
+    else:
+        print("Error formatting Rust files on Windows:")
+        print(stderr)
 
 
 def run():
@@ -360,17 +450,21 @@ def run():
             if slug:
                 question_details[slug] = item
 
-    for q in spider.get_all_questions(retry=4):
-        slug = q["stat"]["question__title_slug"]
-        qid = q["stat"]["frontend_question_id"]
+    for q in spider.get_all_questions_v2(retry=6):
+        try:
+            slug = q["stat"]["question__title_slug"]
+            qid = q["stat"]["frontend_question_id"]
+        except:
+            slug = q["titleSlug"]
+            qid = int(q["frontendQuestionId"])
         if slug in question_details:
             continue
         detail = spider.get_question_detail(
             slug, retry=4
-        ) or spider.get_question_detail_en(slug, retry=4)
+        ) or spider.get_question_detail_en(slug, retry=8)
         if not detail:
             continue
-        time.sleep(0.3)
+        time.sleep(1)
         question_details[slug] = Spider.format_question_detail(
             detail, str(qid).zfill(4)
         )
@@ -408,7 +502,6 @@ def run():
     ls = load_result()
     generate_readme(ls)
     generate_question_readme(ls)
-    generate_summary(ls)
 
     # 生成周赛题目列表
     generate_contest_readme(cls)
@@ -416,15 +509,17 @@ def run():
     # 生成分类题目列表
     generate_category_readme(ls, "Database")
     generate_category_readme(ls, "JavaScript")
-    generate_category_summary(ls, "Database")
-    generate_category_summary(ls, "JavaScript")
 
-    # 刷新题目文件
-    if refresh_all:
-        refresh(ls)
-
+    refresh(ls)
     # 格式化
     os.system('cd .. && npx prettier --write "**/*.{md,js,ts,php,sql}"')
+
+    # 格式化 rust 代码
+    # 判断当前是 windows 还是 linux
+    if platform.system() == "Linux":
+        format_rust_files_linux()
+    elif platform.system() == "Windows":
+        format_rust_files_windows()
 
 
 if __name__ == "__main__":

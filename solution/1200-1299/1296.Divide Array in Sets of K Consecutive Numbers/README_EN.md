@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1296.Divide%20Array%20in%20Sets%20of%20K%20Consecutive%20Numbers/README_EN.md
+rating: 1490
+source: Weekly Contest 168 Q2
+tags:
+    - Greedy
+    - Array
+    - Hash Table
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [1296. Divide Array in Sets of K Consecutive Numbers](https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers)
 
 [中文文档](/solution/1200-1299/1296.Divide%20Array%20in%20Sets%20of%20K%20Consecutive%20Numbers/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an array of integers <code>nums</code> and a positive integer <code>k</code>, check whether it is possible to divide this array into sets of <code>k</code> consecutive numbers.</p>
 
@@ -44,11 +61,23 @@
 <p>&nbsp;</p>
 <strong>Note:</strong> This question is the same as&nbsp;846:&nbsp;<a href="https://leetcode.com/problems/hand-of-straights/" target="_blank">https://leetcode.com/problems/hand-of-straights/</a>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Hash Table + Sorting
+
+We use a hash table $\textit{cnt}$ to count the occurrences of each number in the array $\textit{nums}$, and then sort the array $\textit{nums}$.
+
+Next, we traverse the array $\textit{nums}$. For each number $v$ in the array, if the count of $v$ in the hash table $\textit{cnt}$ is not zero, we enumerate each number from $v$ to $v+k-1$. If the counts of these numbers in the hash table $\textit{cnt}$ are all non-zero, we decrement the counts of these numbers by 1. If the count becomes zero after decrementing, we remove these numbers from the hash table $\textit{cnt}$. Otherwise, it means we cannot divide the array into several subarrays of length $k$, and we return `false`. If we can divide the array into several subarrays of length $k$, we return `true` after the traversal.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(n)$. Here, $n$ is the length of the array $\textit{nums}$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -64,6 +93,103 @@ class Solution:
                         cnt.pop(x)
         return True
 ```
+
+#### Java
+
+```java
+class Solution {
+    public boolean isPossibleDivide(int[] nums, int k) {
+        Map<Integer, Integer> cnt = new HashMap<>();
+        for (int v : nums) {
+            cnt.merge(v, 1, Integer::sum);
+        }
+        Arrays.sort(nums);
+        for (int v : nums) {
+            if (cnt.containsKey(v)) {
+                for (int x = v; x < v + k; ++x) {
+                    if (!cnt.containsKey(x)) {
+                        return false;
+                    }
+                    if (cnt.merge(x, -1, Integer::sum) == 0) {
+                        cnt.remove(x);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    bool isPossibleDivide(vector<int>& nums, int k) {
+        unordered_map<int, int> cnt;
+        for (int& v : nums) ++cnt[v];
+        sort(nums.begin(), nums.end());
+        for (int& v : nums) {
+            if (cnt.count(v)) {
+                for (int x = v; x < v + k; ++x) {
+                    if (!cnt.count(x)) {
+                        return false;
+                    }
+                    if (--cnt[x] == 0) {
+                        cnt.erase(x);
+                    }
+                }
+            }
+        }
+        return true;
+    }
+};
+```
+
+#### Go
+
+```go
+func isPossibleDivide(nums []int, k int) bool {
+	cnt := map[int]int{}
+	for _, v := range nums {
+		cnt[v]++
+	}
+	sort.Ints(nums)
+	for _, v := range nums {
+		if _, ok := cnt[v]; ok {
+			for x := v; x < v+k; x++ {
+				if _, ok := cnt[x]; !ok {
+					return false
+				}
+				cnt[x]--
+				if cnt[x] == 0 {
+					delete(cnt, x)
+				}
+			}
+		}
+	}
+	return true
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 1: Ordered Set
+
+We can also use an ordered set to count the occurrences of each number in the array $\textit{nums}$.
+
+Next, we loop to extract the minimum value $v$ from the ordered set, then enumerate each number from $v$ to $v+k-1$. If the occurrences of these numbers in the ordered set are all non-zero, we decrement the occurrence count of these numbers by 1. If the occurrence count becomes 0 after decrementing, we remove the number from the ordered set. Otherwise, it means we cannot divide the array into several subarrays of length $k$, and we return `false`. If we can divide the array into several subarrays of length $k$, we return `true` after the traversal.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(n)$. Here, $n$ is the length of the array $\textit{nums}$.
+
+<!-- tabs:start -->
+
+#### Python3
 
 ```python
 from sortedcontainers import SortedDict
@@ -91,33 +217,7 @@ class Solution:
         return True
 ```
 
-### **Java**
-
-```java
-class Solution {
-    public boolean isPossibleDivide(int[] nums, int k) {
-        Map<Integer, Integer> cnt = new HashMap<>();
-        for (int v : nums) {
-            cnt.put(v, cnt.getOrDefault(v, 0) + 1);
-        }
-        Arrays.sort(nums);
-        for (int v : nums) {
-            if (cnt.containsKey(v)) {
-                for (int x = v; x < v + k; ++x) {
-                    if (!cnt.containsKey(x)) {
-                        return false;
-                    }
-                    cnt.put(x, cnt.get(x) - 1);
-                    if (cnt.get(x) == 0) {
-                        cnt.remove(x);
-                    }
-                }
-            }
-        }
-        return true;
-    }
-}
-```
+#### Java
 
 ```java
 class Solution {
@@ -127,7 +227,7 @@ class Solution {
         }
         TreeMap<Integer, Integer> tm = new TreeMap<>();
         for (int h : nums) {
-            tm.put(h, tm.getOrDefault(h, 0) + 1);
+            tm.merge(h, 1, Integer::sum);
         }
         while (!tm.isEmpty()) {
             int v = tm.firstKey();
@@ -135,10 +235,8 @@ class Solution {
                 if (!tm.containsKey(i)) {
                     return false;
                 }
-                if (tm.get(i) == 1) {
+                if (tm.merge(i, -1, Integer::sum) == 0) {
                     tm.remove(i);
-                } else {
-                    tm.put(i, tm.get(i) - 1);
                 }
             }
         }
@@ -147,47 +245,28 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
 public:
     bool isPossibleDivide(vector<int>& nums, int k) {
-        unordered_map<int, int> cnt;
-        for (int& v : nums) ++cnt[v];
-        sort(nums.begin(), nums.end());
-        for (int& v : nums) {
-            if (cnt.count(v)) {
-                for (int x = v; x < v + k; ++x) {
-                    if (!cnt.count(x)) {
-                        return false;
-                    }
-                    if (--cnt[x] == 0) {
-                        cnt.erase(x);
-                    }
-                }
-            }
+        if (nums.size() % k) {
+            return false;
         }
-        return true;
-    }
-};
-```
-
-```cpp
-class Solution {
-public:
-    bool isPossibleDivide(vector<int>& nums, int k) {
-        if (nums.size() % k != 0) return false;
         map<int, int> mp;
-        for (int& h : nums) mp[h] += 1;
+        for (int& h : nums) {
+            mp[h] += 1;
+        }
         while (!mp.empty()) {
             int v = mp.begin()->first;
             for (int i = v; i < v + k; ++i) {
-                if (!mp.count(i)) return false;
-                if (mp[i] == 1)
+                if (!mp.contains(i)) {
+                    return false;
+                }
+                if (--mp[i] == 0) {
                     mp.erase(i);
-                else
-                    mp[i] -= 1;
+                }
             }
         }
         return true;
@@ -195,31 +274,7 @@ public:
 };
 ```
 
-### **Go**
-
-```go
-func isPossibleDivide(nums []int, k int) bool {
-	cnt := map[int]int{}
-	for _, v := range nums {
-		cnt[v]++
-	}
-	sort.Ints(nums)
-	for _, v := range nums {
-		if _, ok := cnt[v]; ok {
-			for x := v; x < v+k; x++ {
-				if _, ok := cnt[x]; !ok {
-					return false
-				}
-				cnt[x]--
-				if cnt[x] == 0 {
-					delete(cnt, x)
-				}
-			}
-		}
-	}
-	return true
-}
-```
+#### Go
 
 ```go
 func isPossibleDivide(nums []int, k int) bool {
@@ -251,10 +306,8 @@ func isPossibleDivide(nums []int, k int) bool {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2132.Stamping%20the%20Grid/README_EN.md
+rating: 2364
+source: Biweekly Contest 69 Q4
+tags:
+    - Greedy
+    - Array
+    - Matrix
+    - Prefix Sum
+---
+
+<!-- problem:start -->
+
 # [2132. Stamping the Grid](https://leetcode.com/problems/stamping-the-grid)
 
 [中文文档](/solution/2100-2199/2132.Stamping%20the%20Grid/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an <code>m x n</code> binary matrix <code>grid</code> where each cell is either <code>0</code> (empty) or <code>1</code> (occupied).</p>
 
@@ -48,29 +65,36 @@
 	<li><code>1 &lt;= stampHeight, stampWidth &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Based on the constraints provided by the question, it's easy to infer that a cell can accommodate a stamp if, after adding the length and width of the stamp, the bottom-right corner does not exceed the boundary, and the sum of all cells in the current sub-area is zero.
+<!-- solution:start -->
 
-Apparently, we can maintain a two-dimensional prefix sum array, and in `O(1)` time complexity, we can judge whether each cell traversed can accommodate a stamp.
+### Solution 1: Two-Dimensional Prefix Sum + Two-Dimensional Difference
 
-Since the action of affixing a stamp can be generalized to setting the values of all cells in the current sub-area to `1`, it's natural to think of maintaining the state after stamp affixing using a two-dimensional difference array.
+According to the problem description, every empty cell must be covered by a stamp, and no occupied cell can be covered. Therefore, we can traverse the two-dimensional matrix, and for each cell, if all cells in the area of $stampHeight \times stampWidth$ with this cell as the upper left corner are empty (i.e., not occupied), then we can place a stamp at this cell.
 
-Finally, just calculate the two-dimensional prefix sum for this difference array again.
+To quickly determine whether all cells in an area are empty, we can use a two-dimensional prefix sum. We use $s_{i,j}$ to represent the number of occupied cells in the sub-matrix from $(1,1)$ to $(i,j)$ in the two-dimensional matrix. That is, $s_{i, j} = s_{i - 1, j} + s_{i, j - 1} - s_{i - 1, j - 1} + grid_{i-1, j-1}$.
 
-If the sum of the current cell is `0`, it means there are cases that have not been completely covered, and you can directly return `false`.
+Then, with $(i, j)$ as the upper left corner, and the height and width are $stampHeight$ and $stampWidth$ respectively, the lower right coordinate of the sub-matrix is $(x, y) = (i + stampHeight - 1, j + stampWidth - 1)$. We can calculate the number of occupied cells in this sub-matrix through $s_{x, y} - s_{x, j - 1} - s_{i - 1, y} + s_{i - 1, j - 1}$. If the number of occupied cells in this sub-matrix is $0$, then we can place a stamp at $(i, j)$. After placing the stamp, all cells in this $stampHeight \times stampWidth$ area will become occupied cells. We can use a two-dimensional difference array $d$ to record this change. That is:
 
-It's worth noting the subscript relationship of the two-dimensional array, which is as follows.
+$$
+\begin{aligned}
+d_{i, j} &\leftarrow d_{i, j} + 1 \\
+d_{i, y + 1} &\leftarrow d_{i, y + 1} - 1 \\
+d_{x + 1, j} &\leftarrow d_{x + 1, j} - 1 \\
+d_{x + 1, y + 1} &\leftarrow d_{x + 1, y + 1} + 1
+\end{aligned}
+$$
 
-`s[i + 1][j + 1]` represents the sum of all elements in the upper left part of the i-th row and j-th column, where the subscript i, j starts from 0.
+Finally, we perform a prefix sum operation on the two-dimensional difference array $d$ to find out the number of times each cell is covered by a stamp. If a cell is not occupied and the number of times it is covered by a stamp is $0$, then we cannot place a stamp at this cell, so we need to return $\texttt{false}$. If all "unoccupied cells" are successfully covered by stamps, return $\texttt{true}$.
 
-So `s[i + 1][j + 1] = s[i + 1][j] + s[i][j + 1] - s[i][j] + nums[i][j]`.
-
-For a sub-matrix with (x1, y1) as the upper left corner and (x2, y2) as the bottom right corner, the sum `sub = s[x2 + 1][y2 + 1] - s[x2 + 1][y1] - s[x1][y2 + 1] + s[x1][y1]`.
+The time complexity is $O(m \times n)$, and the space complexity is $O(m \times n)$. Here, $m$ and $n$ are the height and width of the two-dimensional matrix, respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -79,61 +103,54 @@ class Solution:
     ) -> bool:
         m, n = len(grid), len(grid[0])
         s = [[0] * (n + 1) for _ in range(m + 1)]
-        for i, row in enumerate(grid):
-            for j, v in enumerate(row):
-                s[i + 1][j + 1] = s[i + 1][j] + s[i][j + 1] - s[i][j] + v
-
-        d = [[0] * (n + 1) for _ in range(m + 1)]
-        for i, row in enumerate(grid):
-            for j, v in enumerate(row):
-                if v == 0:
-                    x, y = i + stampHeight, j + stampWidth
-                    if x <= m and y <= n and s[x][y] - s[x][j] - s[i][y] + s[i][j] == 0:
-                        d[i][j] += 1
-                        d[i][y] -= 1
-                        d[x][j] -= 1
-                        d[x][y] += 1
-
-        cnt = [[0] * (n + 1) for _ in range(m + 1)]
-        for i, row in enumerate(grid):
-            for j, v in enumerate(row):
-                cnt[i + 1][j + 1] = cnt[i + 1][j] + cnt[i][j + 1] - cnt[i][j] + d[i][j]
-                if v == 0 and cnt[i + 1][j + 1] == 0:
+        for i, row in enumerate(grid, 1):
+            for j, v in enumerate(row, 1):
+                s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + v
+        d = [[0] * (n + 2) for _ in range(m + 2)]
+        for i in range(1, m - stampHeight + 2):
+            for j in range(1, n - stampWidth + 2):
+                x, y = i + stampHeight - 1, j + stampWidth - 1
+                if s[x][y] - s[x][j - 1] - s[i - 1][y] + s[i - 1][j - 1] == 0:
+                    d[i][j] += 1
+                    d[i][y + 1] -= 1
+                    d[x + 1][j] -= 1
+                    d[x + 1][y + 1] += 1
+        for i, row in enumerate(grid, 1):
+            for j, v in enumerate(row, 1):
+                d[i][j] += d[i - 1][j] + d[i][j - 1] - d[i - 1][j - 1]
+                if v == 0 and d[i][j] == 0:
                     return False
         return True
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
     public boolean possibleToStamp(int[][] grid, int stampHeight, int stampWidth) {
         int m = grid.length, n = grid[0].length;
         int[][] s = new int[m + 1][n + 1];
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                s[i + 1][j + 1] = s[i + 1][j] + s[i][j + 1] - s[i][j] + grid[i][j];
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + grid[i - 1][j - 1];
             }
         }
-        int[][] d = new int[m + 1][n + 1];
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (grid[i][j] == 0) {
-                    int x = i + stampHeight, y = j + stampWidth;
-                    if (x <= m && y <= n && s[x][y] - s[x][j] - s[i][y] + s[i][j] == 0) {
-                        d[i][j]++;
-                        d[i][y]--;
-                        d[x][j]--;
-                        d[x][y]++;
-                    }
+        int[][] d = new int[m + 2][n + 2];
+        for (int i = 1; i + stampHeight - 1 <= m; ++i) {
+            for (int j = 1; j + stampWidth - 1 <= n; ++j) {
+                int x = i + stampHeight - 1, y = j + stampWidth - 1;
+                if (s[x][y] - s[x][j - 1] - s[i - 1][y] + s[i - 1][j - 1] == 0) {
+                    d[i][j]++;
+                    d[i][y + 1]--;
+                    d[x + 1][j]--;
+                    d[x + 1][y + 1]++;
                 }
             }
         }
-        int[][] cnt = new int[m + 1][n + 1];
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                cnt[i + 1][j + 1] = cnt[i + 1][j] + cnt[i][j + 1] - cnt[i][j] + d[i][j];
-                if (grid[i][j] == 0 && cnt[i + 1][j + 1] == 0) {
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                d[i][j] += d[i - 1][j] + d[i][j - 1] - d[i - 1][j - 1];
+                if (grid[i - 1][j - 1] == 0 && d[i][j] == 0) {
                     return false;
                 }
             }
@@ -143,7 +160,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -151,29 +168,31 @@ public:
     bool possibleToStamp(vector<vector<int>>& grid, int stampHeight, int stampWidth) {
         int m = grid.size(), n = grid[0].size();
         vector<vector<int>> s(m + 1, vector<int>(n + 1));
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                s[i + 1][j + 1] = s[i + 1][j] + s[i][j + 1] - s[i][j] + grid[i][j];
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + grid[i - 1][j - 1];
             }
         }
-        vector<vector<int>> d(m + 1, vector<int>(n + 1));
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                if (grid[i][j]) continue;
-                int x = i + stampHeight, y = j + stampWidth;
-                if (x <= m && y <= n && s[x][y] - s[i][y] - s[x][j] + s[i][j] == 0) {
+
+        vector<vector<int>> d(m + 2, vector<int>(n + 2));
+        for (int i = 1; i + stampHeight - 1 <= m; ++i) {
+            for (int j = 1; j + stampWidth - 1 <= n; ++j) {
+                int x = i + stampHeight - 1, y = j + stampWidth - 1;
+                if (s[x][y] - s[x][j - 1] - s[i - 1][y] + s[i - 1][j - 1] == 0) {
                     d[i][j]++;
-                    d[x][j]--;
-                    d[i][y]--;
-                    d[x][y]++;
+                    d[i][y + 1]--;
+                    d[x + 1][j]--;
+                    d[x + 1][y + 1]++;
                 }
             }
         }
-        vector<vector<int>> cnt(m + 1, vector<int>(n + 1));
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                cnt[i + 1][j + 1] = cnt[i + 1][j] + cnt[i][j + 1] - cnt[i][j] + d[i][j];
-                if (grid[i][j] == 0 && cnt[i + 1][j + 1] == 0) return false;
+
+        for (int i = 1; i <= m; ++i) {
+            for (int j = 1; j <= n; ++j) {
+                d[i][j] += d[i - 1][j] + d[i][j - 1] - d[i - 1][j - 1];
+                if (grid[i - 1][j - 1] == 0 && d[i][j] == 0) {
+                    return false;
+                }
             }
         }
         return true;
@@ -181,7 +200,89 @@ public:
 };
 ```
 
-### **Rust**
+#### Go
+
+```go
+func possibleToStamp(grid [][]int, stampHeight int, stampWidth int) bool {
+	m, n := len(grid), len(grid[0])
+	s := make([][]int, m+1)
+	for i := range s {
+		s[i] = make([]int, n+1)
+	}
+	for i := 1; i <= m; i++ {
+		for j := 1; j <= n; j++ {
+			s[i][j] = s[i-1][j] + s[i][j-1] - s[i-1][j-1] + grid[i-1][j-1]
+		}
+	}
+
+	d := make([][]int, m+2)
+	for i := range d {
+		d[i] = make([]int, n+2)
+	}
+
+	for i := 1; i+stampHeight-1 <= m; i++ {
+		for j := 1; j+stampWidth-1 <= n; j++ {
+			x, y := i+stampHeight-1, j+stampWidth-1
+			if s[x][y]-s[x][j-1]-s[i-1][y]+s[i-1][j-1] == 0 {
+				d[i][j]++
+				d[i][y+1]--
+				d[x+1][j]--
+				d[x+1][y+1]++
+			}
+		}
+	}
+
+	for i := 1; i <= m; i++ {
+		for j := 1; j <= n; j++ {
+			d[i][j] += d[i-1][j] + d[i][j-1] - d[i-1][j-1]
+			if grid[i-1][j-1] == 0 && d[i][j] == 0 {
+				return false
+			}
+		}
+	}
+	return true
+}
+```
+
+#### TypeScript
+
+```ts
+function possibleToStamp(grid: number[][], stampHeight: number, stampWidth: number): boolean {
+    const m = grid.length;
+    const n = grid[0].length;
+    const s: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+    for (let i = 1; i <= m; ++i) {
+        for (let j = 1; j <= n; ++j) {
+            s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + grid[i - 1][j - 1];
+        }
+    }
+
+    const d: number[][] = Array.from({ length: m + 2 }, () => Array(n + 2).fill(0));
+    for (let i = 1; i + stampHeight - 1 <= m; ++i) {
+        for (let j = 1; j + stampWidth - 1 <= n; ++j) {
+            const [x, y] = [i + stampHeight - 1, j + stampWidth - 1];
+            if (s[x][y] - s[x][j - 1] - s[i - 1][y] + s[i - 1][j - 1] === 0) {
+                d[i][j]++;
+                d[i][y + 1]--;
+                d[x + 1][j]--;
+                d[x + 1][y + 1]++;
+            }
+        }
+    }
+
+    for (let i = 1; i <= m; ++i) {
+        for (let j = 1; j <= n; ++j) {
+            d[i][j] += d[i - 1][j] + d[i][j - 1] - d[i - 1][j - 1];
+            if (grid[i - 1][j - 1] === 0 && d[i][j] === 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+```
+
+#### Rust
 
 ```rust
 impl Solution {
@@ -214,9 +315,8 @@ impl Solution {
                 // Check the bound
                 if x <= n && y <= m {
                     // If the region can be sticked (All cells are empty, which means the sum will be zero)
-                    if
-                        prefix_vec[x][y] - prefix_vec[x][j] - prefix_vec[i][y] + prefix_vec[i][j] ==
-                        0
+                    if prefix_vec[x][y] - prefix_vec[x][j] - prefix_vec[i][y] + prefix_vec[i][j]
+                        == 0
                     {
                         // Update the difference vector
                         diff_vec[i][j] += 1;
@@ -252,50 +352,7 @@ impl Solution {
 }
 ```
 
-### **Go**
-
-```go
-func possibleToStamp(grid [][]int, stampHeight int, stampWidth int) bool {
-	m, n := len(grid), len(grid[0])
-	s := make([][]int, m+1)
-	d := make([][]int, m+1)
-	cnt := make([][]int, m+1)
-	for i := range s {
-		s[i] = make([]int, n+1)
-		d[i] = make([]int, n+1)
-		cnt[i] = make([]int, n+1)
-	}
-	for i, row := range grid {
-		for j, v := range row {
-			s[i+1][j+1] = s[i+1][j] + s[i][j+1] - s[i][j] + v
-		}
-	}
-	for i, row := range grid {
-		for j, v := range row {
-			if v == 0 {
-				x, y := i+stampHeight, j+stampWidth
-				if x <= m && y <= n && s[x][y]-s[i][y]-s[x][j]+s[i][j] == 0 {
-					d[i][j]++
-					d[i][y]--
-					d[x][j]--
-					d[x][y]++
-				}
-			}
-		}
-	}
-	for i, row := range grid {
-		for j, v := range row {
-			cnt[i+1][j+1] = cnt[i+1][j] + cnt[i][j+1] - cnt[i][j] + d[i][j]
-			if v == 0 && cnt[i+1][j+1] == 0 {
-				return false
-			}
-		}
-	}
-	return true
-}
-```
-
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -307,31 +364,30 @@ func possibleToStamp(grid [][]int, stampHeight int, stampWidth int) bool {
 var possibleToStamp = function (grid, stampHeight, stampWidth) {
     const m = grid.length;
     const n = grid[0].length;
-    let s = new Array(m + 1).fill(0).map(() => new Array(n + 1).fill(0));
-    let d = new Array(m + 1).fill(0).map(() => new Array(n + 1).fill(0));
-    let cnt = new Array(m + 1).fill(0).map(() => new Array(n + 1).fill(0));
-    for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++j) {
-            s[i + 1][j + 1] = s[i + 1][j] + s[i][j + 1] - s[i][j] + grid[i][j];
+    const s = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+    for (let i = 1; i <= m; ++i) {
+        for (let j = 1; j <= n; ++j) {
+            s[i][j] = s[i - 1][j] + s[i][j - 1] - s[i - 1][j - 1] + grid[i - 1][j - 1];
         }
     }
-    for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++j) {
-            if (grid[i][j] == 0) {
-                let [x, y] = [i + stampHeight, j + stampWidth];
-                if (x <= m && y <= n && s[x][y] - s[i][y] - s[x][j] + s[i][j] == 0) {
-                    d[i][j]++;
-                    d[i][y]--;
-                    d[x][j]--;
-                    d[x][y]++;
-                }
+
+    const d = Array.from({ length: m + 2 }, () => Array(n + 2).fill(0));
+    for (let i = 1; i + stampHeight - 1 <= m; ++i) {
+        for (let j = 1; j + stampWidth - 1 <= n; ++j) {
+            const [x, y] = [i + stampHeight - 1, j + stampWidth - 1];
+            if (s[x][y] - s[x][j - 1] - s[i - 1][y] + s[i - 1][j - 1] === 0) {
+                d[i][j]++;
+                d[i][y + 1]--;
+                d[x + 1][j]--;
+                d[x + 1][y + 1]++;
             }
         }
     }
-    for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++j) {
-            cnt[i + 1][j + 1] = cnt[i + 1][j] + cnt[i][j + 1] - cnt[i][j] + d[i][j];
-            if (grid[i][j] == 0 && cnt[i + 1][j + 1] == 0) {
+
+    for (let i = 1; i <= m; ++i) {
+        for (let j = 1; j <= n; ++j) {
+            d[i][j] += d[i - 1][j] + d[i][j - 1] - d[i - 1][j - 1];
+            if (grid[i - 1][j - 1] === 0 && d[i][j] === 0) {
                 return false;
             }
         }
@@ -340,16 +396,82 @@ var possibleToStamp = function (grid, stampHeight, stampWidth) {
 };
 ```
 
-### **TypeScript**
+#### Kotlin
 
-```ts
+```kotlin
+class Solution {
+    fun possibleToStamp(grid: Array<IntArray>, stampHeight: Int, stampWidth: Int): Boolean {
+        val m = grid.size
+        val n = grid[0].size
 
-```
+        var prefix_sums_matrix = Array(m + 1) { IntArray(n + 1) }
+        var diff_matrix = Array(m + 1) { IntArray(n + 1) }
+        var sum_matrix = Array(m + 1) { IntArray(n + 1) }
 
-### **...**
+        for (i in 0..<m) {
+            for (j in 0..<n) {
+                prefix_sums_matrix[i + 1][j + 1] =
+                    prefix_sums_matrix[i + 1][j] +
+                    prefix_sums_matrix[i][j + 1] -
+                    prefix_sums_matrix[i][j] +
+                    grid[i][j]
+            }
+        }
 
-```
+        for (i in 0..<m) {
+            for (j in 0..<n) {
+                if (grid[i][j] != 0) {
+                    continue
+                }
 
+                val bottom = i + stampHeight
+                val right = j + stampWidth
+
+                if (bottom > m || right > n) {
+                    continue
+                }
+
+                val sum = prefix_sums_matrix[bottom][right] -
+                    prefix_sums_matrix[bottom][j] -
+                    prefix_sums_matrix[i][right] +
+                    prefix_sums_matrix[i][j]
+
+                if (sum == 0) {
+                    diff_matrix[i][j] += 1
+                    diff_matrix[bottom][right] += 1
+
+                    diff_matrix[i][right] -= 1
+                    diff_matrix[bottom][j] -= 1
+                }
+            }
+        }
+
+        for (i in 0..<m) {
+            for (j in 0..<n) {
+                if (grid[i][j] != 0) {
+                    continue
+                }
+
+                val sum = sum_matrix[i][j + 1] +
+                    sum_matrix[i + 1][j] -
+                    sum_matrix[i][j] +
+                    diff_matrix[i][j]
+
+                if (sum == 0) {
+                    return false
+                }
+
+                sum_matrix[i + 1][j + 1] = sum
+            }
+        }
+
+        return true
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

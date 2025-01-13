@@ -1,4 +1,4 @@
-# JavaScript 专项练习
+# JavaScript专项练习
 
 [English Version](/solution/JAVASCRIPT_README_EN.md)
 
@@ -34,7 +34,7 @@
 | 2649 | [嵌套数组生成器](/solution/2600-2699/2649.Nested%20Array%20Generator/README.md)                                                                       |      | 中等 |      |
 | 2650 | [设计可取消函数](/solution/2600-2699/2650.Design%20Cancellable%20Function/README.md)                                                                  |      | 困难 |      |
 | 2665 | [计数器 II](/solution/2600-2699/2665.Counter%20II/README.md)                                                                                          |      | 简单 |      |
-| 2666 | [只允许一次函数调用 44](/solution/2600-2699/2666.Allow%20One%20Function%20Call/README.md)                                                             |      | 简单 |      |
+| 2666 | [只允许一次函数调用](/solution/2600-2699/2666.Allow%20One%20Function%20Call/README.md)                                                                |      | 简单 |      |
 | 2667 | [创建 Hello World 函数](/solution/2600-2699/2667.Create%20Hello%20World%20Function/README.md)                                                         |      | 简单 |      |
 | 2675 | [将对象数组转换为矩阵](/solution/2600-2699/2675.Array%20of%20Objects%20to%20Matrix/README.md)                                                         |      | 困难 | 🔒   |
 | 2676 | [节流](/solution/2600-2699/2676.Throttle/README.md)                                                                                                   |      | 中等 | 🔒   |
@@ -74,10 +74,21 @@
 | 2803 | [阶乘生成器](/solution/2800-2899/2803.Factorial%20Generator/README.md)                                                                                |      | 简单 | 🔒   |
 | 2804 | [数组原型的 forEach 方法](/solution/2800-2899/2804.Array%20Prototype%20ForEach/README.md)                                                             |      | 简单 | 🔒   |
 | 2805 | [自定义间隔](/solution/2800-2899/2805.Custom%20Interval/README.md)                                                                                    |      | 中等 | 🔒   |
-| 2821 | [延迟每个 Promise 对象的解析](/solution/2800-2899/2821.Delay%20the%20Resolution%20of%20Each%20Promise/README.md)                                      |      | 简单 | 🔒   |
+| 2821 | [延迟每个 Promise 对象的解析](/solution/2800-2899/2821.Delay%20the%20Resolution%20of%20Each%20Promise/README.md)                                      |      | 中等 | 🔒   |
 | 2822 | [对象反转](/solution/2800-2899/2822.Inversion%20of%20Object/README.md)                                                                                |      | 简单 | 🔒   |
 | 2823 | [深度对象筛选](/solution/2800-2899/2823.Deep%20Object%20Filter/README.md)                                                                             |      | 中等 | 🔒   |
 
 ## 版权
 
-著作权归 [GitHub 开源社区 Doocs](https://github.com/doocs) 所有，商业转载请联系 [@yanglbme](mailto:contact@yanglibin.info) 获得授权，非商业转载请注明出处。
+本项目著作权归 [GitHub 开源社区 Doocs](https://github.com/doocs) 所有，商业转载请联系 @yanglbme 获得授权，非商业转载请注明出处。
+
+## 联系我们
+
+欢迎各位小伙伴们添加 @yanglbme 的个人微信（微信号：YLB0109），备注 「**leetcode**」。后续我们会创建算法、技术相关的交流群，大家一起交流学习，分享经验，共同进步。
+
+| <img src="https://cdn-doocs.oss-cn-shenzhen.aliyuncs.com/gh/doocs/images/qrcode-for-yanglbme.png" width="260px" align="left"/> |
+| ------------------------------------------------------------------------------------------------------------------------------ |
+
+## 许可证
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享 版权归属-相同方式共享 4.0 国际 公共许可证</a>

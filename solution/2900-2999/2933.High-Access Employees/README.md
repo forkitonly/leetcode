@@ -1,10 +1,25 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2900-2999/2933.High-Access%20Employees/README.md
+rating: 1536
+source: 第 371 场周赛 Q2
+tags:
+    - 数组
+    - 哈希表
+    - 字符串
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [2933. 高访问员工](https://leetcode.cn/problems/high-access-employees)
 
 [English Version](/solution/2900-2999/2933.High-Access%20Employees/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个长度为 <code>n</code> 、下标从 <strong>0</strong> 开始的二维字符串数组 <code>access_times</code> 。对于每个 <code>i</code>（<code>0 &lt;= i &lt;= n - 1</code> ），<code>access_times[i][0]</code> 表示某位员工的姓名，<code>access_times[i][1]</code> 表示该员工的访问时间。<code>access_times</code> 中的所有条目都发生在同一天内。</p>
 
@@ -61,44 +76,151 @@
 	<li><code>access_times[i][1]</code> 仅由数字 <code>'0'</code> 到 <code>'9'</code> 组成。</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：哈希表 + 排序
+
+我们用一个哈希表 $d$ 来存储每个员工的所有访问时间，其中键为员工的姓名，值为一个整数数组，表示该员工的所有访问时间，该时间为从当天 00:00 开始的分钟数。
+
+对于每个员工，我们将其所有访问时间按照从小到大的顺序进行排序。然后我们遍历该员工的所有访问时间，如果存在连续的三个访问时间 $t_1, t_2, t_3$，满足 $t_3 - t_1 < 60$，则该员工为高访问员工，我们将其姓名加入答案数组中。
+
+最后，返回答案数组即可。
+
+时间复杂度 $O(n \times \log n)$，空间复杂度 $O(n)$。其中 $n$ 为访问记录的数量。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
-
+class Solution:
+    def findHighAccessEmployees(self, access_times: List[List[str]]) -> List[str]:
+        d = defaultdict(list)
+        for name, t in access_times:
+            d[name].append(int(t[:2]) * 60 + int(t[2:]))
+        ans = []
+        for name, ts in d.items():
+            ts.sort()
+            if any(ts[i] - ts[i - 2] < 60 for i in range(2, len(ts))):
+                ans.append(name)
+        return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
-
+class Solution {
+    public List<String> findHighAccessEmployees(List<List<String>> access_times) {
+        Map<String, List<Integer>> d = new HashMap<>();
+        for (var e : access_times) {
+            String name = e.get(0), s = e.get(1);
+            int t = Integer.valueOf(s.substring(0, 2)) * 60 + Integer.valueOf(s.substring(2));
+            d.computeIfAbsent(name, k -> new ArrayList<>()).add(t);
+        }
+        List<String> ans = new ArrayList<>();
+        for (var e : d.entrySet()) {
+            String name = e.getKey();
+            var ts = e.getValue();
+            Collections.sort(ts);
+            for (int i = 2; i < ts.size(); ++i) {
+                if (ts.get(i) - ts.get(i - 2) < 60) {
+                    ans.add(name);
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+}
 ```
 
-### **C++**
+#### C++
 
 ```cpp
-
+class Solution {
+public:
+    vector<string> findHighAccessEmployees(vector<vector<string>>& access_times) {
+        unordered_map<string, vector<int>> d;
+        for (auto& e : access_times) {
+            auto name = e[0];
+            auto s = e[1];
+            int t = stoi(s.substr(0, 2)) * 60 + stoi(s.substr(2, 2));
+            d[name].emplace_back(t);
+        }
+        vector<string> ans;
+        for (auto& [name, ts] : d) {
+            sort(ts.begin(), ts.end());
+            for (int i = 2; i < ts.size(); ++i) {
+                if (ts[i] - ts[i - 2] < 60) {
+                    ans.emplace_back(name);
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
 ```
 
-### **Go**
+#### Go
 
 ```go
-
+func findHighAccessEmployees(access_times [][]string) (ans []string) {
+	d := map[string][]int{}
+	for _, e := range access_times {
+		name, s := e[0], e[1]
+		h, _ := strconv.Atoi(s[:2])
+		m, _ := strconv.Atoi(s[2:])
+		t := h*60 + m
+		d[name] = append(d[name], t)
+	}
+	for name, ts := range d {
+		sort.Ints(ts)
+		for i := 2; i < len(ts); i++ {
+			if ts[i]-ts[i-2] < 60 {
+				ans = append(ans, name)
+				break
+			}
+		}
+	}
+	return
+}
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function findHighAccessEmployees(access_times: string[][]): string[] {
+    const d: Map<string, number[]> = new Map();
+    for (const [name, s] of access_times) {
+        const h = parseInt(s.slice(0, 2), 10);
+        const m = parseInt(s.slice(2), 10);
+        const t = h * 60 + m;
+        if (!d.has(name)) {
+            d.set(name, []);
+        }
+        d.get(name)!.push(t);
+    }
+    const ans: string[] = [];
+    for (const [name, ts] of d) {
+        ts.sort((a, b) => a - b);
+        for (let i = 2; i < ts.length; ++i) {
+            if (ts[i] - ts[i - 2] < 60) {
+                ans.push(name);
+                break;
+            }
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

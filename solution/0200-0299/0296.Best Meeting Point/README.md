@@ -1,10 +1,23 @@
-# [296. 最佳的碰头地点](https://leetcode.cn/problems/best-meeting-point)
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0200-0299/0296.Best%20Meeting%20Point/README.md
+tags:
+    - 数组
+    - 数学
+    - 矩阵
+    - 排序
+---
+
+<!-- problem:start -->
+
+# [296. 最佳的碰头地点 🔒](https://leetcode.cn/problems/best-meeting-point)
 
 [English Version](/solution/0200-0299/0296.Best%20Meeting%20Point/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个&nbsp;<code>m x n</code>&nbsp;&nbsp;的二进制网格&nbsp;<code>grid</code>&nbsp;，其中 <code>1</code> 表示某个朋友的家所处的位置。返回 <em>最小的 <strong>总行走距离</strong></em> 。</p>
 
@@ -42,11 +55,13 @@
 	<li><code>grid</code>&nbsp;中 <strong>至少</strong> 有两个朋友</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：排序 + 中位数**
+### 方法一：排序 + 中位数
 
 对于每一行，我们可以将所有的 $1$ 的下标排序，然后取中位数 $i$ 作为碰头地点的横坐标。
 
@@ -58,14 +73,12 @@
 
 相似题目：
 
--   [462. 最少移动次数使数组元素相等 II](/solution/0400-0499/0462.Minimum%20Moves%20to%20Equal%20Array%20Elements%20II/README.md)
--   [2448. 使数组相等的最小开销](/solution/2400-2499/2448.Minimum%20Cost%20to%20Make%20Array%20Equal/README.md)
+-   [462. 最少移动次数使数组元素相等 II](https://github.com/doocs/leetcode/blob/main/solution/0400-0499/0462.Minimum%20Moves%20to%20Equal%20Array%20Elements%20II/README.md)
+-   [2448. 使数组相等的最小开销](https://github.com/doocs/leetcode/blob/main/solution/2400-2499/2448.Minimum%20Cost%20to%20Make%20Array%20Equal/README.md)
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -85,9 +98,7 @@ class Solution:
         return f(rows, i) + f(cols, j)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -119,7 +130,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -151,49 +162,7 @@ public:
 };
 ```
 
-### **Rust**
-
-```rust
-impl Solution {
-    #[allow(dead_code)]
-    pub fn min_total_distance(grid: Vec<Vec<i32>>) -> i32 {
-        let n = grid.len();
-        let m = grid[0].len();
-
-        let mut row_vec = Vec::new();
-        let mut col_vec = Vec::new();
-
-        // Initialize the two vector
-        for i in 0..n {
-            for j in 0..m {
-                if grid[i][j] == 1 {
-                    row_vec.push(i as i32);
-                    col_vec.push(j as i32);
-                }
-            }
-        }
-
-        // Since the row vector is originally sorted, we only need to sort the col vector here
-        col_vec.sort();
-
-        Self::compute_manhattan_dis(&row_vec, row_vec[row_vec.len() / 2]) +
-            Self::compute_manhattan_dis(&col_vec, col_vec[col_vec.len() / 2])
-    }
-
-    #[allow(dead_code)]
-    fn compute_manhattan_dis(v: &Vec<i32>, e: i32) -> i32 {
-        let mut ret = 0;
-
-        for num in v {
-            ret += (num - e).abs();
-        }
-
-        ret
-    }
-}
-```
-
-### **Go**
+#### Go
 
 ```go
 func minTotalDistance(grid [][]int) int {
@@ -227,10 +196,50 @@ func abs(x int) int {
 }
 ```
 
-### **...**
+#### Rust
 
-```
+```rust
+impl Solution {
+    #[allow(dead_code)]
+    pub fn min_total_distance(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let m = grid[0].len();
 
+        let mut row_vec = Vec::new();
+        let mut col_vec = Vec::new();
+
+        // Initialize the two vector
+        for i in 0..n {
+            for j in 0..m {
+                if grid[i][j] == 1 {
+                    row_vec.push(i as i32);
+                    col_vec.push(j as i32);
+                }
+            }
+        }
+
+        // Since the row vector is originally sorted, we only need to sort the col vector here
+        col_vec.sort();
+
+        Self::compute_manhattan_dis(&row_vec, row_vec[row_vec.len() / 2])
+            + Self::compute_manhattan_dis(&col_vec, col_vec[col_vec.len() / 2])
+    }
+
+    #[allow(dead_code)]
+    fn compute_manhattan_dis(v: &Vec<i32>, e: i32) -> i32 {
+        let mut ret = 0;
+
+        for num in v {
+            ret += (num - e).abs();
+        }
+
+        ret
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

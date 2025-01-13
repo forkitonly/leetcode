@@ -1,8 +1,27 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2762.Continuous%20Subarrays/README_EN.md
+rating: 1940
+source: Weekly Contest 352 Q3
+tags:
+    - Queue
+    - Array
+    - Ordered Set
+    - Sliding Window
+    - Monotonic Queue
+    - Heap (Priority Queue)
+---
+
+<!-- problem:start -->
+
 # [2762. Continuous Subarrays](https://leetcode.com/problems/continuous-subarrays)
 
 [中文文档](/solution/2700-2799/2762.Continuous%20Subarrays/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>. A subarray of <code>nums</code> is called <strong>continuous</strong> if:</p>
 
@@ -24,7 +43,7 @@
 Continuous subarray of size 1: [5], [4], [2], [4].
 Continuous subarray of size 2: [5,4], [4,2], [2,4].
 Continuous subarray of size 3: [4,2,4].
-Thereare no subarrys of size 4.
+There are no subarrys of size 4.
 Total continuous subarrays = 4 + 3 + 1 = 8.
 It can be shown that there are no more continuous subarrays.
 </pre>
@@ -51,9 +70,13 @@ Total continuous subarrays = 3 + 2 + 1 = 6.
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-**Solution 1: Ordered List + Two Pointers**
+<!-- solution:start -->
+
+### Solution 1: Ordered List + Two Pointers
 
 We can use two pointers, $i$ and $j$, to maintain the left and right endpoints of the current subarray, and use an ordered list to maintain all elements in the current subarray.
 
@@ -65,7 +88,7 @@ The time complexity is $O(n \times \log n)$ and the space complexity is $O(n)$, 
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 from sortedcontainers import SortedList
@@ -84,7 +107,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -108,7 +131,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -129,7 +152,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func continuousSubarrays(nums []int) (ans int64) {
@@ -161,10 +184,82 @@ func continuousSubarrays(nums []int) (ans int64) {
 }
 ```
 
-### **...**
+<!-- tabs:end -->
 
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2: Monotonic queue + Two Pointers
+
+<!-- tabs:start -->
+
+#### TypeScript
+
+```ts
+function continuousSubarrays(nums: number[]): number {
+    const [minQ, maxQ]: [number[], number[]] = [[], []];
+    const n = nums.length;
+    let res = 0;
+
+    for (let r = 0, l = 0; r < n; r++) {
+        const x = nums[r];
+        while (minQ.length && nums[minQ.at(-1)!] > x) minQ.pop();
+        while (maxQ.length && nums[maxQ.at(-1)!] < x) maxQ.pop();
+        minQ.push(r);
+        maxQ.push(r);
+
+        while (minQ.length && maxQ.length && nums[maxQ[0]] - nums[minQ[0]] > 2) {
+            if (maxQ[0] < minQ[0]) {
+                l = maxQ[0] + 1;
+                maxQ.shift();
+            } else {
+                l = minQ[0] + 1;
+                minQ.shift();
+            }
+        }
+
+        res += r - l + 1;
+    }
+
+    return res;
+}
 ```
 
+#### JavaScript
+
+```js
+function continuousSubarrays(nums) {
+    const [minQ, maxQ] = [[], []];
+    const n = nums.length;
+    let res = 0;
+
+    for (let r = 0, l = 0; r < n; r++) {
+        const x = nums[r];
+        while (minQ.length && nums[minQ.at(-1)] > x) minQ.pop();
+        while (maxQ.length && nums[maxQ.at(-1)] < x) maxQ.pop();
+        minQ.push(r);
+        maxQ.push(r);
+
+        while (minQ.length && maxQ.length && nums[maxQ[0]] - nums[minQ[0]] > 2) {
+            if (maxQ[0] < minQ[0]) {
+                l = maxQ[0] + 1;
+                maxQ.shift();
+            } else {
+                l = minQ[0] + 1;
+                minQ.shift();
+            }
+        }
+
+        res += r - l + 1;
+    }
+
+    return res;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2100-2199/2136.Earliest%20Possible%20Day%20of%20Full%20Bloom/README_EN.md
+rating: 2033
+source: Weekly Contest 275 Q4
+tags:
+    - Greedy
+    - Array
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2136. Earliest Possible Day of Full Bloom](https://leetcode.com/problems/earliest-possible-day-of-full-bloom)
 
 [中文文档](/solution/2100-2199/2136.Earliest%20Possible%20Day%20of%20Full%20Bloom/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You have <code>n</code> flower seeds. Every seed must be planted first before it can begin to grow, then bloom. Planting a seed takes time and so does the growth of a seed. You are given two <strong>0-indexed</strong> integer arrays <code>plantTime</code> and <code>growTime</code>, of length <code>n</code> each:</p>
 
@@ -61,11 +77,21 @@ Thus, on day 2, all the seeds are blooming.
 	<li><code>1 &lt;= plantTime[i], growTime[i] &lt;= 10<sup>4</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Greedy + Sorting
+
+According to the problem description, we know that only one seed can be planted per day. Therefore, regardless of the planting order, the sum of the planting times for all seeds is always equal to $\sum_{i=0}^{n-1} plantTime[i]$. To make all seeds bloom as soon as possible, we should prioritize planting the seeds with the longest growth time. Hence, we can sort all seeds by their growth time in descending order and then plant them in sequence.
+
+The time complexity is $O(n \log n)$, and the space complexity is $O(n)$, where $n$ is the number of seeds.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -77,7 +103,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -98,7 +124,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -118,7 +144,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func earliestFullBloom(plantTime []int, growTime []int) (ans int) {
@@ -137,7 +163,7 @@ func earliestFullBloom(plantTime []int, growTime []int) (ans int) {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function earliestFullBloom(plantTime: number[], growTime: number[]): number {
@@ -153,7 +179,7 @@ function earliestFullBloom(plantTime: number[], growTime: number[]): number {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -171,10 +197,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0004.Median%20of%20Two%20Sorted%20Arrays/README_EN.md
+tags:
+    - Array
+    - Binary Search
+    - Divide and Conquer
+---
+
+<!-- problem:start -->
+
 # [4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays)
 
 [中文文档](/solution/0000-0099/0004.Median%20of%20Two%20Sorted%20Arrays/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given two sorted arrays <code>nums1</code> and <code>nums2</code> of size <code>m</code> and <code>n</code> respectively, return <strong>the median</strong> of the two sorted arrays.</p>
 
@@ -37,13 +51,34 @@
 	<li><code>-10<sup>6</sup> &lt;= nums1[i], nums2[i] &lt;= 10<sup>6</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
 
-Binary search.
+<!-- solution:start -->
+
+### Solution 1: Divide and Conquer
+
+The problem requires the time complexity of the algorithm to be $O(\log (m + n))$, so we cannot directly traverse the two arrays, but need to use the binary search method.
+
+If $m + n$ is odd, then the median is the $\left\lfloor\frac{m + n + 1}{2}\right\rfloor$-th number; if $m + n$ is even, then the median is the average of the $\left\lfloor\frac{m + n + 1}{2}\right\rfloor$-th and the $\left\lfloor\frac{m + n + 2}{2}\right\rfloor$-th numbers. In fact, we can unify it as the average of the $\left\lfloor\frac{m + n + 1}{2}\right\rfloor$-th and the $\left\lfloor\frac{m + n + 2}{2}\right\rfloor$-th numbers.
+
+Therefore, we can design a function $f(i, j, k)$, which represents the $k$-th smallest number in the interval $[i, m)$ of array $nums1$ and the interval $[j, n)$ of array $nums2$. The median is the average of $f(0, 0, \left\lfloor\frac{m + n + 1}{2}\right\rfloor)$ and $f(0, 0, \left\lfloor\frac{m + n + 2}{2}\right\rfloor)$.
+
+The implementation idea of the function $f(i, j, k)$ is as follows:
+
+-   If $i \geq m$, it means that the interval $[i, m)$ of array $nums1$ is empty, so directly return $nums2[j + k - 1]$;
+-   If $j \geq n$, it means that the interval $[j, n)$ of array $nums2$ is empty, so directly return $nums1[i + k - 1]$;
+-   If $k = 1$, it means to find the first number, so just return the minimum of $nums1[i]$ and $nums2[j]$;
+-   Otherwise, we find the $\left\lfloor\frac{k}{2}\right\rfloor$-th number in the two arrays, denoted as $x$ and $y$. (Note, if a certain array does not have the $\left\lfloor\frac{k}{2}\right\rfloor$-th number, then we regard the $\left\lfloor\frac{k}{2}\right\rfloor$-th number as $+\infty$.) Compare the size of $x$ and $y$:
+    -   If $x \leq y$, it means that the $\left\lfloor\frac{k}{2}\right\rfloor$-th number of array $nums1$ cannot be the $k$-th smallest number, so we can exclude the interval $[i, i + \left\lfloor\frac{k}{2}\right\rfloor)$ of array $nums1$, and recursively call $f(i + \left\lfloor\frac{k}{2}\right\rfloor, j, k - \left\lfloor\frac{k}{2}\right\rfloor)$.
+    -   If $x > y$, it means that the $\left\lfloor\frac{k}{2}\right\rfloor$-th number of array $nums2$ cannot be the $k$-th smallest number, so we can exclude the interval $[j, j + \left\lfloor\frac{k}{2}\right\rfloor)$ of array $nums2$, and recursively call $f(i, j + \left\lfloor\frac{k}{2}\right\rfloor, k - \left\lfloor\frac{k}{2}\right\rfloor)$.
+
+The time complexity is $O(\log(m + n))$, and the space complexity is $O(\log(m + n))$. Here, $m$ and $n$ are the lengths of arrays $nums1$ and $nums2$ respectively.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -66,7 +101,7 @@ class Solution:
         return (a + b) / 2
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -103,7 +138,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -132,7 +167,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
@@ -166,7 +201,7 @@ func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function findMedianSortedArrays(nums1: number[], nums2: number[]): number {
@@ -193,7 +228,7 @@ function findMedianSortedArrays(nums1: number[], nums2: number[]): number {
 }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -225,9 +260,9 @@ var findMedianSortedArrays = function (nums1, nums2) {
 };
 ```
 
-### **TypeScript**
+#### C#
 
-```ts
+```cs
 public class Solution {
     private int m;
     private int n;
@@ -262,10 +297,57 @@ public class Solution {
 }
 ```
 
-### **...**
+#### PHP
 
+```php
+class Solution {
+    /**
+     * @param int[] $nums1
+     * @param int[] $nums2
+     * @return float
+     */
+
+    function findMedianSortedArrays($nums1, $nums2) {
+        $arr = array_merge($nums1, $nums2);
+        sort($arr);
+        $cnt_arr = count($arr);
+
+        if ($cnt_arr % 2) {
+            return $arr[$cnt_arr / 2];
+        } else {
+            return ($arr[intdiv($cnt_arr, 2) - 1] + $arr[intdiv($cnt_arr, 2)]) / 2;
+        }
+    }
+}
 ```
 
+#### Nim
+
+```nim
+import std/[algorithm, sequtils]
+
+proc medianOfTwoSortedArrays(nums1: seq[int], nums2: seq[int]): float =
+  var
+    fullList: seq[int] = concat(nums1, nums2)
+    value: int = fullList.len div 2
+
+  fullList.sort()
+
+  if fullList.len mod 2 == 0:
+    result = (fullList[value - 1] + fullList[value]) / 2
+  else:
+    result = fullList[value].toFloat()
+
+# Driver Code
+
+# var
+#   arrA: seq[int] = @[1, 2]
+#   arrB: seq[int] = @[3, 4, 5]
+# echo medianOfTwoSortedArrays(arrA, arrB)
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

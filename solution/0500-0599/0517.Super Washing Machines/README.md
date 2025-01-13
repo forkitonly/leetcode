@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 困难
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0500-0599/0517.Super%20Washing%20Machines/README.md
+tags:
+    - 贪心
+    - 数组
+---
+
+<!-- problem:start -->
+
 # [517. 超级洗衣机](https://leetcode.cn/problems/super-washing-machines)
 
 [English Version](/solution/0500-0599/0517.Super%20Washing%20Machines/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>假设有 <code>n</code><strong>&nbsp;</strong>台超级洗衣机放在同一排上。开始的时候，每台洗衣机内可能有一定量的衣服，也可能是空的。</p>
 
@@ -54,17 +65,19 @@
 	<li><code>0 &lt;= machines[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：贪心**
+### 方法一：贪心
 
 如果洗衣机内的衣服总数不能被洗衣机的数量整除，那么不可能使得每台洗衣机内的衣服数量相等，直接返回 $-1$。
 
 否则，假设洗衣机内的衣服总数为 $s$，那么最终每台洗衣机内的衣服数量都会变为 $k = s / n$。
 
-我们定义 $a_i$ 为第 $i$ 台洗衣机内的衣服数量与 $k$ 的差值，即 $a_i = \text{machines}[i] - k$。若 $a_i > 0$，则表示第 $i$ 台洗衣机内有多余的衣服，需要向相邻的洗衣机传递；若 $a_i < 0$，则表示第 $i$ 台洗衣机内缺少衣服，需要从相邻的洗衣机获得。
+我们定义 $a_i$ 为第 $i$ 台洗衣机内的衣服数量与 $k$ 的差值，即 $a_i = \textit{machines}[i] - k$。若 $a_i > 0$，则表示第 $i$ 台洗衣机内有多余的衣服，需要向相邻的洗衣机传递；若 $a_i < 0$，则表示第 $i$ 台洗衣机内缺少衣服，需要从相邻的洗衣机获得。
 
 我们将前 $i$ 台洗衣机的衣服数量差值之和定义为 $s_i = \sum_{j=0}^{i-1} a_j$，如果把前 $i$ 台洗衣机视为一组，其余的洗衣机视为另一组。那么若 $s_i$ 为正数，表示第一组洗衣机内有多余的衣服，需要向第二组洗衣机传递；若 $s_i$ 为负数，表示第一组洗衣机内缺少衣服，需要从第二组洗衣机获得。
 
@@ -79,9 +92,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -98,9 +109,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -126,7 +135,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -150,7 +159,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findMinMoves(machines []int) (ans int) {
@@ -180,7 +189,7 @@ func abs(x int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function findMinMoves(machines: number[]): number {
@@ -201,10 +210,8 @@ function findMinMoves(machines: number[]): number {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

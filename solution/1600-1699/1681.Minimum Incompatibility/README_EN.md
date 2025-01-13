@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1681.Minimum%20Incompatibility/README_EN.md
+rating: 2389
+source: Weekly Contest 218 Q4
+tags:
+    - Bit Manipulation
+    - Array
+    - Dynamic Programming
+    - Bitmask
+---
+
+<!-- problem:start -->
+
 # [1681. Minimum Incompatibility](https://leetcode.com/problems/minimum-incompatibility)
 
 [中文文档](/solution/1600-1699/1681.Minimum%20Incompatibility/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>nums</code>​​​ and an integer <code>k</code>. You are asked to distribute this array into <code>k</code> subsets of <strong>equal size</strong> such that there are no two equal elements in the same subset.</p>
 
@@ -48,11 +65,31 @@ The incompatibility is (2-1) + (3-2) + (8-6) + (3-1) = 6.
 	<li><code>1 &lt;= nums[i] &lt;= nums.length</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Preprocessing + State Compression + Dynamic Programming
+
+Let's assume that the size of each subset after partitioning is $m$, so $m=\frac{n}{k}$, where $n$ is the length of the array.
+
+We can enumerate all subsets $i$, where $i \in [0, 2^n)$, if the binary representation of subset $i$ has $m$ ones, and the elements in subset $i$ are not repeated, then we can calculate the incompatibility of subset $i$, denoted as $g[i]$, i.e., $g[i]=\max_{j \in i} \{nums[j]\} - \min_{j \in i} \{nums[j]\}$.
+
+Next, we can use dynamic programming to solve.
+
+We define $f[i]$ as the minimum sum of incompatibilities when the current partitioned subset state is $i$. Initially, $f[0]=0$, which means no elements are partitioned into the subset, and the rest $f[i]=+\infty$.
+
+For state $i$, we find all undivided and non-repeated elements, represented by a state $mask$. If the number of elements in state $mask$ is greater than or equal to $m$, then we enumerate all subsets $j$ of $mask$, and satisfy $j \subset mask$, then $f[i \cup j]=\min \{f[i \cup j], f[i]+g[j]\}$.
+
+Finally, if $f[2^n-1]=+\infty$, it means that it cannot be partitioned into $k$ subsets, return $-1$, otherwise return $f[2^n-1]$.
+
+The time complexity is $O(3^n)$, and the space complexity is $O(2^n)$. Here, $n$ is the length of the array.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -95,32 +132,7 @@ class Solution:
         return f[-1] if f[-1] != inf else -1
 ```
 
-```python
-class Solution:
-    def minimumIncompatibility(self, nums: List[int], k: int) -> int:
-        @cache
-        def dfs(mask):
-            if mask == (1 << n) - 1:
-                return 0
-            d = {v: i for i, v in enumerate(nums) if (mask >> i & 1) == 0}
-            ans = inf
-            if len(d) < m:
-                return ans
-            for vs in combinations(d.keys(), m):
-                nxt = mask
-                for v in vs:
-                    nxt |= 1 << d[v]
-                ans = min(ans, max(vs) - min(vs) + dfs(nxt))
-            return ans
-
-        n = len(nums)
-        m = n // k
-        ans = dfs(0)
-        dfs.cache_clear()
-        return ans if ans < inf else -1
-```
-
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -178,7 +190,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -237,7 +249,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minimumIncompatibility(nums []int, k int) int {
@@ -299,7 +311,7 @@ func minimumIncompatibility(nums []int, k int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function minimumIncompatibility(nums: number[], k: number): number {
@@ -363,7 +375,7 @@ function bitCount(i: number): number {
 }
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
@@ -431,10 +443,45 @@ public class Solution {
 }
 ```
 
-### **...**
+<!-- tabs:end -->
 
-```
+<!-- solution:end -->
 
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def minimumIncompatibility(self, nums: List[int], k: int) -> int:
+        @cache
+        def dfs(mask):
+            if mask == (1 << n) - 1:
+                return 0
+            d = {v: i for i, v in enumerate(nums) if (mask >> i & 1) == 0}
+            ans = inf
+            if len(d) < m:
+                return ans
+            for vs in combinations(d.keys(), m):
+                nxt = mask
+                for v in vs:
+                    nxt |= 1 << d[v]
+                ans = min(ans, max(vs) - min(vs) + dfs(nxt))
+            return ans
+
+        n = len(nums)
+        m = n // k
+        ans = dfs(0)
+        dfs.cache_clear()
+        return ans if ans < inf else -1
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

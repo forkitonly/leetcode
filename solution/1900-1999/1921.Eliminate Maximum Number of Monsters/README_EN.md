@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1900-1999/1921.Eliminate%20Maximum%20Number%20of%20Monsters/README_EN.md
+rating: 1527
+source: Weekly Contest 248 Q2
+tags:
+    - Greedy
+    - Array
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [1921. Eliminate Maximum Number of Monsters](https://leetcode.com/problems/eliminate-maximum-number-of-monsters)
 
 [中文文档](/solution/1900-1999/1921.Eliminate%20Maximum%20Number%20of%20Monsters/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are playing a video game where you are defending your city from a group of <code>n</code> monsters. You are given a <strong>0-indexed</strong> integer array <code>dist</code> of size <code>n</code>, where <code>dist[i]</code> is the <strong>initial distance</strong> in kilometers of the <code>i<sup>th</sup></code> monster from the city.</p>
 
@@ -23,7 +39,7 @@
 <strong>Explanation:</strong>
 In the beginning, the distances of the monsters are [1,3,4]. You eliminate the first monster.
 After a minute, the distances of the monsters are [X,2,3]. You eliminate the second monster.
-After a minute, the distances of the monsters are [X,X,2]. You eliminate the thrid monster.
+After a minute, the distances of the monsters are [X,X,2]. You eliminate the third monster.
 All 3 monsters can be eliminated.</pre>
 
 <p><strong class="example">Example 2:</strong></p>
@@ -57,11 +73,29 @@ You can only eliminate 1 monster.
 	<li><code>1 &lt;= dist[i], speed[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Sorting + Greedy
+
+We use the $\textit{times}$ array to record the latest time each monster can be eliminated. For the $i$-th monster, the latest time it can be eliminated is:
+
+$$\textit{times}[i] = \left\lfloor \frac{\textit{dist}[i]-1}{\textit{speed}[i]} \right\rfloor$$
+
+Next, we sort the $\textit{times}$ array in ascending order.
+
+Then, we traverse the $\textit{times}$ array. For the $i$-th monster, if $\textit{times}[i] \geq i$, it means the $i$-th monster can be eliminated. Otherwise, it means the $i$-th monster cannot be eliminated, and we return $i$ immediately.
+
+If all monsters can be eliminated, we return $n$.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(n)$. Here, $n$ is the length of the array.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -73,7 +107,7 @@ class Solution:
         return len(times)
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -94,7 +128,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -116,7 +150,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func eliminateMaximum(dist []int, speed []int) int {
@@ -135,12 +169,12 @@ func eliminateMaximum(dist []int, speed []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function eliminateMaximum(dist: number[], speed: number[]): number {
     const n = dist.length;
-    const times = new Array(n).fill(0);
+    const times: number[] = Array(n).fill(0);
     for (let i = 0; i < n; ++i) {
         times[i] = Math.floor((dist[i] - 1) / speed[i]);
     }
@@ -154,7 +188,7 @@ function eliminateMaximum(dist: number[], speed: number[]): number {
 }
 ```
 
-### **JavaScript**
+#### JavaScript
 
 ```js
 /**
@@ -163,21 +197,22 @@ function eliminateMaximum(dist: number[], speed: number[]): number {
  * @return {number}
  */
 var eliminateMaximum = function (dist, speed) {
-    let arr = [];
-    for (let i = 0; i < dist.length; i++) {
-        arr[i] = dist[i] / speed[i];
+    const n = dist.length;
+    const times = Array(n).fill(0);
+    for (let i = 0; i < n; ++i) {
+        times[i] = Math.floor((dist[i] - 1) / speed[i]);
     }
-    arr.sort((a, b) => a - b);
-    let ans = 0;
-    while (arr[0] > ans) {
-        arr.shift();
-        ++ans;
+    times.sort((a, b) => a - b);
+    for (let i = 0; i < n; ++i) {
+        if (times[i] < i) {
+            return i;
+        }
     }
-    return ans;
+    return n;
 };
 ```
 
-### **C#**
+#### C
 
 ```cs
 public class Solution {
@@ -198,10 +233,8 @@ public class Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,20 @@
+---
+comments: true
+difficulty: Easy
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1100-1199/1114.Print%20in%20Order/README_EN.md
+tags:
+    - Concurrency
+---
+
+<!-- problem:start -->
+
 # [1114. Print in Order](https://leetcode.com/problems/print-in-order)
 
 [中文文档](/solution/1100-1199/1114.Print%20in%20Order/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Suppose we have a class:</p>
 
@@ -44,11 +56,27 @@ public class Foo {
 	<li><code>nums</code> is a permutation of <code>[1, 2, 3]</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Multithreading + Lock or Semaphore
+
+We can use three semaphores $a$, $b$, and $c$ to control the execution order of the three threads. Initially, the count of semaphore $a$ is $1$, and the counts of $b$ and $c$ are $0$.
+
+When thread $A$ executes the `first()` method, it first needs to acquire semaphore $a$. After acquiring successfully, it executes the `first()` method, and then releases semaphore $b$. This allows thread $B$ to acquire semaphore $b$ and execute the `second()` method.
+
+When thread $B$ executes the `second()` method, it first needs to acquire semaphore $b$. After acquiring successfully, it executes the `second()` method, and then releases semaphore $c$. This allows thread $C$ to acquire semaphore $c$ and execute the `third()` method.
+
+When thread $C$ executes the `third()` method, it first needs to acquire semaphore $c$. After acquiring successfully, it executes the `third()` method, and then releases semaphore $a$. This allows thread $A$ to acquire semaphore $a$ and execute the `first()` method.
+
+The time complexity is $O(1)$, and the space complexity is $O(1)$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Foo:
@@ -72,36 +100,7 @@ class Foo:
         printThird()
 ```
 
-```python
-from threading import Semaphore
-
-
-class Foo:
-    def __init__(self):
-        self.a = Semaphore(1)
-        self.b = Semaphore(0)
-        self.c = Semaphore(0)
-
-    def first(self, printFirst: 'Callable[[], None]') -> None:
-        self.a.acquire()
-        # printFirst() outputs "first". Do not change or remove this line.
-        printFirst()
-        self.b.release()
-
-    def second(self, printSecond: 'Callable[[], None]') -> None:
-        self.b.acquire()
-        # printSecond() outputs "second". Do not change or remove this line.
-        printSecond()
-        self.c.release()
-
-    def third(self, printThird: 'Callable[[], None]') -> None:
-        self.c.acquire()
-        # printThird() outputs "third". Do not change or remove this line.
-        printThird()
-        self.a.release()
-```
-
-### **Java**
+#### Java
 
 ```java
 class Foo {
@@ -135,7 +134,7 @@ class Foo {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Foo {
@@ -165,6 +164,49 @@ public:
     }
 };
 ```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+from threading import Semaphore
+
+
+class Foo:
+    def __init__(self):
+        self.a = Semaphore(1)
+        self.b = Semaphore(0)
+        self.c = Semaphore(0)
+
+    def first(self, printFirst: 'Callable[[], None]') -> None:
+        self.a.acquire()
+        # printFirst() outputs "first". Do not change or remove this line.
+        printFirst()
+        self.b.release()
+
+    def second(self, printSecond: 'Callable[[], None]') -> None:
+        self.b.acquire()
+        # printSecond() outputs "second". Do not change or remove this line.
+        printSecond()
+        self.c.release()
+
+    def third(self, printThird: 'Callable[[], None]') -> None:
+        self.c.acquire()
+        # printThird() outputs "third". Do not change or remove this line.
+        printThird()
+        self.a.release()
+```
+
+#### C++
 
 ```cpp
 #include <semaphore.h>
@@ -203,10 +245,8 @@ public:
 };
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,8 +1,22 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1200-1299/1220.Count%20Vowels%20Permutation/README_EN.md
+rating: 1729
+source: Weekly Contest 157 Q4
+tags:
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
 # [1220. Count Vowels Permutation](https://leetcode.com/problems/count-vowels-permutation)
 
 [中文文档](/solution/1200-1299/1220.Count%20Vowels%20Permutation/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>Given an integer <code>n</code>, your task is to count how many strings of length <code>n</code> can be formed under the following rules:</p>
 
@@ -47,7 +61,15 @@
 	<li><code>1 &lt;= n &lt;= 2 * 10^4</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Dynamic Programming
+
+Based on the problem description, we can list the possible subsequent vowels for each vowel:
 
 ```bash
 a [e]
@@ -55,9 +77,11 @@ e [a|i]
 i [a|e|o|u]
 o [i|u]
 u [a]
+```
 
-=>
+From this, we can deduce the possible preceding vowels for each vowel:
 
+```bash
 [e|i|u]	a
 [a|i]	e
 [e|o]	i
@@ -65,9 +89,28 @@ u [a]
 [i|o]	u
 ```
 
+We define $f[i]$ as the number of strings of the current length ending with the $i$-th vowel. If the length is $1$, then $f[i]=1$.
+
+When the length is greater than $1$, we define $g[i]$ as the number of strings of the current length ending with the $i$-th vowel. Then $g[i]$ can be derived from $f$, that is:
+
+$$
+g[i]=
+\begin{cases}
+f[1]+f[2]+f[4] & i=0 \\
+f[0]+f[2] & i=1 \\
+f[1]+f[3] & i=2 \\
+f[2] & i=3 \\
+f[2]+f[3] & i=4
+\end{cases}
+$$
+
+The final answer is $\sum_{i=0}^{4}f[i]$. Note that the answer may be very large, so we need to take the modulus of $10^9+7$.
+
+The time complexity is $O(n)$, and the space complexity is $O(C)$. Here, $n$ is the length of the string, and $C$ is the number of vowels. In this problem, $C=5$.
+
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -85,68 +128,7 @@ class Solution:
         return sum(f) % mod
 ```
 
-```python
-class Solution:
-    def countVowelPermutation(self, n: int) -> int:
-        mod = 10**9 + 7
-
-        def mul(a: List[List[int]], b: List[List[int]]) -> List[List[int]]:
-            m, n = len(a), len(b[0])
-            c = [[0] * n for _ in range(m)]
-            for i in range(m):
-                for j in range(n):
-                    for k in range(len(b)):
-                        c[i][j] = (c[i][j] + a[i][k] * b[k][j]) % mod
-            return c
-
-        def pow(a: List[List[int]], n: int) -> List[int]:
-            res = [[1] * len(a)]
-            while n:
-                if n & 1:
-                    res = mul(res, a)
-                a = mul(a, a)
-                n >>= 1
-            return res
-
-        a = [
-            [0, 1, 0, 0, 0],
-            [1, 0, 1, 0, 0],
-            [1, 1, 0, 1, 1],
-            [0, 0, 1, 0, 1],
-            [1, 0, 0, 0, 0],
-        ]
-        res = pow(a, n - 1)
-        return sum(map(sum, res)) % mod
-```
-
-```python
-import numpy as np
-
-
-class Solution:
-    def countVowelPermutation(self, n: int) -> int:
-        mod = 10**9 + 7
-        factor = np.mat(
-            [
-                (0, 1, 0, 0, 0),
-                (1, 0, 1, 0, 0),
-                (1, 1, 0, 1, 1),
-                (0, 0, 1, 0, 1),
-                (1, 0, 0, 0, 0),
-            ],
-            np.dtype("O"),
-        )
-        res = np.mat([(1, 1, 1, 1, 1)], np.dtype("O"))
-        n -= 1
-        while n:
-            if n & 1:
-                res = res * factor % mod
-            factor = factor * factor % mod
-            n >>= 1
-        return res.sum() % mod
-```
-
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -171,6 +153,139 @@ class Solution {
     }
 }
 ```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int countVowelPermutation(int n) {
+        using ll = long long;
+        vector<ll> f(5, 1);
+        const int mod = 1e9 + 7;
+        for (int i = 1; i < n; ++i) {
+            vector<ll> g(5);
+            g[0] = (f[1] + f[2] + f[4]) % mod;
+            g[1] = (f[0] + f[2]) % mod;
+            g[2] = (f[1] + f[3]) % mod;
+            g[3] = f[2];
+            g[4] = (f[2] + f[3]) % mod;
+            f = move(g);
+        }
+        return accumulate(f.begin(), f.end(), 0LL) % mod;
+    }
+};
+```
+
+#### Go
+
+```go
+func countVowelPermutation(n int) (ans int) {
+	const mod int = 1e9 + 7
+	f := make([]int, 5)
+	for i := range f {
+		f[i] = 1
+	}
+	for i := 1; i < n; i++ {
+		g := make([]int, 5)
+		g[0] = (f[1] + f[2] + f[4]) % mod
+		g[1] = (f[0] + f[2]) % mod
+		g[2] = (f[1] + f[3]) % mod
+		g[3] = f[2] % mod
+		g[4] = (f[2] + f[3]) % mod
+		f = g
+	}
+	for _, x := range f {
+		ans = (ans + x) % mod
+	}
+	return
+}
+```
+
+#### TypeScript
+
+```ts
+function countVowelPermutation(n: number): number {
+    const f: number[] = Array(5).fill(1);
+    const mod = 1e9 + 7;
+    for (let i = 1; i < n; ++i) {
+        const g: number[] = Array(5).fill(0);
+        g[0] = (f[1] + f[2] + f[4]) % mod;
+        g[1] = (f[0] + f[2]) % mod;
+        g[2] = (f[1] + f[3]) % mod;
+        g[3] = f[2];
+        g[4] = (f[2] + f[3]) % mod;
+        f.splice(0, 5, ...g);
+    }
+    return f.reduce((a, b) => (a + b) % mod);
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var countVowelPermutation = function (n) {
+    const mod = 1e9 + 7;
+    const f = Array(5).fill(1);
+    for (let i = 1; i < n; ++i) {
+        const g = Array(5).fill(0);
+        g[0] = (f[1] + f[2] + f[4]) % mod;
+        g[1] = (f[0] + f[2]) % mod;
+        g[2] = (f[1] + f[3]) % mod;
+        g[3] = f[2];
+        g[4] = (f[2] + f[3]) % mod;
+        f.splice(0, 5, ...g);
+    }
+    return f.reduce((a, b) => (a + b) % mod);
+};
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### Solution 2: Matrix Exponentiation to Accelerate Recursion
+
+The time complexity is $O(C^3 \times \log n)$, and the space complexity is $O(C^2)$. Here, $C$ is the number of vowels. In this problem, $C=5$.
+
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+import numpy as np
+
+
+class Solution:
+    def countVowelPermutation(self, n: int) -> int:
+        mod = 10**9 + 7
+        factor = np.asmatrix(
+            [
+                (0, 1, 0, 0, 0),
+                (1, 0, 1, 0, 0),
+                (1, 1, 0, 1, 1),
+                (0, 0, 1, 0, 1),
+                (1, 0, 0, 0, 0),
+            ],
+            np.dtype("O"),
+        )
+        res = np.asmatrix([(1, 1, 1, 1, 1)], np.dtype("O"))
+        n -= 1
+        while n:
+            if n & 1:
+                res = res * factor % mod
+            factor = factor * factor % mod
+            n >>= 1
+        return res.sum() % mod
+```
+
+#### Java
 
 ```java
 class Solution {
@@ -215,54 +330,7 @@ class Solution {
 }
 ```
 
-```java
-class Solution {
-    public int countVowelPermutation(int n) {
-        final int mod = 1000000007;
-        long countA = 1, countE = 1, countI = 1, countO = 1, countU = 1;
-        for (int length = 1; length < n; length++) {
-            // Calculate the next counts for each vowel based on the previous counts
-            long nextCountA = countE;
-            long nextCountE = (countA + countI) % mod;
-            long nextCountI = (countA + countE + countO + countU) % mod;
-            long nextCountO = (countI + countU) % mod;
-            long nextCountU = countA;
-            // Update the counts with the newly calculated values for the next length
-            countA = nextCountA;
-            countE = nextCountE;
-            countI = nextCountI;
-            countO = nextCountO;
-            countU = nextCountU;
-        }
-        // Calculate the total count of valid strings for length n
-        long totalCount = (countA + countE + countI + countO + countU) % mod;
-        return (int) totalCount;
-    }
-}
-```
-
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int countVowelPermutation(int n) {
-        using ll = long long;
-        vector<ll> f(5, 1);
-        const int mod = 1e9 + 7;
-        for (int i = 1; i < n; ++i) {
-            vector<ll> g(5);
-            g[0] = (f[1] + f[2] + f[4]) % mod;
-            g[1] = (f[0] + f[2]) % mod;
-            g[2] = (f[1] + f[3]) % mod;
-            g[3] = f[2];
-            g[4] = (f[2] + f[3]) % mod;
-            f = move(g);
-        }
-        return accumulate(f.begin(), f.end(), 0LL) % mod;
-    }
-};
-```
+#### C++
 
 ```cpp
 class Solution {
@@ -310,30 +378,7 @@ private:
 };
 ```
 
-### **Go**
-
-```go
-func countVowelPermutation(n int) (ans int) {
-	const mod int = 1e9 + 7
-	f := make([]int, 5)
-	for i := range f {
-		f[i] = 1
-	}
-	for i := 1; i < n; i++ {
-		g := make([]int, 5)
-		g[0] = (f[1] + f[2] + f[4]) % mod
-		g[1] = (f[0] + f[2]) % mod
-		g[2] = (f[1] + f[3]) % mod
-		g[3] = f[2] % mod
-		g[4] = (f[2] + f[3]) % mod
-		f = g
-	}
-	for _, x := range f {
-		ans = (ans + x) % mod
-	}
-	return
-}
-```
+#### Go
 
 ```go
 const mod = 1e9 + 7
@@ -381,24 +426,7 @@ func pow(a [][]int, n int) [][]int {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function countVowelPermutation(n: number): number {
-    const f: number[] = Array(5).fill(1);
-    const mod = 1e9 + 7;
-    for (let i = 1; i < n; ++i) {
-        const g: number[] = Array(5).fill(0);
-        g[0] = (f[1] + f[2] + f[4]) % mod;
-        g[1] = (f[0] + f[2]) % mod;
-        g[2] = (f[1] + f[3]) % mod;
-        g[3] = f[2];
-        g[4] = (f[2] + f[3]) % mod;
-        f.splice(0, 5, ...g);
-    }
-    return f.reduce((a, b) => (a + b) % mod);
-}
-```
+#### TypeScript
 
 ```ts
 const mod = 1e9 + 7;
@@ -442,28 +470,7 @@ function pow(a: number[][], n: number): number[][] {
 }
 ```
 
-### **JavaScript**
-
-```js
-/**
- * @param {number} n
- * @return {number}
- */
-var countVowelPermutation = function (n) {
-    const mod = 1e9 + 7;
-    const f = Array(5).fill(1);
-    for (let i = 1; i < n; ++i) {
-        const g = Array(5).fill(0);
-        g[0] = (f[1] + f[2] + f[4]) % mod;
-        g[1] = (f[0] + f[2]) % mod;
-        g[2] = (f[1] + f[3]) % mod;
-        g[3] = f[2];
-        g[4] = (f[2] + f[3]) % mod;
-        f.splice(0, 5, ...g);
-    }
-    return f.reduce((a, b) => (a + b) % mod);
-};
-```
+#### JavaScript
 
 ```js
 /**
@@ -512,10 +519,8 @@ function pow(a, n) {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

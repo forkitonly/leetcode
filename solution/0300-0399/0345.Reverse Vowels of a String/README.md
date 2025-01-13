@@ -1,10 +1,21 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0300-0399/0345.Reverse%20Vowels%20of%20a%20String/README.md
+tags:
+    - 双指针
+    - 字符串
+---
+
+<!-- problem:start -->
+
 # [345. 反转字符串中的元音字母](https://leetcode.cn/problems/reverse-vowels-of-a-string)
 
 [English Version](/solution/0300-0399/0345.Reverse%20Vowels%20of%20a%20String/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个字符串 <code>s</code> ，仅反转字符串中的所有元音字母，并返回结果字符串。</p>
 
@@ -12,20 +23,27 @@
 
 <p>&nbsp;</p>
 
-<p><strong>示例 1：</strong></p>
+<p><strong class="example">示例 1：</strong></p>
 
-<pre>
-<strong>输入：</strong>s = "hello"
-<strong>输出：</strong>"holle"
-</pre>
+<div class="example-block">
+<p><strong>输入：</strong><span class="example-io">s = "IceCreAm"</span></p>
 
-<p><strong>示例 2：</strong></p>
+<p><span class="example-io"><b>输出：</b>"AceCreIm"</span></p>
 
-<pre>
-<strong>输入：</strong>s = "leetcode"
-<strong>输出：</strong>"leotcede"</pre>
+<p><strong>解释：</strong></p>
+
+<p><code>s</code>&nbsp;中的元音是&nbsp;<code>['I', 'e', 'e', 'A']</code>。反转这些元音，<code>s</code> 变为&nbsp;<code>"AceCreIm"</code>.</p>
+</div>
+
+<p><strong class="example">示例 2：</strong></p>
+
+<div class="example-block">
+<p><span class="example-io"><b>输入：</b>s = "leetcode"</span></p>
+
+<p><strong>输出：</strong><span class="example-io">"leotcede"</span></p>
 
 <p>&nbsp;</p>
+</div>
 
 <p><strong>提示：</strong></p>
 
@@ -34,11 +52,13 @@
 	<li><code>s</code> 由 <strong>可打印的 ASCII</strong> 字符组成</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：双指针**
+### 方法一：双指针
 
 我们可以用两个指针 $i$ 和 $j$，初始时分别指向字符串的首尾。
 
@@ -48,9 +68,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -69,9 +87,7 @@ class Solution:
         return "".join(cs)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -102,7 +118,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -130,7 +146,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func reverseVowels(s string) string {
@@ -156,7 +172,7 @@ func reverseVowels(s string) string {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function reverseVowels(s: string): string {
@@ -175,7 +191,7 @@ function reverseVowels(s: string): string {
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -201,10 +217,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

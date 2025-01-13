@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 简单
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0070.Climbing%20Stairs/README.md
+tags:
+    - 记忆化搜索
+    - 数学
+    - 动态规划
+---
+
+<!-- problem:start -->
+
 # [70. 爬楼梯](https://leetcode.cn/problems/climbing-stairs)
 
 [English Version](/solution/0000-0099/0070.Climbing%20Stairs/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>假设你正在爬楼梯。需要 <code>n</code>&nbsp;阶你才能到达楼顶。</p>
 
@@ -40,11 +52,13 @@
 	<li><code>1 &lt;= n &lt;= 45</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：递推**
+### 方法一：递推
 
 我们定义 $f[i]$ 表示爬到第 $i$ 阶楼梯的方法数，那么 $f[i]$ 可以由 $f[i - 1]$ 和 $f[i - 2]$ 转移而来，即：
 
@@ -60,7 +74,140 @@ $$
 
 时间复杂度 $O(n)$，空间复杂度 $O(1)$。
 
-**方法二：矩阵快速幂加速递推**
+<!-- tabs:start -->
+
+#### Python3
+
+```python
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        a, b = 0, 1
+        for _ in range(n):
+            a, b = b, a + b
+        return b
+```
+
+#### Java
+
+```java
+class Solution {
+    public int climbStairs(int n) {
+        int a = 0, b = 1;
+        for (int i = 0; i < n; ++i) {
+            int c = a + b;
+            a = b;
+            b = c;
+        }
+        return b;
+    }
+}
+```
+
+#### C++
+
+```cpp
+class Solution {
+public:
+    int climbStairs(int n) {
+        int a = 0, b = 1;
+        for (int i = 0; i < n; ++i) {
+            int c = a + b;
+            a = b;
+            b = c;
+        }
+        return b;
+    }
+};
+```
+
+#### Go
+
+```go
+func climbStairs(n int) int {
+	a, b := 0, 1
+	for i := 0; i < n; i++ {
+		a, b = b, a+b
+	}
+	return b
+}
+```
+
+#### TypeScript
+
+```ts
+function climbStairs(n: number): number {
+    let p = 1;
+    let q = 1;
+    for (let i = 1; i < n; i++) {
+        [p, q] = [q, p + q];
+    }
+    return q;
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    pub fn climb_stairs(n: i32) -> i32 {
+        let (mut p, mut q) = (1, 1);
+        for i in 1..n {
+            let t = p + q;
+            p = q;
+            q = t;
+        }
+        q
+    }
+}
+```
+
+#### JavaScript
+
+```js
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairs = function (n) {
+    let a = 0,
+        b = 1;
+    for (let i = 0; i < n; ++i) {
+        const c = a + b;
+        a = b;
+        b = c;
+    }
+    return b;
+};
+```
+
+#### PHP
+
+```php
+class Solution {
+    /**
+     * @param Integer $n
+     * @return Integer
+     */
+    function climbStairs($n) {
+        if ($n <= 2) {
+            return $n;
+        }
+        $dp = [0, 1, 2];
+        for ($i = 3; $i <= $n; $i++) {
+            $dp[$i] = $dp[$i - 2] + $dp[$i - 1];
+        }
+        return $dp[$n];
+    }
+}
+```
+
+<!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- solution:start -->
+
+### 方法二：矩阵快速幂加速递推
 
 我们设 $Fib(n)$ 表示一个 $1 \times 2$ 的矩阵 $\begin{bmatrix} F_n & F_{n - 1} \end{bmatrix}$，其中 $F_n$ 和 $F_{n - 1}$ 分别是第 $n$ 个和第 $n - 1$ 个斐波那契数。
 
@@ -102,43 +249,7 @@ $$
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
-
-```python
-class Solution:
-    def climbStairs(self, n: int) -> int:
-        a, b = 0, 1
-        for _ in range(n):
-            a, b = b, a + b
-        return b
-```
-
-```python
-class Solution:
-    def climbStairs(self, n: int) -> int:
-        def mul(a: List[List[int]], b: List[List[int]]) -> List[List[int]]:
-            m, n = len(a), len(b[0])
-            c = [[0] * n for _ in range(m)]
-            for i in range(m):
-                for j in range(n):
-                    for k in range(len(a[0])):
-                        c[i][j] = c[i][j] + a[i][k] * b[k][j]
-            return c
-
-        def pow(a: List[List[int]], n: int) -> List[List[int]]:
-            res = [[1, 1]]
-            while n:
-                if n & 1:
-                    res = mul(res, a)
-                n >>= 1
-                a = mul(a, a)
-            return res
-
-        a = [[1, 1], [1, 0]]
-        return pow(a, n - 1)[0][0]
-```
+#### Python3
 
 ```python
 import numpy as np
@@ -146,8 +257,8 @@ import numpy as np
 
 class Solution:
     def climbStairs(self, n: int) -> int:
-        res = np.mat([(1, 1)], np.dtype("O"))
-        factor = np.mat([(1, 1), (1, 0)], np.dtype("O"))
+        res = np.asmatrix([(1, 1)], np.dtype("O"))
+        factor = np.asmatrix([(1, 1), (1, 0)], np.dtype("O"))
         n -= 1
         while n:
             if n & 1:
@@ -157,28 +268,13 @@ class Solution:
         return res[0, 0]
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
-    public int climbStairs(int n) {
-        int a = 0, b = 1;
-        for (int i = 0; i < n; ++i) {
-            int c = a + b;
-            a = b;
-            b = c;
-        }
-        return b;
-    }
-}
-```
+    private final int[][] a = {{1, 1}, {1, 0}};
 
-```java
-class Solution {
     public int climbStairs(int n) {
-        int[][] a = {{1, 1,}, {1, 0}};
         return pow(a, n - 1)[0][0];
     }
 
@@ -209,22 +305,7 @@ class Solution {
 }
 ```
 
-### **C++**
-
-```cpp
-class Solution {
-public:
-    int climbStairs(int n) {
-        int a = 0, b = 1;
-        for (int i = 0; i < n; ++i) {
-            int c = a + b;
-            a = b;
-            b = c;
-        }
-        return b;
-    }
-};
-```
+#### C++
 
 ```cpp
 class Solution {
@@ -262,17 +343,7 @@ private:
 };
 ```
 
-### **Go**
-
-```go
-func climbStairs(n int) int {
-	a, b := 0, 1
-	for i := 0; i < n; i++ {
-		a, b = b, a+b
-	}
-	return b
-}
-```
+#### Go
 
 ```go
 type matrix [2][2]int
@@ -307,24 +378,49 @@ func pow(a matrix, n int) matrix {
 }
 ```
 
-### **JavaScript**
+#### TypeScript
 
-```js
-/**
- * @param {number} n
- * @return {number}
- */
-var climbStairs = function (n) {
-    let a = 0,
-        b = 1;
-    for (let i = 0; i < n; ++i) {
-        const c = a + b;
-        a = b;
-        b = c;
+```ts
+function climbStairs(n: number): number {
+    const a = [
+        [1, 1],
+        [1, 0],
+    ];
+    return pow(a, n - 1)[0][0];
+}
+
+function mul(a: number[][], b: number[][]): number[][] {
+    const [m, n] = [a.length, b[0].length];
+    const c = Array(m)
+        .fill(0)
+        .map(() => Array(n).fill(0));
+    for (let i = 0; i < m; ++i) {
+        for (let j = 0; j < n; ++j) {
+            for (let k = 0; k < a[0].length; ++k) {
+                c[i][j] += a[i][k] * b[k][j];
+            }
+        }
     }
-    return b;
-};
+    return c;
+}
+
+function pow(a: number[][], n: number): number[][] {
+    let res = [
+        [1, 1],
+        [0, 0],
+    ];
+    while (n) {
+        if (n & 1) {
+            res = mul(res, a);
+        }
+        a = mul(a, a);
+        n >>= 1;
+    }
+    return res;
+}
 ```
+
+#### JavaScript
 
 ```js
 /**
@@ -370,100 +466,8 @@ function pow(a, n) {
 }
 ```
 
-### **TypeScript**
-
-```ts
-function climbStairs(n: number): number {
-    let p = 1;
-    let q = 1;
-    for (let i = 1; i < n; i++) {
-        [p, q] = [q, p + q];
-    }
-    return q;
-}
-```
-
-```ts
-function climbStairs(n: number): number {
-    const a = [
-        [1, 1],
-        [1, 0],
-    ];
-    return pow(a, n - 1)[0][0];
-}
-
-function mul(a: number[][], b: number[][]): number[][] {
-    const [m, n] = [a.length, b[0].length];
-    const c = Array(m)
-        .fill(0)
-        .map(() => Array(n).fill(0));
-    for (let i = 0; i < m; ++i) {
-        for (let j = 0; j < n; ++j) {
-            for (let k = 0; k < a[0].length; ++k) {
-                c[i][j] += a[i][k] * b[k][j];
-            }
-        }
-    }
-    return c;
-}
-
-function pow(a: number[][], n: number): number[][] {
-    let res = [
-        [1, 1],
-        [0, 0],
-    ];
-    while (n) {
-        if (n & 1) {
-            res = mul(res, a);
-        }
-        a = mul(a, a);
-        n >>= 1;
-    }
-    return res;
-}
-```
-
-### **Rust**
-
-```rust
-impl Solution {
-    pub fn climb_stairs(n: i32) -> i32 {
-        let (mut p, mut q) = (1, 1);
-        for i in 1..n {
-            let t = p + q;
-            p = q;
-            q = t;
-        }
-        q
-    }
-}
-```
-
-### **PHP**
-
-```php
-class Solution {
-    /**
-     * @param Integer $n
-     * @return Integer
-     */
-    function climbStairs($n) {
-        if ($n <= 2) {
-            return $n;
-        }
-        $dp = [0, 1, 2];
-        for ($i = 3; $i <= $n; $i++) {
-            $dp[$i] = $dp[$i - 2] + $dp[$i - 1];
-        }
-        return $dp[$n];
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

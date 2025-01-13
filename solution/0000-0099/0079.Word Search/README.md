@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/0000-0099/0079.Word%20Search/README.md
+tags:
+    - 深度优先搜索
+    - 数组
+    - 字符串
+    - 回溯
+    - 矩阵
+---
+
+<!-- problem:start -->
+
 # [79. 单词搜索](https://leetcode.cn/problems/word-search)
 
 [English Version](/solution/0000-0099/0079.Word%20Search/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给定一个 <code>m x n</code> 二维字符网格 <code>board</code> 和一个字符串单词 <code>word</code> 。如果 <code>word</code> 存在于网格中，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>
 
@@ -49,11 +63,13 @@
 
 <p><strong>进阶：</strong>你可以使用搜索剪枝的技术来优化解决方案，使其在 <code>board</code> 更大的情况下可以更快解决问题？</p>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：DFS(回溯)**
+### 方法一：DFS(回溯)
 
 我们可以枚举网格的每一个位置 $(i, j)$ 作为搜索的起点，然后从起点开始进行深度优先搜索，如果可以搜索到单词的末尾，就说明单词存在，否则说明单词不存在。
 
@@ -69,9 +85,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -95,9 +109,7 @@ class Solution:
         return any(dfs(i, j, 0) for i in range(m) for j in range(n))
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -143,7 +155,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -181,7 +193,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func exist(board [][]byte, word string) bool {
@@ -217,7 +229,7 @@ func exist(board [][]byte, word string) bool {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function exist(board: string[][], word: string): boolean {
@@ -253,7 +265,95 @@ function exist(board: string[][], word: string): boolean {
 }
 ```
 
-### **C#**
+#### JavaScript
+
+```js
+function exist(board, word) {
+    const [m, n] = [board.length, board[0].length];
+    const dirs = [-1, 0, 1, 0, -1];
+    const dfs = (i, j, k) => {
+        if (k === word.length - 1) {
+            return board[i][j] === word[k];
+        }
+        if (board[i][j] !== word[k]) {
+            return false;
+        }
+        const c = board[i][j];
+        board[i][j] = '0';
+        for (let u = 0; u < 4; ++u) {
+            const [x, y] = [i + dirs[u], j + dirs[u + 1]];
+            const ok = x >= 0 && x < m && y >= 0 && y < n;
+            if (ok && board[x][y] !== '0' && dfs(x, y, k + 1)) {
+                return true;
+            }
+        }
+        board[i][j] = c;
+        return false;
+    };
+    for (let i = 0; i < m; ++i) {
+        for (let j = 0; j < n; ++j) {
+            if (dfs(i, j, 0)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+```
+
+#### Rust
+
+```rust
+impl Solution {
+    fn dfs(
+        i: usize,
+        j: usize,
+        c: usize,
+        word: &[u8],
+        board: &Vec<Vec<char>>,
+        vis: &mut Vec<Vec<bool>>,
+    ) -> bool {
+        if (board[i][j] as u8) != word[c] {
+            return false;
+        }
+        if c == word.len() - 1 {
+            return true;
+        }
+        vis[i][j] = true;
+        let dirs = [[-1, 0], [0, -1], [1, 0], [0, 1]];
+        for [x, y] in dirs.into_iter() {
+            let i = x + (i as i32);
+            let j = y + (j as i32);
+            if i < 0 || i == (board.len() as i32) || j < 0 || j == (board[0].len() as i32) {
+                continue;
+            }
+            let (i, j) = (i as usize, j as usize);
+            if !vis[i][j] && Self::dfs(i, j, c + 1, word, board, vis) {
+                return true;
+            }
+        }
+        vis[i][j] = false;
+        false
+    }
+
+    pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {
+        let m = board.len();
+        let n = board[0].len();
+        let word = word.as_bytes();
+        let mut vis = vec![vec![false; n]; m];
+        for i in 0..m {
+            for j in 0..n {
+                if Self::dfs(i, j, 0, word, &board, &mut vis) {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+}
+```
+
+#### C#
 
 ```cs
 public class Solution {
@@ -300,67 +400,8 @@ public class Solution {
 }
 ```
 
-### **Rust**
-
-```rust
-impl Solution {
-    fn dfs(
-        i: usize,
-        j: usize,
-        c: usize,
-        word: &[u8],
-        board: &Vec<Vec<char>>,
-        vis: &mut Vec<Vec<bool>>
-    ) -> bool {
-        if (board[i][j] as u8) != word[c] {
-            return false;
-        }
-        if c == word.len() - 1 {
-            return true;
-        }
-        vis[i][j] = true;
-        let dirs = [
-            [-1, 0],
-            [0, -1],
-            [1, 0],
-            [0, 1],
-        ];
-        for [x, y] in dirs.into_iter() {
-            let i = x + (i as i32);
-            let j = y + (j as i32);
-            if i < 0 || i == (board.len() as i32) || j < 0 || j == (board[0].len() as i32) {
-                continue;
-            }
-            let (i, j) = (i as usize, j as usize);
-            if !vis[i][j] && Self::dfs(i, j, c + 1, word, board, vis) {
-                return true;
-            }
-        }
-        vis[i][j] = false;
-        false
-    }
-
-    pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {
-        let m = board.len();
-        let n = board[0].len();
-        let word = word.as_bytes();
-        let mut vis = vec![vec![false; n]; m];
-        for i in 0..m {
-            for j in 0..n {
-                if Self::dfs(i, j, 0, word, &board, &mut vis) {
-                    return true;
-                }
-            }
-        }
-        false
-    }
-}
-```
-
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

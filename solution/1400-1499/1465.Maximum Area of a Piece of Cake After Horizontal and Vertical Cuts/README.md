@@ -1,10 +1,24 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1400-1499/1465.Maximum%20Area%20of%20a%20Piece%20of%20Cake%20After%20Horizontal%20and%20Vertical%20Cuts/README.md
+rating: 1444
+source: 第 191 场周赛 Q2
+tags:
+    - 贪心
+    - 数组
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [1465. 切割后面积最大的蛋糕](https://leetcode.cn/problems/maximum-area-of-a-piece-of-cake-after-horizontal-and-vertical-cuts)
 
 [English Version](/solution/1400-1499/1465.Maximum%20Area%20of%20a%20Piece%20of%20Cake%20After%20Horizontal%20and%20Vertical%20Cuts/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>矩形蛋糕的高度为 <code>h</code> 且宽度为 <code>w</code>，给你两个整数数组 <code>horizontalCuts</code> 和 <code>verticalCuts</code>，其中：</p>
 
@@ -57,11 +71,13 @@
 	<li>题目数据保证 <code>verticalCuts</code>&nbsp;中的所有元素各不相同</li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：排序**
+### 方法一：排序
 
 我们先分别对 `horizontalCuts` 和 `verticalCuts` 排序，然后分别遍历两个数组，计算相邻两个元素的最大差值，分别记为 $x$ 和 $y$，最后返回 $x \times y$ 即可。
 
@@ -71,9 +87,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -89,9 +103,7 @@ class Solution:
         return (x * y) % (10**9 + 7)
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -114,7 +126,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -139,7 +151,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func maxArea(h int, w int, horizontalCuts []int, verticalCuts []int) int {
@@ -159,7 +171,7 @@ func maxArea(h int, w int, horizontalCuts []int, verticalCuts []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function maxArea(h: number, w: number, horizontalCuts: number[], verticalCuts: number[]): number {
@@ -179,7 +191,7 @@ function maxArea(h: number, w: number, horizontalCuts: number[], verticalCuts: n
 }
 ```
 
-### **Rust**
+#### Rust
 
 ```rust
 impl Solution {
@@ -187,7 +199,7 @@ impl Solution {
         h: i32,
         w: i32,
         mut horizontal_cuts: Vec<i32>,
-        mut vertical_cuts: Vec<i32>
+        mut vertical_cuts: Vec<i32>,
     ) -> i32 {
         const MOD: i64 = 1_000_000_007;
 
@@ -199,12 +211,18 @@ impl Solution {
 
         let mut x = i64::max(
             horizontal_cuts[0] as i64,
-            (h as i64) - (horizontal_cuts[m - 1] as i64)
+            (h as i64) - (horizontal_cuts[m - 1] as i64),
         );
-        let mut y = i64::max(vertical_cuts[0] as i64, (w as i64) - (vertical_cuts[n - 1] as i64));
+        let mut y = i64::max(
+            vertical_cuts[0] as i64,
+            (w as i64) - (vertical_cuts[n - 1] as i64),
+        );
 
         for i in 1..m {
-            x = i64::max(x, (horizontal_cuts[i] as i64) - (horizontal_cuts[i - 1] as i64));
+            x = i64::max(
+                x,
+                (horizontal_cuts[i] as i64) - (horizontal_cuts[i - 1] as i64),
+            );
         }
 
         for i in 1..n {
@@ -216,10 +234,8 @@ impl Solution {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

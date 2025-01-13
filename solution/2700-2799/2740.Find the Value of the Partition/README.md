@@ -1,10 +1,23 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2700-2799/2740.Find%20the%20Value%20of%20the%20Partition/README.md
+rating: 1301
+source: 第 350 场周赛 Q2
+tags:
+    - 数组
+    - 排序
+---
+
+<!-- problem:start -->
+
 # [2740. 找出分区值](https://leetcode.cn/problems/find-the-value-of-the-partition)
 
 [English Version](/solution/2700-2799/2740.Find%20the%20Value%20of%20the%20Partition/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你一个 <strong>正</strong> 整数数组 <code>nums</code> 。</p>
 
@@ -55,11 +68,13 @@
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
 
-**方法一：排序**
+### 方法一：排序
 
 题目要求分区值最小，那么我们可以将数组排序，然后取相邻两个数的差值的最小值即可。
 
@@ -67,9 +82,7 @@
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -78,9 +91,7 @@ class Solution:
         return min(b - a for a, b in pairwise(nums))
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -95,7 +106,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -111,7 +122,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func findValueOfPartition(nums []int) int {
@@ -124,10 +135,36 @@ func findValueOfPartition(nums []int) int {
 }
 ```
 
-### **...**
+#### TypeScript
 
+```ts
+function findValueOfPartition(nums: number[]): number {
+    nums.sort((a, b) => a - b);
+    let ans = Infinity;
+    for (let i = 1; i < nums.length; ++i) {
+        ans = Math.min(ans, Math.abs(nums[i] - nums[i - 1]));
+    }
+    return ans;
+}
 ```
 
+#### Rust
+
+```rust
+impl Solution {
+    pub fn find_value_of_partition(mut nums: Vec<i32>) -> i32 {
+        nums.sort();
+        let mut ans = i32::MAX;
+        for i in 1..nums.len() {
+            ans = ans.min(nums[i] - nums[i - 1]);
+        }
+        ans
+    }
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

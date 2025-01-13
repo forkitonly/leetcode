@@ -1,5 +1,5 @@
-func longestAlternatingSubarray(nums []int, threshold int) int {
-	ans, n := 0, len(nums)
+func longestAlternatingSubarray(nums []int, threshold int) (ans int) {
+	n := len(nums)
 	for l := range nums {
 		if nums[l]%2 == 0 && nums[l] <= threshold {
 			r := l + 1
@@ -9,5 +9,5 @@ func longestAlternatingSubarray(nums []int, threshold int) int {
 			ans = max(ans, r-l)
 		}
 	}
-	return ans
+	return
 }

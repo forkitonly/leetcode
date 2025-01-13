@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Hard
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2800-2899/2846.Minimum%20Edge%20Weight%20Equilibrium%20Queries%20in%20a%20Tree/README_EN.md
+rating: 2507
+source: Weekly Contest 361 Q4
+tags:
+    - Tree
+    - Graph
+    - Array
+    - Strongly Connected Component
+---
+
+<!-- problem:start -->
+
 # [2846. Minimum Edge Weight Equilibrium Queries in a Tree](https://leetcode.com/problems/minimum-edge-weight-equilibrium-queries-in-a-tree)
 
 [中文文档](/solution/2800-2899/2846.Minimum%20Edge%20Weight%20Equilibrium%20Queries%20in%20a%20Tree/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>There is an undirected tree with <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code>. You are given the integer <code>n</code> and a 2D integer array <code>edges</code> of length <code>n - 1</code>, where <code>edges[i] = [u<sub>i</sub>, v<sub>i</sub>, w<sub>i</sub>]</code> indicates that there is an edge between nodes <code>u<sub>i</sub></code> and <code>v<sub>i</sub></code> with weight <code>w<sub>i</sub></code> in the tree.</p>
 
@@ -57,11 +74,35 @@ For each queries[i], it can be shown that answer[i] is the minimum number of ope
 	<li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt; n</code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Binary Lifting for LCA
+
+The problem asks for the minimum number of operations to make all edge weights the same on the path between any two points. This is essentially the length of the path between these two points, minus the number of times the most frequently occurring edge appears on the path.
+
+The length of the path between two points can be obtained by finding the LCA (Lowest Common Ancestor) using binary lifting. Let's denote the two points as $u$ and $v$, and their LCA as $x$. Then, the path length from $u$ to $v$ is $depth(u) + depth(v) - 2 \times depth(x)$.
+
+Additionally, we can use an array $cnt[n][26]$ to record the number of occurrences of each edge weight from the root node to each node. Then, the number of times the most frequently occurring edge appears on the path from $u$ to $v$ is $\max_{0 \leq j < 26} cnt[u][j] + cnt[v][j] - 2 \times cnt[x][j]$, where $x$ is the LCA of $u$ and $v$.
+
+The process of finding the LCA using binary lifting is as follows:
+
+We denote the depth of each node as $depth$, its parent node as $p$, and $f[i][j]$ as the $2^j$th ancestor of node $i$. Then, for any two points $x$ and $y$, we can find their LCA as follows:
+
+1. If $depth(x) < depth(y)$, then swap $x$ and $y$, i.e., ensure that the depth of $x$ is not less than the depth of $y$;
+2. Next, we continuously raise the depth of $x$ until the depths of $x$ and $y$ are the same, at which point the depths of $x$ and $y$ are both $depth(x)$;
+3. Then, we raise the depths of $x$ and $y$ simultaneously until the parents of $x$ and $y$ are the same, at which point the parents of $x$ and $y$ are both $f[x][0]$, which is the LCA of $x$ and $y$.
+
+Finally, the minimum number of operations from node $u$ to node $v$ is $depth(u) + depth(v) - 2 \times depth(x) - \max_{0 \leq j < 26} cnt[u][j] + cnt[v][j] - 2 \times cnt[x][j]$.
+
+The time complexity is $O((n + q) \times C \times \log n)$, and the space complexity is $O(n \times C \times \log n)$. Here, $C$ is the maximum value of the edge weight.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -109,7 +150,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -181,7 +222,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -253,7 +294,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func minOperationsQueries(n int, edges [][]int, queries [][]int) []int {
@@ -324,10 +365,8 @@ func minOperationsQueries(n int, edges [][]int, queries [][]int) []int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

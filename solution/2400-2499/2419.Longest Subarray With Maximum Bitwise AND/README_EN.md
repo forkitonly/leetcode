@@ -1,8 +1,24 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2400-2499/2419.Longest%20Subarray%20With%20Maximum%20Bitwise%20AND/README_EN.md
+rating: 1495
+source: Weekly Contest 312 Q2
+tags:
+    - Bit Manipulation
+    - Brainteaser
+    - Array
+---
+
+<!-- problem:start -->
+
 # [2419. Longest Subarray With Maximum Bitwise AND](https://leetcode.com/problems/longest-subarray-with-maximum-bitwise-and)
 
 [中文文档](/solution/2400-2499/2419.Longest%20Subarray%20With%20Maximum%20Bitwise%20AND/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given an integer array <code>nums</code> of size <code>n</code>.</p>
 
@@ -47,11 +63,25 @@ The longest subarray with that value is [4], so we return 1.
 	<li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Quick Thinking
+
+Due to the bitwise AND operation, the number will not get larger, so the maximum value is the maximum value in the array.
+
+The problem can be transformed into finding the maximum number of consecutive occurrences of the maximum value in the array.
+
+First, traverse the array once to find the maximum value, then traverse the array again to find the number of consecutive occurrences of the maximum value, and finally return this count.
+
+The time complexity is $O(n)$, where $n$ is the length of the array.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -67,7 +97,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -90,7 +120,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -111,7 +141,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func longestSubarray(nums []int) int {
@@ -129,16 +159,48 @@ func longestSubarray(nums []int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
+function longestSubarray(nums: number[]): number {
+    const mx = Math.max(...nums);
+    let [ans, cnt] = [0, 0];
 
+    for (const x of nums) {
+        if (x === mx) {
+            cnt++;
+            ans = Math.max(ans, cnt);
+        } else {
+            cnt = 0;
+        }
+    }
+
+    return ans;
+}
 ```
 
-### **...**
+#### JavaScript
 
-```
+```js
+function longestSubarray(nums) {
+    const mx = Math.max(...nums);
+    let [ans, cnt] = [0, 0];
 
+    for (const x of nums) {
+        if (x === mx) {
+            cnt++;
+            ans = Math.max(ans, cnt);
+        } else {
+            cnt = 0;
+        }
+    }
+
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

@@ -1,10 +1,22 @@
+---
+comments: true
+difficulty: 中等
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2800-2899/2849.Determine%20if%20a%20Cell%20Is%20Reachable%20at%20a%20Given%20Time/README.md
+rating: 1515
+source: 第 362 场周赛 Q2
+tags:
+    - 数学
+---
+
+<!-- problem:start -->
+
 # [2849. 判断能否在给定时间到达单元格](https://leetcode.cn/problems/determine-if-a-cell-is-reachable-at-a-given-time)
 
 [English Version](/solution/2800-2899/2849.Determine%20if%20a%20Cell%20Is%20Reachable%20at%20a%20Given%20Time/README_EN.md)
 
 ## 题目描述
 
-<!-- 这里写题目描述 -->
+<!-- description:start -->
 
 <p>给你四个整数 <code>sx</code>、<code>sy</code>、<code>fx</code>、<code>fy</code>&nbsp; 以及一个 <strong>非负整数</strong> <code>t</code> 。</p>
 
@@ -41,15 +53,23 @@
 	<li><code>0 &lt;= t &lt;= 10<sup>9</sup></code></li>
 </ul>
 
+<!-- description:end -->
+
 ## 解法
 
-<!-- 这里可写通用的实现逻辑 -->
+<!-- solution:start -->
+
+### 方法一：分情况讨论
+
+如果起点和终点相同，那么只有当 $t \neq 1$ 时，才能在给定时间到达终点。
+
+否则，我们可以计算出起点和终点的横纵坐标之差，然后取最大值，如果最大值小于等于给定时间，那么就可以在给定时间到达终点。
+
+时间复杂度 $O(1)$，空间复杂度 $O(1)$。
 
 <!-- tabs:start -->
 
-### **Python3**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Python3
 
 ```python
 class Solution:
@@ -61,9 +81,7 @@ class Solution:
         return max(dx, dy) <= t
 ```
 
-### **Java**
-
-<!-- 这里可写当前语言的特殊实现逻辑 -->
+#### Java
 
 ```java
 class Solution {
@@ -78,7 +96,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -93,7 +111,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func isReachableAtTime(sx int, sy int, fx int, fy int, t int) bool {
@@ -113,7 +131,7 @@ func abs(x int) int {
 }
 ```
 
-### **TypeScript**
+#### TypeScript
 
 ```ts
 function isReachableAtTime(sx: number, sy: number, fx: number, fy: number, t: number): boolean {
@@ -126,22 +144,21 @@ function isReachableAtTime(sx: number, sy: number, fx: number, fy: number, t: nu
 }
 ```
 
-### **C#**
+#### C#
 
 ```cs
 public class Solution {
     public bool IsReachableAtTime(int sx, int sy, int fx, int fy, int t) {
-        if (sx == fx && sy == fy)
+        if (sx == fx && sy == fy) {
             return t != 1;
+        }
         return Math.Max(Math.Abs(sx - fx), Math.Abs(sy - fy)) <= t;
     }
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

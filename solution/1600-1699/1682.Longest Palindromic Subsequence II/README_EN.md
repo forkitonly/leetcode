@@ -1,8 +1,21 @@
-# [1682. Longest Palindromic Subsequence II](https://leetcode.com/problems/longest-palindromic-subsequence-ii)
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/1600-1699/1682.Longest%20Palindromic%20Subsequence%20II/README_EN.md
+tags:
+    - String
+    - Dynamic Programming
+---
+
+<!-- problem:start -->
+
+# [1682. Longest Palindromic Subsequence II 🔒](https://leetcode.com/problems/longest-palindromic-subsequence-ii)
 
 [中文文档](/solution/1600-1699/1682.Longest%20Palindromic%20Subsequence%20II/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>A subsequence of a string <code>s</code> is considered a <strong>good palindromic subsequence</strong> if:</p>
 
@@ -42,11 +55,29 @@
 	<li><code>s</code> consists of lowercase English letters.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Memorization Search
+
+We design a function $dfs(i, j, x)$ to represent the length of the longest "good" palindrome subsequence ending with character $x$ in the index range $[i, j]$ of string $s$. The answer is $dfs(0, n - 1, 26)$.
+
+The calculation process of the function $dfs(i, j, x)$ is as follows:
+
+-   If $i >= j$, then $dfs(i, j, x) = 0$;
+-   If $s[i] = s[j]$ and $s[i] \neq x$, then $dfs(i, j, x) = dfs(i + 1, j - 1, s[i]) + 2$;
+-   If $s[i] \neq s[j]$, then $dfs(i, j, x) = max(dfs(i + 1, j, x), dfs(i, j - 1, x))$.
+
+During the process, we can use memorization search to avoid repeated calculations.
+
+The time complexity is $O(n^2 \times C)$. Where $n$ is the length of the string $s$, and $C$ is the size of the character set. In this problem, $C = 26$.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
 class Solution:
@@ -64,7 +95,7 @@ class Solution:
         return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
 class Solution {
@@ -102,7 +133,7 @@ class Solution {
 }
 ```
 
-### **C++**
+#### C++
 
 ```cpp
 class Solution {
@@ -128,7 +159,7 @@ public:
 };
 ```
 
-### **Go**
+#### Go
 
 ```go
 func longestPalindromeSubseq(s string) int {
@@ -164,10 +195,8 @@ func longestPalindromeSubseq(s string) int {
 }
 ```
 
-### **...**
-
-```
-
-```
-
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->

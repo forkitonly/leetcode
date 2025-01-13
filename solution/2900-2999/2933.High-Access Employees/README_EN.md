@@ -1,8 +1,25 @@
+---
+comments: true
+difficulty: Medium
+edit_url: https://github.com/doocs/leetcode/edit/main/solution/2900-2999/2933.High-Access%20Employees/README_EN.md
+rating: 1536
+source: Weekly Contest 371 Q2
+tags:
+    - Array
+    - Hash Table
+    - String
+    - Sorting
+---
+
+<!-- problem:start -->
+
 # [2933. High-Access Employees](https://leetcode.com/problems/high-access-employees)
 
 [中文文档](/solution/2900-2999/2933.High-Access%20Employees/README.md)
 
 ## Description
+
+<!-- description:start -->
 
 <p>You are given a 2D <strong>0-indexed</strong> array of strings, <code>access_times</code>, with size <code>n</code>. For each <code>i</code> where <code>0 &lt;= i &lt;= n - 1</code>, <code>access_times[i][0]</code> represents the name of an employee, and <code>access_times[i][1]</code> represents the access time of that employee. All entries in <code>access_times</code> are within the same day.</p>
 
@@ -57,38 +74,151 @@ So the answer is [&quot;ab&quot;,&quot;cd&quot;].</pre>
 	<li><code>access_times[i][1]</code> consists only of <code>&#39;0&#39;</code> to <code>&#39;9&#39;</code>.</li>
 </ul>
 
+<!-- description:end -->
+
 ## Solutions
+
+<!-- solution:start -->
+
+### Solution 1: Hash Table + Sorting
+
+We use a hash table $d$ to store all access times of each employee, where the key is the employee's name, and the value is an integer array, representing all access times of the employee, which are the number of minutes from the start of the day at 00:00.
+
+For each employee, we sort all their access times in ascending order. Then we traverse all access times of the employee. If there are three consecutive access times $t_1, t_2, t_3$ that satisfy $t_3 - t_1 < 60$, then the employee is a high-frequency visitor, and we add their name to the answer array.
+
+Finally, we return the answer array.
+
+The time complexity is $O(n \times \log n)$, and the space complexity is $O(n)$. Here, $n$ is the number of access records.
 
 <!-- tabs:start -->
 
-### **Python3**
+#### Python3
 
 ```python
-
+class Solution:
+    def findHighAccessEmployees(self, access_times: List[List[str]]) -> List[str]:
+        d = defaultdict(list)
+        for name, t in access_times:
+            d[name].append(int(t[:2]) * 60 + int(t[2:]))
+        ans = []
+        for name, ts in d.items():
+            ts.sort()
+            if any(ts[i] - ts[i - 2] < 60 for i in range(2, len(ts))):
+                ans.append(name)
+        return ans
 ```
 
-### **Java**
+#### Java
 
 ```java
-
+class Solution {
+    public List<String> findHighAccessEmployees(List<List<String>> access_times) {
+        Map<String, List<Integer>> d = new HashMap<>();
+        for (var e : access_times) {
+            String name = e.get(0), s = e.get(1);
+            int t = Integer.valueOf(s.substring(0, 2)) * 60 + Integer.valueOf(s.substring(2));
+            d.computeIfAbsent(name, k -> new ArrayList<>()).add(t);
+        }
+        List<String> ans = new ArrayList<>();
+        for (var e : d.entrySet()) {
+            String name = e.getKey();
+            var ts = e.getValue();
+            Collections.sort(ts);
+            for (int i = 2; i < ts.size(); ++i) {
+                if (ts.get(i) - ts.get(i - 2) < 60) {
+                    ans.add(name);
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+}
 ```
 
-### **C++**
+#### C++
 
 ```cpp
-
+class Solution {
+public:
+    vector<string> findHighAccessEmployees(vector<vector<string>>& access_times) {
+        unordered_map<string, vector<int>> d;
+        for (auto& e : access_times) {
+            auto name = e[0];
+            auto s = e[1];
+            int t = stoi(s.substr(0, 2)) * 60 + stoi(s.substr(2, 2));
+            d[name].emplace_back(t);
+        }
+        vector<string> ans;
+        for (auto& [name, ts] : d) {
+            sort(ts.begin(), ts.end());
+            for (int i = 2; i < ts.size(); ++i) {
+                if (ts[i] - ts[i - 2] < 60) {
+                    ans.emplace_back(name);
+                    break;
+                }
+            }
+        }
+        return ans;
+    }
+};
 ```
 
-### **Go**
+#### Go
 
 ```go
-
+func findHighAccessEmployees(access_times [][]string) (ans []string) {
+	d := map[string][]int{}
+	for _, e := range access_times {
+		name, s := e[0], e[1]
+		h, _ := strconv.Atoi(s[:2])
+		m, _ := strconv.Atoi(s[2:])
+		t := h*60 + m
+		d[name] = append(d[name], t)
+	}
+	for name, ts := range d {
+		sort.Ints(ts)
+		for i := 2; i < len(ts); i++ {
+			if ts[i]-ts[i-2] < 60 {
+				ans = append(ans, name)
+				break
+			}
+		}
+	}
+	return
+}
 ```
 
-### **...**
+#### TypeScript
 
-```
-
+```ts
+function findHighAccessEmployees(access_times: string[][]): string[] {
+    const d: Map<string, number[]> = new Map();
+    for (const [name, s] of access_times) {
+        const h = parseInt(s.slice(0, 2), 10);
+        const m = parseInt(s.slice(2), 10);
+        const t = h * 60 + m;
+        if (!d.has(name)) {
+            d.set(name, []);
+        }
+        d.get(name)!.push(t);
+    }
+    const ans: string[] = [];
+    for (const [name, ts] of d) {
+        ts.sort((a, b) => a - b);
+        for (let i = 2; i < ts.length; ++i) {
+            if (ts[i] - ts[i - 2] < 60) {
+                ans.push(name);
+                break;
+            }
+        }
+    }
+    return ans;
+}
 ```
 
 <!-- tabs:end -->
+
+<!-- solution:end -->
+
+<!-- problem:end -->
