@@ -13,15 +13,21 @@ var minScore = function (n, roads) {
 
     const vis = new Array(n + 1).fill(false);
     let ans = Infinity;
+    let q = [1];
+    vis[1] = true;
 
-    const dfs = a => {
-        vis[a] = true;
-        for (const [b, w] of g[a]) {
-            ans = Math.min(ans, w);
-            if (!vis[b]) dfs(b);
+    while (q.length > 0) {
+        const nq = [];
+        for (const a of q) {
+            for (const [b, w] of g[a]) {
+                ans = Math.min(ans, w);
+                if (!vis[b]) {
+                    vis[b] = true;
+                    nq.push(b);
+                }
+            }
         }
-    };
-
-    dfs(1);
+        q = nq;
+    }
     return ans;
 };
